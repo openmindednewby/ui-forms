@@ -46,6 +46,16 @@ const CHANNEL_END_OFFSET = 2;
  * colour form (already `rgba()`, a CSS name, …) is returned unchanged — so the caller degrades
  * gracefully rather than emitting an invalid value.
  */
+/**
+ * True when the user asked the OS to reduce motion (web only). Read at render so the
+ * focus/hover transition collapses to an instant change for those users (WCAG 2.3.3 / the
+ * `prefers-reduced-motion: reduce` contract). Safe under SSR / no `matchMedia`.
+ */
+function prefersReducedMotion(): boolean {
+  if (!IS_WEB || typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false;
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
 function withAlpha(color: string, alpha: number): string {
   const hex = color.trim();
   const isHex = hex.charAt(0) === '#' && (hex.length === HEX_FULL_LENGTH || hex.length === HEX_SHORT_LENGTH);
@@ -124,7 +134,8 @@ export function useThemedInput(options: UseThemedInputOptions = {}): ThemedInput
       isFocused && !hasError ? `0 0 0 ${FOCUS_RING_WIDTH}px ${withAlpha(primary, FOCUS_RING_ALPHA)}` : 'none';
     const webStyle = {
       transitionProperty: TRANSITION_PROPERTY,
-      transitionDuration: TRANSITION_DURATION,
+      // Collapse the eased transition to instant when the user prefers reduced motion.
+      transitionDuration: prefersReducedMotion() ? '0s' : TRANSITION_DURATION,
       transitionTimingFunction: TRANSITION_TIMING,
       boxShadow: ring,
       outlineStyle: 'none',

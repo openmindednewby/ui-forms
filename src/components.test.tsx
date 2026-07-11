@@ -5,6 +5,28 @@ import { ChipSelector } from './ChipSelector/ChipSelector';
 import { FormSwitch } from './FormSwitch/FormSwitch';
 import { FormCheckbox } from './FormCheckbox/FormCheckbox';
 
+describe('FormField a11y', () => {
+  it('marks the input invalid and links the error text via aria-describedby', () => {
+    render(<FormField label="Email" required error="Required" />);
+    const input = screen.getByTestId('form-field-input');
+    expect(input.getAttribute('aria-invalid')).toBe('true');
+    expect(input.getAttribute('aria-required')).toBe('true');
+    const describedBy = input.getAttribute('aria-describedby');
+    expect(describedBy).toBeTruthy();
+    // The error line carries the id the input points at, and is an alert.
+    const errorNode = screen.getByText('Required');
+    expect(errorNode.getAttribute('id')).toBe(describedBy);
+    expect(errorNode.getAttribute('role')).toBe('alert');
+  });
+
+  it('is not aria-invalid when there is no error', () => {
+    render(<FormField label="Name" />);
+    const input = screen.getByTestId('form-field-input');
+    expect(input.getAttribute('aria-invalid')).toBeNull();
+    expect(input.getAttribute('aria-describedby')).toBeNull();
+  });
+});
+
 // These components read theme from @dloizides/ui-feedback's context, which provides a
 // neutral default when no provider is mounted — so they render standalone in tests.
 
@@ -107,5 +129,22 @@ describe('FormCheckbox', () => {
     render(<FormCheckbox testID="cb-alias" label="Alias" value={false} onChange={onChange} />);
     fireEvent.click(screen.getByTestId('cb-alias'));
     expect(onChange).toHaveBeenCalledWith(true);
+  });
+
+  it('toggles on the Enter and Space keys (keyboard operable)', () => {
+    const onValueChange = jest.fn();
+    render(<FormCheckbox testID="cb-kbd" label="Kbd" value={false} onValueChange={onValueChange} />);
+    const box = screen.getByTestId('cb-kbd');
+    fireEvent.keyDown(box, { key: 'Enter' });
+    expect(onValueChange).toHaveBeenLastCalledWith(true);
+    fireEvent.keyDown(box, { key: ' ' });
+    expect(onValueChange).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not toggle on keydown when disabled', () => {
+    const onValueChange = jest.fn();
+    render(<FormCheckbox testID="cb-kbd-dis" label="Kbd" value={false} disabled onValueChange={onValueChange} />);
+    fireEvent.keyDown(screen.getByTestId('cb-kbd-dis'), { key: 'Enter' });
+    expect(onValueChange).not.toHaveBeenCalled();
   });
 });

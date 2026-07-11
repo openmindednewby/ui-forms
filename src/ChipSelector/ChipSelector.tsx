@@ -28,6 +28,12 @@ const RGB_R_START = 0;
 const RGB_R_END = 2;
 const RGB_G_END = 4;
 const RGB_B_END = 6;
+/**
+ * Chips are visually compact (≈24–26px tall). `hitSlop` expands the pressable's TOUCH area
+ * toward the WCAG ≥44px target WITHOUT changing the rendered pill size, so existing layouts are
+ * byte-identical while taps/clicks get an easier target.
+ */
+const CHIP_HIT_SLOP = { top: 10, bottom: 10, left: 4, right: 4 } as const;
 
 /** Visual variant. `solid` = filled selected pill (default); `outline` = v1 tinted-outline. */
 export type ChipVariant = 'solid' | 'outline';
@@ -132,8 +138,9 @@ function OutlineChip<T extends string | number>({
       accessibilityHint={`Selects ${option.label}`}
       accessibilityLabel={option.label}
       accessibilityRole="button"
-      accessibilityState={{ selected }}
+      accessibilityState={{ selected, disabled }}
       disabled={disabled}
+      hitSlop={CHIP_HIT_SLOP}
       style={styles.chipWrapper}
       testID={`chip-selector-chip-${String(option.value)}`}
       onHoverIn={() => setHovered(true)}
@@ -162,8 +169,9 @@ function SolidChip<T extends string | number>({
       accessibilityHint={`Selects ${option.label}`}
       accessibilityLabel={option.label}
       accessibilityRole="button"
-      accessibilityState={{ selected }}
+      accessibilityState={{ selected, disabled }}
       disabled={disabled}
+      hitSlop={CHIP_HIT_SLOP}
       style={styles.chipWrapper}
       testID={`chip-selector-chip-${String(option.value)}`}
       onPress={onPress}

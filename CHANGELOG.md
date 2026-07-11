@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.4.0
+
+- **Accessibility (WCAG 2.1 AA) hardening — additive + backward-compatible.**
+  - `FormField`: the error message is now programmatically tied to the input — the input gets
+    `aria-invalid` when errored and `aria-describedby` pointing at the error line (which is a
+    `role="alert"` live region), and `aria-required` when `required`. The required `*` is marked
+    decorative (`aria-hidden` / `accessibilityElementsHidden`) so a screen reader hears "required"
+    (via `aria-required`) instead of "star".
+  - `ThemedTextInput`: new optional `describedById` + `requiredField` props forward
+    `aria-describedby` / `aria-required`, and it emits `aria-invalid` from `hasError` (web only;
+    no-ops on native). Existing callers are unaffected.
+  - `FormCheckbox`: now keyboard-operable — the `role="checkbox"` Pressable renders a `<div>`
+    (no free Enter/Space), so an explicit web-only Enter/Space handler toggles it (WCAG 2.1.1).
+  - `ChipSelector`: chips gain a `hitSlop` so the touch target reaches ~44px WITHOUT changing the
+    rendered pill size, and expose `accessibilityState.disabled` when the selector is disabled.
+  - `useThemedInput`: the focus/hover CSS transition now collapses to instant when the user
+    requests `prefers-reduced-motion: reduce` (WCAG 2.3.3, web only).
+
 ## 1.3.0
 
 - `ChipSelector` gains a `variant` prop (`'solid' | 'outline'`, default `'solid'`). `solid` is the

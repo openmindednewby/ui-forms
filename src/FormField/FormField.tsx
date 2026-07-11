@@ -54,6 +54,16 @@ export interface FormFieldProps extends Omit<TextInputProps, 'style'> {
   containerStyle?: ViewStyle;
 }
 
+let formFieldSeq = 0;
+/** Stable-per-instance id so the error line can be linked to the input via aria-describedby. */
+function useErrorId(): string {
+  const [id] = React.useState(() => {
+    formFieldSeq += 1;
+    return `form-field-error-${String(formFieldSeq)}`;
+  });
+  return id;
+}
+
 export const FormField = ({
   label,
   required = false,
@@ -65,6 +75,7 @@ export const FormField = ({
   const { colors, semantic } = theme;
   const errorColor = semantic.error['500'];
   const hasError = typeof error === 'string' && error !== '';
+  const errorId = useErrorId();
 
   const themeStyles = React.useMemo<ThemeStyles>(
     () => ({
@@ -78,17 +89,29 @@ export const FormField = ({
   return (
     <View style={[styles.container, containerStyle]}>
       <Text style={[styles.label, themeStyles.label]}>
-        {label} {required ? <Text style={themeStyles.requiredMark}>*</Text> : null}
+        {label}{' '}
+        {required ? (
+          // The asterisk is decorative — `requiredField` conveys "required" to assistive tech.
+          <Text aria-hidden accessibilityElementsHidden importantForAccessibility="no" style={themeStyles.requiredMark}>
+            *
+          </Text>
+        ) : null}
       </Text>
       <ThemedTextInput
         accessibilityHint={`Enter ${label}`}
         accessibilityLabel={label}
+        describedById={hasError ? errorId : undefined}
         hasError={hasError}
+        requiredField={required}
         style={styles.input}
         testID="form-field-input"
         {...textInputProps}
       />
-      {hasError ? <Text style={[styles.errorText, themeStyles.errorText]}>{error}</Text> : null}
+      {hasError ? (
+        <Text nativeID={errorId} role="alert" style={[styles.errorText, themeStyles.errorText]}>
+          {error}
+        </Text>
+      ) : null}
     </View>
   );
 };

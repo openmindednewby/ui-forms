@@ -6,9 +6,21 @@
  */
 import React from 'react';
 
-import { StyleSheet, View, Text, Pressable, type TextStyle, type ViewStyle } from 'react-native';
+import { Platform, StyleSheet, View, Text, Pressable, type TextStyle, type ViewStyle } from 'react-native';
 
 import { useUi } from '@dloizides/ui-feedback';
+
+/**
+ * Web-only keydown prop react-native-web's `Pressable` forwards but RN's types omit. A
+ * `role="checkbox"` Pressable renders a `<div>` (not a native `<button>`), so — unlike a
+ * button-role Pressable — it gets NO free Enter/Space activation. We add it explicitly so the
+ * checkbox is keyboard-operable (WCAG 2.1.1). `preventDefault()` stops Space from scrolling.
+ */
+interface WebKeyboardProps {
+  onKeyDown?: (event: { key?: string; preventDefault?: () => void }) => void;
+}
+
+const ACTIVATION_KEYS = ['Enter', ' ', 'Spacebar'];
 
 const HINT_FONT_SIZE = 12;
 const BOX_SIZE = 20;
@@ -100,6 +112,16 @@ export const FormCheckbox = ({
     if (onChange) onChange(next);
   };
 
+  const handleKeyDown = (event: { key?: string; preventDefault?: () => void }): void => {
+    if (disabled) return;
+    const key = event.key ?? '';
+    if (!ACTIVATION_KEYS.includes(key)) return;
+    if (typeof event.preventDefault === 'function') event.preventDefault();
+    toggle();
+  };
+
+  const keyboardProps: WebKeyboardProps = Platform.OS === 'web' ? { onKeyDown: handleKeyDown } : {};
+
   return (
     <Pressable
       accessibilityHint={accessibilityHint ?? label}
@@ -113,6 +135,7 @@ export const FormCheckbox = ({
       role="checkbox"
       style={[styles.container, containerStyle, disabled ? { opacity: DISABLED_OPACITY } : null]}
       testID={testID}
+      {...keyboardProps}
     >
       <View style={[styles.box, value ? themeStyles.boxOn : themeStyles.boxOff]}>
         {value ? (

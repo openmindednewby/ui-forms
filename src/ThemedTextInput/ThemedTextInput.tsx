@@ -12,17 +12,37 @@
  */
 import React from 'react';
 
-import { TextInput, type TextInputProps } from 'react-native';
+import { Platform, TextInput, type TextInputProps } from 'react-native';
 
 import { useThemedInput } from '../useThemedInput/useThemedInput';
+
+const IS_WEB = Platform.OS === 'web';
+
+/**
+ * Web-only ARIA attributes react-native-web forwards to the underlying `<input>` but that RN's
+ * `TextInputProps` type does not enumerate. Cast through the TextInput props at the call site
+ * (never `any`) so error/label semantics reach a screen reader without a type escape hatch.
+ */
+interface WebInputA11y {
+  'aria-invalid'?: boolean;
+  'aria-describedby'?: string;
+  'aria-required'?: boolean;
+}
 
 export interface ThemedTextInputProps extends TextInputProps {
   /** Render with the error border colour (matches `FormField`'s error treatment). */
   hasError?: boolean;
+  /**
+   * id of an element describing this input (e.g. an error/hint line). Linked via
+   * `aria-describedby` on web so a screen reader reads it after the field's name. No-op native.
+   */
+  describedById?: string;
+  /** Marks the field required for assistive tech (`aria-required` on web). No-op on native. */
+  requiredField?: boolean;
 }
 
 export const ThemedTextInput = React.forwardRef<TextInput, ThemedTextInputProps>(function ThemedTextInput(
-  { hasError = false, onFocus, onBlur, style, placeholderTextColor, ...rest },
+  { hasError = false, describedById, requiredField = false, onFocus, onBlur, style, placeholderTextColor, ...rest },
   ref,
 ): React.ReactElement {
   const {
@@ -32,11 +52,22 @@ export const ThemedTextInput = React.forwardRef<TextInput, ThemedTextInputProps>
     hoverBind,
   } = useThemedInput({ hasError, onFocus, onBlur });
 
+  // aria-invalid announces the error state; aria-describedby ties the error/hint text to the
+  // field; aria-required marks it mandatory. Web-only (RN-web → DOM); omitted on native.
+  const webA11y: WebInputA11y = IS_WEB
+    ? {
+        'aria-invalid': hasError ? true : undefined,
+        'aria-describedby': describedById,
+        'aria-required': requiredField ? true : undefined,
+      }
+    : {};
+
   return (
     <TextInput
       ref={ref}
       placeholderTextColor={placeholderTextColor ?? themedPlaceholder}
       {...rest}
+      {...(webA11y as TextInputProps)}
       {...hoverBind}
       onFocus={focusBind.onFocus}
       onBlur={focusBind.onBlur}
