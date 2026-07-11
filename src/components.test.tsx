@@ -32,6 +32,39 @@ describe('ChipSelector', () => {
     fireEvent.click(screen.getByTestId('chip-selector-chip-b'));
     expect(onChange).toHaveBeenCalledWith('b');
   });
+
+  it('outline variant renders every chip and fires onChange on press', () => {
+    const onChange = jest.fn();
+    render(
+      <ChipSelector
+        variant="outline"
+        options={[{ value: 'a', label: 'Alpha' }, { value: 'b', label: 'Beta' }]}
+        value="a"
+        onChange={onChange}
+      />
+    );
+    expect(screen.getByTestId('chip-selector-chip-a')).toBeTruthy();
+    fireEvent.click(screen.getByTestId('chip-selector-chip-b'));
+    expect(onChange).toHaveBeenCalledWith('b');
+  });
+
+  it('supports multiple selection: fires the pressed value regardless of current array', () => {
+    const onChange = jest.fn();
+    render(
+      <ChipSelector
+        multiple
+        variant="outline"
+        options={[{ value: 'a', label: 'Alpha' }, { value: 'b', label: 'Beta' }]}
+        value={['a']}
+        onChange={onChange}
+      />
+    );
+    // Both chips render; pressing an already-selected chip still fires (parent owns toggle).
+    fireEvent.click(screen.getByTestId('chip-selector-chip-a'));
+    expect(onChange).toHaveBeenCalledWith('a');
+    fireEvent.click(screen.getByTestId('chip-selector-chip-b'));
+    expect(onChange).toHaveBeenCalledWith('b');
+  });
 });
 
 describe('FormSwitch', () => {

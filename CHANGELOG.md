@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.3.0
+
+- `ChipSelector` gains a `variant` prop (`'solid' | 'outline'`, default `'solid'`). `solid` is the
+  original filled-pill look (selected = solid brand fill, white ink) — existing consumers
+  (erevna / katalogos / kefi) render **identically**, no change. `outline` is the AML v1 console
+  look: an outlined pill on a muted fill where the **selected** state is a subtle tinted-outline
+  (brand border + brand ink + a low-alpha brand wash), NOT a solid fill; on web, hover lifts the
+  border + ink to the brand colour. Fully theme-driven (brand colour + alpha, border/text from the
+  theme), so it re-themes per tenant. Additive + backward-compatible.
+
 ## 1.2.0
 
 - Add `ThemedTextInput` + `useThemedInput` — the shared "readable + lively" text-input treatment,

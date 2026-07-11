@@ -8,7 +8,7 @@ export { useThemedInput } from './useThemedInput/useThemedInput';
 export type { ThemedInput, UseThemedInputOptions } from './useThemedInput/useThemedInput';
 
 export { ChipSelector } from './ChipSelector/ChipSelector';
-export type { ChipSelectorProps, ChipOption } from './ChipSelector/ChipSelector';
+export type { ChipSelectorProps, ChipOption, ChipVariant } from './ChipSelector/ChipSelector';
 
 export { FormSwitch } from './FormSwitch/FormSwitch';
 export type { FormSwitchProps } from './FormSwitch/FormSwitch';
