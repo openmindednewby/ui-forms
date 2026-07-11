@@ -1,16 +1,24 @@
 /**
  * Reusable form field — labelled text input with optional required mark + error.
+ *
+ * The input itself is the shared `ThemedTextInput` primitive, so every FormField gets the
+ * readable + lively treatment (dark text, subtle off-white rest background, brand focus
+ * animation with a soft ring) for free, driven by the active theme.
  */
 import React from 'react';
 
-import { StyleSheet, View, Text, TextInput, type TextInputProps, type TextStyle, type ViewStyle } from 'react-native';
+import { StyleSheet, View, Text, type TextInputProps, type TextStyle, type ViewStyle } from 'react-native';
 
 import { useUi } from '@dloizides/ui-feedback';
 
+import { ThemedTextInput } from '../ThemedTextInput/ThemedTextInput';
+
 const CONTAINER_MARGIN_BOTTOM = 16;
-const INPUT_PADDING = 12;
+const INPUT_PADDING_V = 10;
+const INPUT_PADDING_H = 12;
 const INPUT_BORDER_RADIUS = 8;
 const ERROR_FONT_SIZE = 12;
+const LABEL_FONT_SIZE = 13;
 
 const styles = StyleSheet.create({
   container: {
@@ -18,10 +26,12 @@ const styles = StyleSheet.create({
   },
   label: {
     marginBottom: 4,
+    fontSize: LABEL_FONT_SIZE,
     fontWeight: '600',
   },
   input: {
-    padding: INPUT_PADDING,
+    paddingVertical: INPUT_PADDING_V,
+    paddingHorizontal: INPUT_PADDING_H,
     borderRadius: INPUT_BORDER_RADIUS,
     borderWidth: 1,
   },
@@ -34,7 +44,6 @@ const styles = StyleSheet.create({
 interface ThemeStyles {
   label: TextStyle;
   requiredMark: TextStyle;
-  input: TextStyle;
   errorText: TextStyle;
 }
 
@@ -57,33 +66,25 @@ export const FormField = ({
   const errorColor = semantic.error['500'];
   const hasError = typeof error === 'string' && error !== '';
 
-  const themeStyles = React.useMemo<ThemeStyles>(() => {
-    const labelStyle: TextStyle = { color: colors.text };
-    const requiredMarkStyle: TextStyle = { color: errorColor };
-    const inputStyle: TextStyle = {
-      backgroundColor: colors.surface,
-      color: colors.text,
-      borderColor: hasError ? errorColor : colors.border,
-    };
-    const errorTextStyle: TextStyle = { color: errorColor };
-    return {
-      label: labelStyle,
-      requiredMark: requiredMarkStyle,
-      input: inputStyle,
-      errorText: errorTextStyle,
-    };
-  }, [colors.border, colors.surface, colors.text, errorColor, hasError]);
+  const themeStyles = React.useMemo<ThemeStyles>(
+    () => ({
+      label: { color: colors.textSecondary },
+      requiredMark: { color: errorColor },
+      errorText: { color: errorColor },
+    }),
+    [colors.textSecondary, errorColor],
+  );
 
   return (
     <View style={[styles.container, containerStyle]}>
       <Text style={[styles.label, themeStyles.label]}>
         {label} {required ? <Text style={themeStyles.requiredMark}>*</Text> : null}
       </Text>
-      <TextInput
+      <ThemedTextInput
         accessibilityHint={`Enter ${label}`}
         accessibilityLabel={label}
-        placeholderTextColor={colors.textSecondary}
-        style={[styles.input, themeStyles.input]}
+        hasError={hasError}
+        style={styles.input}
         testID="form-field-input"
         {...textInputProps}
       />
