@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.0
+
+- Add `FormCheckbox` — a native-safe (`Pressable`-based, RN-web + native) themed checkbox: a rounded
+  square that fills with the brand colour and shows a check glyph when on, with a label and optional
+  hint. Mirrors `FormSwitch`'s prop shape (`value`, `onValueChange`/`onChange`, `label`, `hint`,
+  `disabled`, `testID`, a11y) so it is a drop-in for boolean toggles that should read as checkboxes.
+  Exposes `role="checkbox"` + `aria-checked` / `accessibilityState={{ checked }}`.
+
 ## 1.0.0
 
 Initial release. Extracted the proven duplicated form components from erevna-web ↔ katalogos-web

@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { FormField } from './FormField/FormField';
 import { ChipSelector } from './ChipSelector/ChipSelector';
 import { FormSwitch } from './FormSwitch/FormSwitch';
+import { FormCheckbox } from './FormCheckbox/FormCheckbox';
 
 // These components read theme from @dloizides/ui-feedback's context, which provides a
 // neutral default when no provider is mounted — so they render standalone in tests.
@@ -42,5 +43,36 @@ describe('FormSwitch', () => {
     expect(screen.getByTestId('form-switch')).toBeTruthy();
     expect(screen.getByText('Notifications')).toBeTruthy();
     expect(screen.getByText('Email me')).toBeTruthy();
+  });
+});
+
+describe('FormCheckbox', () => {
+  it('renders label + hint and fires the toggled value on press', () => {
+    const onValueChange = jest.fn();
+    render(
+      <FormCheckbox label="Monitor" hint="Re-screen on a schedule" value={false} onValueChange={onValueChange} />
+    );
+    expect(screen.getByText('Monitor')).toBeTruthy();
+    expect(screen.getByText('Re-screen on a schedule')).toBeTruthy();
+    fireEvent.click(screen.getByTestId('form-checkbox'));
+    expect(onValueChange).toHaveBeenCalledWith(true);
+  });
+
+  it('exposes aria-checked reflecting the value and does not fire when disabled', () => {
+    const onValueChange = jest.fn();
+    render(
+      <FormCheckbox testID="cb-on" label="On" value disabled onValueChange={onValueChange} />
+    );
+    const box = screen.getByTestId('cb-on');
+    expect(box.getAttribute('aria-checked')).toBe('true');
+    fireEvent.click(box);
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
+  it('also supports the onChange alias', () => {
+    const onChange = jest.fn();
+    render(<FormCheckbox testID="cb-alias" label="Alias" value={false} onChange={onChange} />);
+    fireEvent.click(screen.getByTestId('cb-alias'));
+    expect(onChange).toHaveBeenCalledWith(true);
   });
 });
