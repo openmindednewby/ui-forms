@@ -108,6 +108,34 @@ describe('Field a11y id wiring', () => {
   });
 });
 
+describe('Field optional label', () => {
+  it('renders no label row at all when the label is absent or empty', () => {
+    const { rerender } = render(
+      <Field testID="fld">
+        <span data-testid="control" />
+      </Field>,
+    );
+    // The control is the shell's FIRST child — no empty label row above it.
+    expect(screen.getByTestId('fld').firstElementChild).toBe(screen.getByTestId('control'));
+    rerender(
+      <Field label="" testID="fld">
+        <span data-testid="control" />
+      </Field>,
+    );
+    expect(screen.getByTestId('fld').firstElementChild).toBe(screen.getByTestId('control'));
+  });
+
+  it('still renders the error line when there is no label', () => {
+    render(
+      <Field error="Pick one" testID="fld">
+        <span data-testid="control" />
+      </Field>,
+    );
+    expect(screen.getByText('Pick one').getAttribute('role')).toBe('alert');
+    expect(screen.getByTestId('fld').children).toHaveLength(2);
+  });
+});
+
 describe('Field children forms', () => {
   it('accepts a plain node child (the wrap-a-dropdown case)', () => {
     render(

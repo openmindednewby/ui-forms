@@ -39,7 +39,8 @@ import { Field } from '@dloizides/ui-forms';
 </Field>
 ```
 
-`FormField` composes `Field` internally, so the two can never drift out of alignment.
+`FormField` **and** `ChipSelector` compose `Field` internally, so the label row can never drift
+out of alignment between them — there is exactly one label implementation in the kit.
 
 To wire the error line into a custom control's own `aria-describedby` / invalid state, pass a
 **function** child — it receives `{ describedById, hasError }` (`describedById` is `undefined`
@@ -55,7 +56,7 @@ when there is no error):
 
 | Prop | Type | Notes |
 |------|------|-------|
-| `label` | `string` | required |
+| `label` | `string` | optional — an absent or empty label renders NO label row |
 | `children` | `ReactNode \| (ctx) => ReactNode` | the control |
 | `required` | `boolean` | renders a decorative `*` (hidden from assistive tech) |
 | `error` | `string` | renders a `role="alert"` line, linked via the child's `describedById` |
@@ -65,6 +66,37 @@ when there is no error):
 The injected theme needs `colors.{surface,text,textSecondary,border}`, `palette.primary['500']`
 and `semantic.error['500']` — supplied via `@dloizides/ui-feedback`'s provider. Without a provider
 the components fall back to a neutral default theme.
+
+## `ChipSelector`
+
+```tsx
+<ChipSelector
+  label="Plan"
+  required
+  error={errors.plan}
+  options={plans}
+  value={plan}
+  onChange={setPlan}
+  variant="outline"
+/>
+```
+
+Its label, required mark, error line and bottom spacing come from `Field`. `label` is optional:
+with no label no label row is rendered, so it drops into a toolbar or filter bar cleanly.
+
+| Prop | Type | Notes |
+|------|------|-------|
+| `label` | `string` | optional — no label means no label row |
+| `options` | `Array<{ value, label }>` | `value` is a `string` or `number` |
+| `value` | `T \| T[]` | array when `multiple` |
+| `onChange` | `(value: T) => void` | fires the pressed value; the parent owns toggle logic |
+| `multiple` | `boolean` | selection is an array |
+| `disabled` | `boolean` | disables every chip |
+| `variant` | `'solid' \| 'outline'` | `solid` (default) = filled pill; `outline` = tinted outline |
+| `required` | `boolean` | renders `Field`'s decorative `*` |
+| `error` | `string` | `role="alert"` line, tied to the chip group via `aria-describedby` |
+| `containerStyle` | `ViewStyle` | merged over the container |
+| `testID` | `string` | on the container |
 
 ## testIDs
 

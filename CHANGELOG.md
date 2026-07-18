@@ -1,5 +1,34 @@
 # Changelog
 
+## 1.6.0
+
+- **`ChipSelector` now composes `Field` internally — its label was drifting.** It rendered its OWN
+  `<Text>` label whose metrics differed from `Field`'s on three of four axes: `marginBottom: 8`
+  (vs 4), NO `fontSize` at all so it fell back to RN's ~14 (vs 13), and `colors.text`
+  (vs `textSecondary`). A `ChipSelector` next to a `FormField` in a row/grid therefore started a
+  different distance down the column and read as a different weight of text. Found at 4 sites in
+  aml-v2 (`TenantWatchlistsEditor`, `CoverageSelector`, `CustomCoverageFields`,
+  `AdvancedMatching`); fixing it in the package fixes every consumer with zero app churn.
+  The local label styles are deleted — there is now exactly one label implementation in the kit.
+- **`ChipSelectorProps` is unchanged and fully backward-compatible** — every existing prop keeps
+  its name, type and default, and `label` stays OPTIONAL. With no label (or an empty one) NO label
+  row is rendered, so composing `Field` cannot introduce a phantom gap above the chips.
+- **`ChipSelector` gains `required`, `error` and `testID`** (all optional, all additive) now that
+  `Field` provides them for free. `error` renders the same `role="alert"` line as `FormField` and
+  is tied to the chip group via `aria-describedby` + `aria-invalid` (web only; no-op on native).
+- **Spacing:** a `ChipSelector` now carries `Field`'s `marginBottom: 16` like every other field
+  (it previously had none). The chips' own 8px trailing gutter is cancelled on the group so the
+  block's total bottom spacing is exactly 16 — the same as a `FormField`, not 24. Pass
+  `containerStyle` to override, as before.
+- **`Field`'s `label` is now optional** (widened from `label: string`, so existing callers are
+  unaffected). An absent or empty label renders no label row, letting a control whose label lives
+  elsewhere still use the shared shell for its error line and spacing.
+- `FormSwitch` / `FormCheckbox` are deliberately NOT changed — see `src/labelRoles.test.tsx`.
+  Their labels are INLINE control labels (beside the control in a row, the row's primary text),
+  not field headers stacked above a control, so they have no alignment defect to fix and `Field`'s
+  smaller/dimmer header treatment would be a regression. They were already identical to each
+  other; a new test now enforces that they stay so.
+
 ## 1.5.0
 
 - **Add `Field` — the generic label-over-control wrapper.** `FormField` is hard-wired to a text

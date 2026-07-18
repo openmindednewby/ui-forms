@@ -7,12 +7,29 @@
  *  - `outline` — the AML v1 console look: an outlined pill on a muted fill; selected = a subtle
  *    tinted-outline (primary border + primary ink + a low-alpha primary wash), NOT a solid fill.
  *    Hover (web) lifts the border/ink to the primary colour.
+ *
+ * The label row, the error line and the container spacing come from the shared `Field` wrapper —
+ * NOT from a local `<Text>`. Its own label used to drift from `Field` on three of four axes
+ * (`marginBottom: 8` vs 4, no `fontSize` at all so ~14 vs 13, `colors.text` vs `textSecondary`),
+ * so a `ChipSelector` next to a `FormField` in a row/grid started a different distance down the
+ * column and read as a different weight of text. Now there is exactly one label implementation.
  */
 import React from 'react';
 
-import { StyleSheet, View, Text, Pressable, TouchableOpacity, type TextStyle, type ViewStyle } from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  View,
+  Text,
+  Pressable,
+  TouchableOpacity,
+  type ViewProps,
+  type ViewStyle,
+} from 'react-native';
 
 import { useUi } from '@dloizides/ui-feedback';
+
+import { Field } from '../Field/Field';
 
 const TRANSPARENT_COLOR = 'transparent';
 const WHITE_COLOR = '#fff';
@@ -34,6 +51,8 @@ const RGB_B_END = 6;
  * byte-identical while taps/clicks get an easier target.
  */
 const CHIP_HIT_SLOP = { top: 10, bottom: 10, left: 4, right: 4 } as const;
+/** Gap between adjacent chips, horizontally and between wrapped rows. */
+const CHIP_GUTTER = 8;
 
 /** Visual variant. `solid` = filled selected pill (default); `outline` = v1 tinted-outline. */
 export type ChipVariant = 'solid' | 'outline';
@@ -51,17 +70,17 @@ function withAlpha(hex: string, alpha: number): string {
 }
 
 const styles = StyleSheet.create({
-  label: {
-    marginBottom: 8,
-    fontWeight: '600',
-  },
   chipContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    // Each chip's bottom gutter also hangs off the LAST row, stacking on `Field`'s container
+    // margin (8 + 16 = 24) and dropping the block below the `FormField` beside it. Cancelling it
+    // is standard gutter compensation: inner rows keep their 8px, the block ends at Field's 16.
+    marginBottom: -CHIP_GUTTER,
   },
   chipWrapper: {
-    marginRight: 8,
-    marginBottom: 8,
+    marginRight: CHIP_GUTTER,
+    marginBottom: CHIP_GUTTER,
   },
   chip: {
     paddingHorizontal: 12,
@@ -98,6 +117,7 @@ export interface ChipOption<T> {
 }
 
 export interface ChipSelectorProps<T> {
+  /** Optional — with no label, no label row is rendered (no phantom gap above the chips). */
   label?: string;
   options: Array<ChipOption<T>>;
   value: T | T[];
@@ -107,6 +127,20 @@ export interface ChipSelectorProps<T> {
   /** Visual variant. `solid` (default) = filled selected pill; `outline` = v1 tinted-outline. */
   variant?: ChipVariant;
   containerStyle?: ViewStyle;
+  /** Marks the selection mandatory — renders `Field`'s decorative `*` next to the label. */
+  required?: boolean;
+  /** Validation message under the chips, wired to the chip group via `aria-describedby`. */
+  error?: string;
+  testID?: string;
+}
+
+/**
+ * Web-only ARIA attributes react-native-web forwards to the underlying element but that RN's
+ * `ViewProps` type does not enumerate — same escape-hatch-free pattern `ThemedTextInput` uses.
+ */
+interface WebGroupA11y {
+  'aria-invalid'?: boolean;
+  'aria-describedby'?: string;
 }
 
 interface ChipProps<T> {
@@ -183,6 +217,14 @@ function SolidChip<T extends string | number>({
   );
 }
 
+const IS_WEB = Platform.OS === 'web';
+
+/** Ties the chip group to `Field`'s error line for assistive tech (web only; no-op on native). */
+function groupA11yProps(describedById: string | undefined, hasError: boolean): WebGroupA11y {
+  if (!IS_WEB) return {};
+  return { 'aria-invalid': hasError ? true : undefined, 'aria-describedby': describedById };
+}
+
 export const ChipSelector = <T extends string | number>({
   label,
   options,
@@ -192,10 +234,12 @@ export const ChipSelector = <T extends string | number>({
   disabled = false,
   variant = 'solid',
   containerStyle,
+  required = false,
+  error,
+  testID,
 }: ChipSelectorProps<T>): React.ReactElement => {
   const { theme } = useUi();
   const { colors, palette } = theme;
-  const hasLabel = typeof label === 'string' && label !== '';
 
   const chipColors = React.useMemo<ChipColors>(() => {
     const primary = palette.primary['500'];
@@ -209,8 +253,6 @@ export const ChipSelector = <T extends string | number>({
     };
   }, [colors.border, colors.text, colors.textSecondary, colors.background, palette.primary]);
 
-  const labelStyle = React.useMemo<TextStyle>(() => ({ color: colors.text }), [colors.text]);
-
   function isSelected(optionValue: T): boolean {
     if (multiple && Array.isArray(value))
       return value.includes(optionValue);
@@ -218,35 +260,26 @@ export const ChipSelector = <T extends string | number>({
     return value === optionValue;
   }
 
+  function renderChip(option: ChipOption<T>): React.ReactElement {
+    const chipProps = {
+      colors: chipColors,
+      disabled,
+      option,
+      selected: isSelected(option.value),
+      onPress: (): void => onChange(option.value),
+    };
+    const key = String(option.value);
+    return variant === 'outline' ? <OutlineChip key={key} {...chipProps} /> : <SolidChip key={key} {...chipProps} />;
+  }
+
   return (
-    <View style={containerStyle}>
-      {hasLabel ? <Text style={[styles.label, labelStyle]}>{label}</Text> : null}
-      <View style={styles.chipContainer}>
-        {options.map((option) => {
-          const selected = isSelected(option.value);
-          const onPress = (): void => onChange(option.value);
-          return variant === 'outline' ? (
-            <OutlineChip
-              key={String(option.value)}
-              colors={chipColors}
-              disabled={disabled}
-              option={option}
-              selected={selected}
-              onPress={onPress}
-            />
-          ) : (
-            <SolidChip
-              key={String(option.value)}
-              colors={chipColors}
-              disabled={disabled}
-              option={option}
-              selected={selected}
-              onPress={onPress}
-            />
-          );
-        })}
-      </View>
-    </View>
+    <Field containerStyle={containerStyle} error={error} label={label} required={required} testID={testID}>
+      {({ describedById, hasError }) => (
+        <View style={styles.chipContainer} {...(groupA11yProps(describedById, hasError) as ViewProps)}>
+          {options.map(renderChip)}
+        </View>
+      )}
+    </Field>
   );
 };
 

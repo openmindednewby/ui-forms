@@ -58,7 +58,13 @@ export interface FieldChildContext {
 export type FieldChildren = React.ReactNode | ((context: FieldChildContext) => React.ReactNode);
 
 export interface FieldProps {
-  label: string;
+  /**
+   * Label shown above the control. Optional so a control whose label is supplied elsewhere (or
+   * which genuinely has none) can still use the shared shell for its error line + spacing: an
+   * absent or empty label renders NO label row at all, rather than an empty one that would add a
+   * phantom gap and misalign the control against its labelled siblings.
+   */
+  label?: string;
   children: FieldChildren;
   required?: boolean;
   error?: string;
@@ -93,6 +99,7 @@ export const Field = ({
   const { colors, semantic } = theme;
   const errorColor = semantic.error['500'];
   const hasError = hasFieldError(error);
+  const hasLabel = typeof label === 'string' && label !== '';
   const errorId = useFieldErrorId();
 
   const themeStyles = React.useMemo<ThemeStyles>(
@@ -111,16 +118,18 @@ export const Field = ({
 
   return (
     <View style={[styles.container, containerStyle]} testID={testID}>
-      <Text style={[styles.label, themeStyles.label]}>
-        {label}{' '}
-        {required ? (
-          // The asterisk is decorative — the control's `aria-required` conveys "required" to
-          // assistive tech, so a screen reader says "required" instead of "star".
-          <Text aria-hidden accessibilityElementsHidden importantForAccessibility="no" style={themeStyles.requiredMark}>
-            *
-          </Text>
-        ) : null}
-      </Text>
+      {hasLabel ? (
+        <Text style={[styles.label, themeStyles.label]}>
+          {label}{' '}
+          {required ? (
+            // The asterisk is decorative — the control's `aria-required` conveys "required" to
+            // assistive tech, so a screen reader says "required" instead of "star".
+            <Text aria-hidden accessibilityElementsHidden importantForAccessibility="no" style={themeStyles.requiredMark}>
+              *
+            </Text>
+          ) : null}
+        </Text>
+      ) : null}
       {control}
       {hasError ? (
         <Text nativeID={errorId} role="alert" style={[styles.errorText, themeStyles.errorText]}>
