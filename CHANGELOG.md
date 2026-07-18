@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.5.0
+
+- **Add `Field` — the generic label-over-control wrapper.** `FormField` is hard-wired to a text
+  input (`FormFieldProps extends Omit<TextInputProps,'style'>`), so any NON-text control (a
+  dropdown, a date picker, a chip selector) had no shared way to get a label — and ended up
+  visually misaligned next to its `FormField` siblings: the control's box started ~21px higher
+  (no label row) and it missed `FormField`'s `marginBottom: 16`, so wrapped rows lost their
+  vertical rhythm. This was hand-rolled in 5 places across zygos-web and aml-v2.
+  `Field` takes `{ label, required?, error?, children, containerStyle?, testID? }` and renders the
+  same label row / required mark / error line / spacing.
+- **`FormField` now composes `Field` internally**, so the two can never drift apart — the metrics
+  live in exactly one place. `FormFieldProps` and every rendered attribute (`form-field-input`
+  testID, `aria-invalid` / `aria-describedby` / `aria-required`, the `role="alert"` error line)
+  are unchanged: fully backward-compatible.
+- `Field`'s `children` may be a plain node (the common case) or a render function receiving
+  `{ describedById, hasError }`, so a custom control can wire the error line into its own
+  `aria-describedby` / invalid state exactly the way `FormField` does.
+
 ## 1.4.0
 
 - **Accessibility (WCAG 2.1 AA) hardening — additive + backward-compatible.**

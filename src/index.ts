@@ -1,3 +1,6 @@
+export { Field } from './Field/Field';
+export type { FieldProps, FieldChildContext, FieldChildren } from './Field/Field';
+
 export { FormField } from './FormField/FormField';
 export type { FormFieldProps } from './FormField/FormField';
 

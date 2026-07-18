@@ -1,7 +1,7 @@
 # @dloizides/ui-forms
 
 Themable, brand-agnostic React Native (RN-web) **form** components for the dloizides.com
-portfolio: `FormField`, `ChipSelector`, `FormSwitch`. They read theme colours from the shared
+portfolio: `Field`, `FormField`, `ChipSelector`, `FormSwitch`. They read theme colours from the shared
 `@dloizides/ui-feedback` UI context (`useUi`) — mount one `UiProvider` / `FeedbackUiProvider`
 at your app root and these components pick up your theme automatically.
 
@@ -23,6 +23,44 @@ import { FormField, ChipSelector, FormSwitch } from '@dloizides/ui-forms';
 <ChipSelector label="Plan" options={plans} value={plan} onChange={setPlan} />
 <FormSwitch label="Email notifications" value={notify} onValueChange={setNotify} />
 ```
+
+## `Field` — label any control, not just a text input
+
+`FormField` is hard-wired to a text input. For **any other control** — a dropdown, a date picker,
+a chip selector — wrap it in `Field` to get the identical label row, required mark, error line and
+bottom spacing. This is what keeps a dropdown aligned with the `FormField` next to it: without it
+the dropdown's box starts a label-row higher and the row loses its vertical rhythm.
+
+```tsx
+import { Field } from '@dloizides/ui-forms';
+
+<Field label="Currency" required error={errors.currency}>
+  <ModalDropdown options={currencies} value={currency} onChange={setCurrency} />
+</Field>
+```
+
+`FormField` composes `Field` internally, so the two can never drift out of alignment.
+
+To wire the error line into a custom control's own `aria-describedby` / invalid state, pass a
+**function** child — it receives `{ describedById, hasError }` (`describedById` is `undefined`
+when there is no error):
+
+```tsx
+<Field label="Country" error={errors.country}>
+  {({ describedById, hasError }) => (
+    <CountryPicker aria-describedby={describedById} hasError={hasError} value={country} onChange={setCountry} />
+  )}
+</Field>
+```
+
+| Prop | Type | Notes |
+|------|------|-------|
+| `label` | `string` | required |
+| `children` | `ReactNode \| (ctx) => ReactNode` | the control |
+| `required` | `boolean` | renders a decorative `*` (hidden from assistive tech) |
+| `error` | `string` | renders a `role="alert"` line, linked via the child's `describedById` |
+| `containerStyle` | `ViewStyle` | merged over the container |
+| `testID` | `string` | on the container |
 
 The injected theme needs `colors.{surface,text,textSecondary,border}`, `palette.primary['500']`
 and `semantic.error['500']` — supplied via `@dloizides/ui-feedback`'s provider. Without a provider
