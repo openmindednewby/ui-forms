@@ -1,5 +1,64 @@
 # Changelog
 
+## 1.8.0
+
+**Campaign F2 — the dense CONTROLS arrive.** `@dloizides/ui-tables` shipped a complete, themed,
+a11y-wired set of form controls inside its `Filters` bar and exported NONE of them: its
+`src/index.ts` exposed only `Filters`, `useFilterDraft`, `suggestOptions`, `isUnmatched` and
+types. Six portals could SEE those controls working and none could import them, so the fleet
+reimplemented them — **6 independent select implementations, 5 date fields, 2 typeaheads**. Same
+shape as `MultiTenancy.EntityFrameworkCore` shipping no EF Core. This release makes them public.
+
+Nothing here moves a pixel for an existing consumer: the metrics are the promoted originals,
+unchanged. `CONTAINER_MARGIN_BOTTOM` and `ChipSelector`'s compensating `marginBottom:
+-CHIP_GUTTER` remain deliberately untouched.
+
+- **Add `SelectControl`** — single-select enum/status dropdown. Bordered trigger + chevron opening
+  the shared `AnchoredMenu`.
+- **Add `TypeaheadControl`** — search-as-you-type combobox (aml-v2's CountryPicker, generalized).
+  Free typing is preserved (the value is raw text the caller normalises at query time); picking a
+  suggestion fills the canonical LABEL, not the value.
+- **Add `DateRangeControl`** — inclusive from/to pair. Editing one side patches ONLY that side.
+- **Add `AnchoredMenu`** — the floating option list both of the above compose. Kept in-tree with
+  NO `ui-layout` dependency; that was a considered choice in `ui-tables` and it still holds, since
+  depending on the higher-level `ModalDropdown` would invert the graph for every consumer.
+- **Add `controlStyles`** — the tuned metrics, promoted verbatim. `ui-tables`' `Filters/styles.ts`
+  said the quiet part out loud in its own header: it "reconcile[d] the per-field styles that were
+  copy-pasted across aml-v2's filter files into one shared source" — and then locked the
+  reconciliation inside one bar where no other surface could reach it.
+- **Add `suggestOptions` / `isUnmatched`** — the ranked substring matcher behind the typeahead.
+- **Add `ControlOption` / `DateRangeValue`** types. `ui-tables` now ALIASES its long-standing
+  public `FilterOption` / `DateRangeValue` onto these, so there is one definition rather than two
+  structurally-compatible twins free to drift.
+
+### The controls are LABEL-FREE, on purpose
+
+They render the control only. Compose them inside `Field` — with `labelVariant="control"` on a
+dense surface — to get the label, hint and error slots. That is what retires `ui-tables`' private
+`FieldShell` fork (see `@dloizides/ui-tables` 1.14.0) and leaves ONE label implementation for
+every control instead of one per control.
+
+### i18n: this package still never calls `t`
+
+Every string — `accessibilityLabel`, `placeholder`, `optionHint`, `error`, `fromLabel`/`toLabel`
+— is a PRE-LOCALIZED prop. This is load-bearing, not stylistic: aml-v2 localizes through
+`@dloizides/i18n` with positional `{0}` while the other six portals use i18next `{{p1}}`, so a
+component that localized internally could not serve both. `SelectControl`'s `accessibilityLabel`
+is therefore composed BY THE CALLER — it must carry the selection ("Status: Active", not
+"Status"), and building that string needs a `t` call this package must not make.
+
+### Fixed — a WCAG defect carried in by the promoted code
+
+`AnchoredMenu` marked the current option with `accessibilityState={{ selected }}` alone.
+**react-native-web does not read `accessibilityState` at all** (verified against
+`react-native-web@0.21`'s `createDOMProps`, which enumerates `aria-selected` /
+`accessibilitySelected` and never `accessibilityState`), so on web the selected option was
+distinguished by colour and font-weight ONLY — no screen reader could tell which option was
+current (WCAG 1.4.1, use of colour). `aria-selected` is now passed alongside, so each platform
+gets the channel it honours. The trigger already paired `aria-expanded` with `accessibilityState`;
+the option row was simply missed when that was done. A test asserts it, and that test FAILED
+before the fix.
+
 ## 1.7.0
 
 Additive wave implementing the shared cross-stack forms contract now written down at

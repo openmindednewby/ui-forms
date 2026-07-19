@@ -25,3 +25,32 @@ export type { FormSwitchProps } from './FormSwitch/FormSwitch';
 
 export { FormCheckbox } from './FormCheckbox/FormCheckbox';
 export type { FormCheckboxProps } from './FormCheckbox/FormCheckbox';
+
+// ---------------------------------------------------------------------------
+// Dense CONTROLS — promoted out of @dloizides/ui-tables' private filter bar (F2).
+//
+// These rendered, themed and a11y-wired correctly for six portals and were exported to
+// none of them, so the fleet reimplemented them: 6 selects, 5 date fields, 2 typeaheads.
+// They are LABEL-FREE — compose them inside `Field` (`labelVariant="control"` on a dense
+// surface) so there stays ONE label implementation rather than one per control.
+// ---------------------------------------------------------------------------
+
+export { SelectControl } from './SelectControl/SelectControl';
+export type { SelectControlProps } from './SelectControl/SelectControl';
+
+export {
+  TypeaheadControl,
+  DEFAULT_TYPEAHEAD_MIN_CHARS,
+  DEFAULT_TYPEAHEAD_MAX_SUGGESTIONS,
+} from './TypeaheadControl/TypeaheadControl';
+export type { TypeaheadControlProps } from './TypeaheadControl/TypeaheadControl';
+
+export { DateRangeControl } from './DateRangeControl/DateRangeControl';
+export type { DateRangeControlProps } from './DateRangeControl/DateRangeControl';
+
+export { AnchoredMenu } from './AnchoredMenu/AnchoredMenu';
+export type { AnchoredMenuProps, AnchoredMenuColors } from './AnchoredMenu/AnchoredMenu';
+
+export { controlStyles } from './controls/controlStyles';
+export { suggestOptions, isUnmatched } from './controls/suggestOptions';
+export type { ControlOption, DateRangeValue } from './controls/controlTypes';

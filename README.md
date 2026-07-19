@@ -98,6 +98,48 @@ with no label no label row is rendered, so it drops into a toolbar or filter bar
 | `containerStyle` | `ViewStyle` | merged over the container |
 | `testID` | `string` | on the container |
 
+## Dense controls — `SelectControl` / `TypeaheadControl` / `DateRangeControl`
+
+Promoted in 1.8.0 out of `@dloizides/ui-tables`' private filter bar, where they worked correctly
+for six portals and were exported to none — which is why the fleet grew 6 selects, 5 date fields
+and 2 typeaheads.
+
+They are **label-free by design**. Compose them inside `Field` so there is ONE label
+implementation for every control rather than one per control:
+
+```tsx
+<Field label="Status" labelVariant="control" containerStyle={{ marginBottom: 0 }}>
+  <SelectControl
+    accessibilityLabel={t('filters.statusName', 'Status', selectedLabel)}
+    options={options}
+    testID="filters-status"
+    value={value}
+    onChange={setValue}
+  />
+</Field>
+```
+
+`labelVariant="control"` is the 11/700/uppercase voice from
+[`FORMS.md`](../../../PROOViD/AMLService/AMLService/wwwroot/shared/FORMS.md) — the voice for
+labels that are SCANNED (filter bars, toolbars) rather than READ.
+
+### Every string is pre-localized
+
+This package never calls `t`. In particular `SelectControl`'s `accessibilityLabel` must be
+composed by YOU and must carry the **selection** — "Status: Active", not "Status". The accessible
+name REPLACES the trigger's visible text for a screen reader, so naming it with the field alone
+silently hides what is selected.
+
+| Control | Key props | testIDs |
+|---|---|---|
+| `SelectControl` | `options`, `value`, `onChange`, `placeholder`, `accessibilityLabel`, `optionHint` | `<testID>-trigger`, `-menu`, `-option-<value>` |
+| `TypeaheadControl` | `options`, `value`, `onChange`, `onSubmit`, `error`, `minChars`, `maxSuggestions` | `<testID>-input`, `-menu`, `-error` |
+| `DateRangeControl` | `value` (`{from,to}`), `onChange`, `onSubmit`, `fromLabel`, `toLabel` | `<testID>-range`, `-from`, `-to` |
+| `AnchoredMenu` | the floating list the first two compose | `<testID>-menu` |
+
+Also exported: `controlStyles` (the tuned metrics), `suggestOptions` / `isUnmatched` (the
+typeahead's ranker), and the `ControlOption` / `DateRangeValue` types.
+
 ## testIDs
 
 `form-field-input`, `chip-selector-chip-<value>`, `form-switch` (overridable on FormSwitch).
