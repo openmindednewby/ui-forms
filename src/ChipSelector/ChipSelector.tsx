@@ -17,7 +17,6 @@
 import React from 'react';
 
 import {
-  Platform,
   StyleSheet,
   View,
   Text,
@@ -27,6 +26,8 @@ import {
   type ViewProps,
   type ViewStyle,
 } from 'react-native';
+
+import { webFieldA11y } from '../webFieldA11y/webFieldA11y';
 
 import { useUi } from '@dloizides/ui-feedback';
 
@@ -197,15 +198,6 @@ export interface ChipSelectorProps<T> {
   optionAccessibilityHint?: string;
 }
 
-/**
- * Web-only ARIA attributes react-native-web forwards to the underlying element but that RN's
- * `ViewProps` type does not enumerate — same escape-hatch-free pattern `ThemedTextInput` uses.
- */
-interface WebGroupA11y {
-  'aria-invalid'?: boolean;
-  'aria-describedby'?: string;
-}
-
 interface ChipProps<T> {
   option: ChipOption<T>;
   selected: boolean;
@@ -328,13 +320,11 @@ function SolidChip<T extends string | number>({
   );
 }
 
-const IS_WEB = Platform.OS === 'web';
-
-/** Ties the chip group to `Field`'s error line for assistive tech (web only; no-op on native). */
-function groupA11yProps(describedById: string | undefined, hasError: boolean): WebGroupA11y {
-  if (!IS_WEB) return {};
-  return { 'aria-invalid': hasError ? true : undefined, 'aria-describedby': describedById };
-}
+/*
+ * `groupA11yProps` + its local `WebGroupA11y` type used to live here — a copy of
+ * ThemedTextInput's branch, as its own comment admitted. Both now call `webFieldA11y`.
+ * The chip group passes no `required`, so nothing is emitted for it, exactly as before.
+ */
 
 export const ChipSelector = <T extends string | number>({
   label,
@@ -403,7 +393,7 @@ export const ChipSelector = <T extends string | number>({
       testID={testID}
     >
       {({ describedById, hasError }) => (
-        <View style={styles.chipContainer} {...(groupA11yProps(describedById, hasError) as ViewProps)}>
+        <View style={styles.chipContainer} {...(webFieldA11y({ describedById, hasError }) as ViewProps)}>
           {options.map(renderChip)}
         </View>
       )}

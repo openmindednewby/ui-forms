@@ -12,22 +12,10 @@
  */
 import React from 'react';
 
-import { Platform, TextInput, type TextInputProps } from 'react-native';
+import { TextInput, type TextInputProps } from 'react-native';
 
 import { useThemedInput } from '../useThemedInput/useThemedInput';
-
-const IS_WEB = Platform.OS === 'web';
-
-/**
- * Web-only ARIA attributes react-native-web forwards to the underlying `<input>` but that RN's
- * `TextInputProps` type does not enumerate. Cast through the TextInput props at the call site
- * (never `any`) so error/label semantics reach a screen reader without a type escape hatch.
- */
-interface WebInputA11y {
-  'aria-invalid'?: boolean;
-  'aria-describedby'?: string;
-  'aria-required'?: boolean;
-}
+import { webFieldA11y } from '../webFieldA11y/webFieldA11y';
 
 export interface ThemedTextInputProps extends TextInputProps {
   /** Render with the error border colour (matches `FormField`'s error treatment). */
@@ -54,13 +42,7 @@ export const ThemedTextInput = React.forwardRef<TextInput, ThemedTextInputProps>
 
   // aria-invalid announces the error state; aria-describedby ties the error/hint text to the
   // field; aria-required marks it mandatory. Web-only (RN-web → DOM); omitted on native.
-  const webA11y: WebInputA11y = IS_WEB
-    ? {
-        'aria-invalid': hasError ? true : undefined,
-        'aria-describedby': describedById,
-        'aria-required': requiredField ? true : undefined,
-      }
-    : {};
+  const webA11y = webFieldA11y({ describedById, hasError, required: requiredField });
 
   return (
     <TextInput
