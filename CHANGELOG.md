@@ -1,5 +1,60 @@
 # Changelog
 
+## 1.9.0
+
+**Campaign F3 — `Field`'s spacing model, and the layout primitives.** `Field` hard-coded a 16px
+bottom margin on its container. That is the pre-flexbox model — the CHILD owns the space after
+itself — and in a `gap`-laid-out parent, which is how every modern form row in this fleet is
+written, the margin STACKS on the parent's gap. So consumers cancelled it by hand: **16
+`containerStyle={{ marginBottom: 0 }}` sites across the fleet**, 13 of them in aml-v2, each with an
+apologetic comment. AML v1 got this right in CSS years ago (`.ui-field { display: flex;
+flex-direction: column; gap: 6px; }`) and wrote the contract down in `shared/FORMS.md`.
+
+**This release moves NO pixels for any existing consumer.** The fix is opt-in, not a 2.0.0 — see
+"Why not a major bump" below.
+
+- **Add `FormGrid` + `FormCell`** — the wrapping form row, extracted from the copy the fleet
+  re-declares verbatim (`{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }` +
+  `{ minWidth: 220, flexGrow: 1, flexBasis: 260 }`), with the min-width/basis parameterised. Cell
+  metrics live on the GRID, so the common call site is a bare `<FormCell>` and only the genuine
+  one-offs (`<FormCell basis={160} grow={false} minWidth={140}>`) carry props.
+- **Add `FormSection`** — the fieldset/legend grouping only v1 had. react-native-web has no
+  `fieldset` mapping, so this is the ARIA equivalent: `role="group"` + `aria-labelledby` pointing
+  at the legend. The legend reuses `resolveLabelVariantStyle` — the SAME function `Field` uses — so
+  a section heading cannot drift into a third label voice.
+- **Add `Field.spacing` (`'stack' | 'gap'`)** — the two spacing models. `stack` is the historical
+  16px margin + 4px child margins, byte-identical to 1.8.0, and remains the default. `gap` is the
+  FORMS.md contract: no bottom margin, one uniform 6px internal gap, parent owns the rhythm.
+- **`Field` inside a `FormGrid` or `FormSection` resolves to `gap` automatically.** Adopting the
+  shared grid IS the opt-in: a consumer deletes its hand-rolled `grid`/`field` styles AND its
+  `marginBottom: 0` cancel in the same edit. An explicit `spacing` prop beats the context in both
+  directions.
+- **`ChipSelector`**: the chip row now spaces with `gap: 8` instead of per-chip margins plus a
+  compensating `marginBottom: -8`. Rendered box is byte-identical. Also gains a `spacing`
+  passthrough, and `containerStyle` widens to `StyleProp<ViewStyle>` to match `Field`'s.
+
+### Why not a major bump
+
+The brief for this work allowed a breaking 2.0.0. It was rejected. Switching every `Field` to the
+gap model in one publish moves pixels on every form in seven portals simultaneously — which is
+precisely the change you cannot visually QA, because no app remains on the old behaviour to compare
+against, and a regression surfaces as "some form somewhere looks slightly wrong" with seven
+suspects. The context-aware opt-in gives the identical end state via a per-app rollout, each step
+behind visual QA, with `git revert` scoped to one app. The cost is that both models live in the
+code until the fleet has migrated; that is a smaller price than an un-QA-able fleet-wide pixel
+change.
+
+### Correction to the campaign premise
+
+`ChipSelector`'s `marginBottom: -CHIP_GUTTER` was documented — and briefed — as compensation for
+`Field`'s 16px margin, load-bearing enough that changing one without the other would break chip
+spacing in 7+ sites. **That was wrong.** The -8 cancelled the chips' OWN bottom gutter hanging off
+the last wrapped row; it behaved identically whatever `Field` contributed. It has been replaced with
+`gap` regardless, because a margin/negative-margin pair is fragile and leaks a negative margin onto
+the block's box. `fieldSpacing.test.tsx` now pins `Field` and `ChipSelector` to the same box in both
+models, so the relationship is checkable rather than folkloric.
+
+
 ## 1.8.0
 
 **Campaign F2 — the dense CONTROLS arrive.** `@dloizides/ui-tables` shipped a complete, themed,

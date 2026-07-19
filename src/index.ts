@@ -1,7 +1,30 @@
 export { Field } from './Field/Field';
 export type { FieldProps, FieldChildContext, FieldChildren } from './Field/Field';
 
+export type { FieldSpacing } from './Field/fieldSpacing';
+
 export { DEFAULT_OPTIONAL_LABEL } from './Field/fieldMarkers';
+
+// ---------------------------------------------------------------------------
+// LAYOUT primitives (F3). `FormGrid` + `FormCell` replace the wrapping form row the fleet
+// re-declares by hand; `FormSection` is the fieldset/legend grouping only v1 had.
+//
+// Using `FormGrid` or `FormSection` also tells the `Field`s inside them that a parent's `gap`
+// owns the vertical rhythm, so they drop their 16px bottom margin — which is what retires the
+// 16 `containerStyle={{ marginBottom: 0 }}` cancel hacks across the fleet.
+//
+// There is deliberately no `FormRow`: every real call site measured wraps, so a non-wrapping
+// variant would be an export with no consumer.
+// ---------------------------------------------------------------------------
+
+export { FormGrid } from './FormGrid/FormGrid';
+export type { FormGridProps } from './FormGrid/FormGrid';
+
+export { FormCell } from './FormGrid/FormCell';
+export type { FormCellProps } from './FormGrid/FormCell';
+
+export { FormSection } from './FormSection/FormSection';
+export type { FormSectionProps } from './FormSection/FormSection';
 export type { FieldMarker } from './Field/fieldMarkers';
 export type { FieldLabelVariant } from './Field/labelVariants';
 

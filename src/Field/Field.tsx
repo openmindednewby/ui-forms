@@ -25,32 +25,26 @@ import { useUi } from '@dloizides/ui-feedback';
 
 import { FieldLabel } from './FieldLabel';
 import { DEFAULT_OPTIONAL_LABEL, resolveFieldMarker } from './fieldMarkers';
+import { fieldSpacingStyleSet, resolveFieldSpacing, type FieldSpacing } from './fieldSpacing';
 import { resolveLabelVariantStyle, type FieldLabelVariant } from './labelVariants';
+import { useIsGapOwned } from '../FormGrid/formGridContext';
 
-/** Bottom margin of the whole field block — the vertical rhythm every form row shares. */
-const CONTAINER_MARGIN_BOTTOM = 16;
-const LABEL_MARGIN_BOTTOM = 4;
 const ERROR_FONT_SIZE = 12;
-const ERROR_MARGIN_TOP = 4;
 const HINT_FONT_SIZE = 12;
-const HINT_MARGIN_TOP = 4;
 /** The optional marker drops to normal weight so it reads as an aside inside a 600 label. */
 const OPTIONAL_MARK_FONT_WEIGHT = '400';
 
+/**
+ * The metrics that do NOT depend on the spacing model. Everything positional — the container's
+ * bottom margin, the label's bottom margin, the hint/error top margins — moved to `fieldSpacing`,
+ * because those are exactly the values the two models disagree about.
+ */
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: CONTAINER_MARGIN_BOTTOM,
-  },
-  label: {
-    marginBottom: LABEL_MARGIN_BOTTOM,
-  },
   hintText: {
     fontSize: HINT_FONT_SIZE,
-    marginTop: HINT_MARGIN_TOP,
   },
   errorText: {
     fontSize: ERROR_FONT_SIZE,
-    marginTop: ERROR_MARGIN_TOP,
   },
   optionalMark: {
     fontWeight: OPTIONAL_MARK_FONT_WEIGHT,
@@ -125,6 +119,15 @@ export interface FieldProps {
    * plus a `grow` modifier — instead of having to restate a COMPLETE style per variant.
    */
   containerStyle?: StyleProp<ViewStyle>;
+  /**
+   * Which of the two spacing models this field speaks — see `fieldSpacing.ts`.
+   *
+   * Leave it unset. Inside a `FormGrid` or `FormSection` it resolves to `gap` (the FORMS.md
+   * contract: no bottom margin, the parent's `gap` owns the rhythm); anywhere else it resolves to
+   * `stack` (the historical 16px margin, byte-identical to 1.8.0). Set it explicitly only to
+   * override that — e.g. a cell inside a grid that genuinely stacks two fields wants `stack`.
+   */
+  spacing?: FieldSpacing;
   testID?: string;
 }
 
@@ -178,9 +181,12 @@ export const Field = ({
   labelVariant,
   labelStyle,
   containerStyle,
+  spacing,
   testID,
 }: FieldProps): React.ReactElement => {
   const { theme } = useUi();
+  const gapOwned = useIsGapOwned();
+  const spacingStyles = fieldSpacingStyleSet(resolveFieldSpacing(spacing, gapOwned));
   const { colors, semantic } = theme;
   const errorColor = semantic.error['500'];
   const hasError = hasFieldError(error);
@@ -207,7 +213,7 @@ export const Field = ({
   const control = typeof children === 'function' ? children({ describedById, hasError }) : children;
 
   return (
-    <View style={[styles.container, containerStyle]} testID={testID}>
+    <View style={[spacingStyles.container, containerStyle]} testID={testID}>
       {hasLabel ? (
         <FieldLabel
           label={labelText}
@@ -215,17 +221,17 @@ export const Field = ({
           optionalLabel={optionalLabel}
           optionalMarkStyle={[styles.optionalMark, themeStyles.optionalMark]}
           requiredMarkStyle={themeStyles.requiredMark}
-          style={[styles.label, resolveLabelVariantStyle(labelVariant), themeStyles.label, labelStyle]}
+          style={[spacingStyles.label, resolveLabelVariantStyle(labelVariant), themeStyles.label, labelStyle]}
         />
       ) : null}
       {control}
       {hasHint ? (
-        <Text nativeID={hintId} style={[styles.hintText, themeStyles.hintText]}>
+        <Text nativeID={hintId} style={[styles.hintText, spacingStyles.child, themeStyles.hintText]}>
           {hint}
         </Text>
       ) : null}
       {hasError ? (
-        <Text nativeID={errorId} role="alert" style={[styles.errorText, themeStyles.errorText]}>
+        <Text nativeID={errorId} role="alert" style={[styles.errorText, spacingStyles.child, themeStyles.errorText]}>
           {error}
         </Text>
       ) : null}

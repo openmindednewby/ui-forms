@@ -23,6 +23,7 @@ import {
   Text,
   Pressable,
   TouchableOpacity,
+  type StyleProp,
   type ViewProps,
   type ViewStyle,
 } from 'react-native';
@@ -30,6 +31,7 @@ import {
 import { useUi } from '@dloizides/ui-feedback';
 
 import { Field } from '../Field/Field';
+import type { FieldSpacing } from '../Field/fieldSpacing';
 
 const TRANSPARENT_COLOR = 'transparent';
 const WHITE_COLOR = '#fff';
@@ -101,14 +103,18 @@ const styles = StyleSheet.create({
   chipContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    // Each chip's bottom gutter also hangs off the LAST row, stacking on `Field`'s container
-    // margin (8 + 16 = 24) and dropping the block below the `FormField` beside it. Cancelling it
-    // is standard gutter compensation: inner rows keep their 8px, the block ends at Field's 16.
-    marginBottom: -CHIP_GUTTER,
-  },
-  chipWrapper: {
-    marginRight: CHIP_GUTTER,
-    marginBottom: CHIP_GUTTER,
+    // `gap`, NOT per-chip margins plus a compensating negative container margin.
+    //
+    // The old form was `chipWrapper { marginRight: 8, marginBottom: 8 }` with
+    // `chipContainer { marginBottom: -8 }`. Its comment blamed `Field`'s 16px container margin —
+    // that was WRONG, and worth recording: F3 was briefed on the belief that the -8 compensated for
+    // `Field` and had to move in lockstep with it. It did not. -8 cancelled the CHIP's own gutter
+    // hanging off the last row, identically whether `Field` contributed 16, 0, or anything else.
+    //
+    // The pair is still the wrong tool: it holds only while the two constants agree, and it leaves
+    // a real negative margin any measuring parent inherits. `gap` produces the byte-identical box
+    // and is correct under BOTH of `Field`'s spacing models, not just the one it was tuned against.
+    gap: CHIP_GUTTER,
   },
   chip: {
     paddingHorizontal: 12,
@@ -161,7 +167,17 @@ export interface ChipSelectorProps<T> {
   disabled?: boolean;
   /** Visual variant. `solid` (default) = filled selected pill; `outline` = v1 tinted-outline. */
   variant?: ChipVariant;
-  containerStyle?: ViewStyle;
+  /**
+   * `StyleProp` (not a bare `ViewStyle`) so it composes the same way `Field`'s does — a caller can
+   * pass an array instead of restating a complete style per variant.
+   */
+  containerStyle?: StyleProp<ViewStyle>;
+  /**
+   * Forwarded verbatim to the underlying `Field`. `ChipSelector` deliberately holds NO spacing
+   * opinion of its own: it delegates, so the two cannot drift into disagreeing about how much room
+   * a chip block occupies. The guard for that is `chipSelectorFieldLockstep` in the tests.
+   */
+  spacing?: FieldSpacing;
   /** Marks the selection mandatory — renders `Field`'s decorative `*` next to the label. */
   required?: boolean;
   /** Validation message under the chips, wired to the chip group via `aria-describedby`. */
@@ -268,7 +284,6 @@ function OutlineChip<T extends string | number>({
       aria-pressed={ariaPressed}
       disabled={disabled}
       hitSlop={CHIP_HIT_SLOP}
-      style={styles.chipWrapper}
       testID={testID}
       onHoverIn={() => setHovered(true)}
       onHoverOut={() => setHovered(false)}
@@ -303,7 +318,6 @@ function SolidChip<T extends string | number>({
       aria-pressed={ariaPressed}
       disabled={disabled}
       hitSlop={CHIP_HIT_SLOP}
-      style={styles.chipWrapper}
       testID={testID}
       onPress={onPress}
     >
@@ -331,6 +345,7 @@ export const ChipSelector = <T extends string | number>({
   disabled = false,
   variant = 'solid',
   containerStyle,
+  spacing,
   required = false,
   error,
   testID,
@@ -379,7 +394,14 @@ export const ChipSelector = <T extends string | number>({
   }
 
   return (
-    <Field containerStyle={containerStyle} error={error} label={label} required={required} testID={testID}>
+    <Field
+      containerStyle={containerStyle}
+      error={error}
+      label={label}
+      required={required}
+      spacing={spacing}
+      testID={testID}
+    >
       {({ describedById, hasError }) => (
         <View style={styles.chipContainer} {...(groupA11yProps(describedById, hasError) as ViewProps)}>
           {options.map(renderChip)}
