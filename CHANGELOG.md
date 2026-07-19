@@ -1,5 +1,64 @@
 # Changelog
 
+## 1.7.0
+
+Additive wave implementing the shared cross-stack forms contract now written down at
+`PROOViD/AMLService/AMLService/wwwroot/shared/FORMS.md`. **Nothing in this release moves a pixel
+for an existing consumer**: every addition is opt-in and every default is the previous behaviour.
+`CONTAINER_MARGIN_BOTTOM` and `ChipSelector`'s compensating `marginBottom: -CHIP_GUTTER` are
+deliberately untouched — they are load-bearing and move together in a later, visual-QA-gated wave.
+
+- **Add `FormActions` — the submit/cancel row.** Promoted from the BYTE-IDENTICAL
+  `erevna-web/src/components/Forms/FormActions.tsx` and `katalogos-web/.../FormActions.tsx`
+  (68 lines each; `diff` returns nothing). All seven portals hand-roll this row; aml-v2, agora,
+  kefi, ichnos and zygos each inline their own variant. The primary action is LAST in DOM order so
+  tab reaches Cancel before Save, and `saving` drives the primary button's spinner rather than
+  disabling-and-relabelling it. `saveDisabled` blocks Save WITHOUT blocking Cancel — an invalid
+  form stays escapable. testIDs default to the twins' `save-button` / `cancel-button`, so existing
+  Playwright selectors keep matching.
+- **`Field` gains `hint`.** ~21 hand-rolled copies of `{fontSize:12, marginTop:4, color:
+  textSecondary}` exist across the fleet; aml-v2 alone declares a local `hint` style in 8 files.
+  Because `Field` had no hint slot, consumers rendered the hint as a SIBLING, where it lands past
+  the container's 16px bottom margin and detaches from the control it explains (see the apologetic
+  comment in `aml-v2/src/screens/screening/CoverageSelector.tsx`). The hint renders UNDER the
+  control and ABOVE the error, and hint and error COEXIST — both are reachable from the control via
+  a composed `aria-describedby` (hint id then error id, in reading order). Only the error is a
+  `role="alert"` live region; a hint that announced itself would interrupt on every focus.
+- **`Field` gains `optional` + `optionalLabel`.** Mutually exclusive with `required`; when a caller
+  sets both, `required` WINS — the safe direction, since an under-marked required field sends the
+  user into a failed submit. Enforced at runtime in `resolveFieldMarker` rather than in the type
+  system, so a caller spreading a computed props object still gets a defined single-marker result
+  instead of a compile error it cannot act on. Like the asterisk, the optional text is decorative
+  (`aria-hidden`) — "optional" is the ABSENCE of `aria-required`, which assistive tech already
+  conveys.
+- **`Field` gains `labelVariant` (+ `labelStyle` as the escape hatch).** `Field` hard-coded
+  13/600/sentence-case, which is exactly why kefi-web refused it and why `@dloizides/ui-tables`'
+  private `FieldShell` forked to 11/700/uppercase. `labelVariant` makes the contract's TWO
+  legitimate voices first-class and named: `field` (13/600 sentence case — a label that is READ)
+  and `control` (11/700 UPPERCASE + letter-spacing — a label that is SCANNED, for dense filter bars
+  and toolbars). An absent variant resolves to `field`, so every existing consumer renders
+  byte-identically. `labelStyle` applies AFTER the variant for the genuine one-off.
+- **`Field`'s `containerStyle` widens `ViewStyle` -> `StyleProp<ViewStyle>`.** The narrow type was a
+  documented pain: `aml-v2/src/screens/leaders/CountryPicker.tsx` has to build a COMPLETE style per
+  variant because it cannot compose an array.
+- **`useThemedInput`: a focused errored field now keeps a RED focus ring.** It previously computed
+  `isFocused && !hasError`, so an errored field got NO focus ring at all — removing the focus
+  indicator (WCAG 2.4.7) from precisely the field the user was sent back to fix, at the moment they
+  are most likely navigating by keyboard. It now always rings on focus and only changes the ring's
+  COLOUR, matching v1's `input.invalid:focus { box-shadow: 0 0 0 3px var(--danger-tint) }`.
+  One pre-existing test necessarily changed: it asserted `boxShadow === 'none'` for this state,
+  i.e. it encoded the defect as intended behaviour.
+- **New peer dependency `@dloizides/ui-buttons >= 1.4.0`**, required by `FormActions` so the estate
+  keeps exactly one button implementation rather than forking one here.
+- No i18n runtime is introduced: all user-visible copy (`saveLabel`, `cancelLabel`, `optionalLabel`,
+  `hint`, `error`) arrives pre-localized. aml-v2 localizes via `@dloizides/i18n` with positional
+  `{0}` params while the other six apps use i18next `{{p1}}`, and nothing bridges them, so a
+  component that localized internally could not serve both.
+- Also shipping in this tarball, from a CONCURRENT workstream (commit `13bd281`, not part of this
+  wave): `ChipSelector` gains `chipTestIDPrefix`, `optionAccessibilityHint` and `multiple`
+  toggle semantics, and reads its on-primary ink from the theme's `onBrand` scale instead of a
+  hardcoded `#fff`. All opt-in; the `chip-selector-chip-<value>` testID default is frozen.
+
 ## 1.6.0
 
 - **`ChipSelector` now composes `Field` internally — its label was drifting.** It rendered its OWN

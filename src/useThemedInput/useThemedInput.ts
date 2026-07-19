@@ -130,8 +130,12 @@ export function useThemedInput(options: UseThemedInputOptions = {}): ThemedInput
     const backgroundColor = isFocused ? colors.surface : colors.surfaceElevated;
     const base: TextStyle = { color: colors.text, borderColor, backgroundColor };
     if (!IS_WEB) return base;
-    const ring =
-      isFocused && !hasError ? `0 0 0 ${FOCUS_RING_WIDTH}px ${withAlpha(primary, FOCUS_RING_ALPHA)}` : 'none';
+    // A focused field ALWAYS gets a ring — an errored one just changes its colour to the error
+    // tint (v1: `input.invalid:focus { box-shadow: 0 0 0 3px var(--danger-tint) }`). Suppressing
+    // the ring while errored, as this did, removed the focus indicator (WCAG 2.4.7) from precisely
+    // the field the user was sent back to fix, at the moment they are most likely on a keyboard.
+    const ringColor = hasError ? errorColor : primary;
+    const ring = isFocused ? `0 0 0 ${FOCUS_RING_WIDTH}px ${withAlpha(ringColor, FOCUS_RING_ALPHA)}` : 'none';
     const webStyle = {
       transitionProperty: TRANSITION_PROPERTY,
       // Collapse the eased transition to instant when the user prefers reduced motion.

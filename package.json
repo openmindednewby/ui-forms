@@ -76,6 +76,7 @@
         "version": "npm run build"
     },
     "peerDependencies": {
+        "@dloizides/ui-buttons": ">=1.4.0",
         "@dloizides/ui-feedback": ">=1.1.0",
         "react": ">=18.0.0",
         "react-native": ">=0.74.0"
@@ -103,6 +104,7 @@
         "rimraf": "^5.0.0",
         "ts-jest": "^29.1.0",
         "tsup": "^8.0.0",
-        "typescript": "^5.4.0"
+        "typescript": "^5.4.0",
+        "@dloizides/ui-buttons": "^1.4.0"
     }
 }

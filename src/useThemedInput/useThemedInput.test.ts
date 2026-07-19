@@ -65,13 +65,53 @@ describe('useThemedInput', () => {
     expect(result.current.isHovered).toBe(false);
   });
 
-  it('keeps the error border on focus instead of the brand border/ring', () => {
+  it('keeps the error border on focus instead of the brand border', () => {
     const { result } = renderHook(() => useThemedInput({ hasError: true }));
     expect(result.current.style.borderColor).toBe('#dc2626'); // error 500
 
     act(() => (result.current.focusBind as FocusHandler).onFocus({}));
 
     expect(result.current.style.borderColor).toBe('#dc2626');
+  });
+
+  /**
+   * This assertion previously read `boxShadow === 'none'` — it encoded an ACCESSIBILITY
+   * REGRESSION as intended behaviour. An errored field that is focused kept no focus indicator
+   * at all (WCAG 2.4.7), on precisely the field the user was sent back to fix. The v1 contract
+   * (`input.invalid:focus { box-shadow: 0 0 0 3px var(--danger-tint) }`) keeps the ring and only
+   * changes its colour. See `…/wwwroot/shared/FORMS.md` → "the distinct invalid-focus ring".
+   */
+  it('gives a focused errored field a RED ring, never no ring', () => {
+    const { result } = renderHook(() => useThemedInput({ hasError: true }));
+    expect((result.current.style as { boxShadow?: string }).boxShadow).toBe('none');
+
+    act(() => (result.current.focusBind as FocusHandler).onFocus({}));
+
+    const ring = (result.current.style as { boxShadow?: string }).boxShadow;
+    expect(ring).not.toBe('none');
+    // The error colour (#dc2626 → 220,38,38), NOT the brand primary.
+    expect(ring).toBe('0 0 0 3px rgba(220, 38, 38, 0.16)');
+  });
+
+  it('gives a focused valid field the BRAND ring, so the two states stay distinguishable', () => {
+    const { result } = renderHook(() => useThemedInput({ hasError: false }));
+
+    act(() => (result.current.focusBind as FocusHandler).onFocus({}));
+
+    const ring = (result.current.style as { boxShadow?: string }).boxShadow;
+    expect(ring).not.toBe('none');
+    expect(ring).not.toBe('0 0 0 3px rgba(220, 38, 38, 0.16)');
+  });
+
+  it('clears the ring on blur in both error states', () => {
+    const { result, rerender } = renderHook((props: { hasError: boolean }) => useThemedInput(props), {
+      initialProps: { hasError: true },
+    });
+    act(() => (result.current.focusBind as FocusHandler).onFocus({}));
+    act(() => (result.current.focusBind as FocusHandler).onBlur({}));
+    expect((result.current.style as { boxShadow?: string }).boxShadow).toBe('none');
+
+    rerender({ hasError: false });
     expect((result.current.style as { boxShadow?: string }).boxShadow).toBe('none');
   });
 });
