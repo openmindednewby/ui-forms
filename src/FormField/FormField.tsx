@@ -11,25 +11,18 @@
  */
 import React from 'react';
 
-import { StyleSheet, type TextInputProps, type ViewStyle } from 'react-native';
+import { type TextInputProps, type ViewStyle } from 'react-native';
 
 import { Field } from '../Field/Field';
 import { ThemedTextInput } from '../ThemedTextInput/ThemedTextInput';
 
-const INPUT_PADDING_V = 10;
-const INPUT_PADDING_H = 12;
-const INPUT_BORDER_RADIUS = 8;
-const INPUT_BORDER_WIDTH = 1;
-
-const styles = StyleSheet.create({
-  input: {
-    paddingVertical: INPUT_PADDING_V,
-    paddingHorizontal: INPUT_PADDING_H,
-    borderRadius: INPUT_BORDER_RADIUS,
-    borderWidth: INPUT_BORDER_WIDTH,
-  },
-});
-
+/**
+ * The private `styles.input` that used to live here — padding 10/12, radius 8, border 1 — was a
+ * verbatim duplicate of `controlStyles.input`, and `ThemedTextInput` now applies that itself. The
+ * duplication is what hid the real defect: because `FormField` supplied metrics, inputs reached
+ * through it looked correct, while every DIRECT `ThemedTextInput` caller got an unstyled 19px box
+ * and nobody could see the difference from in here.
+ */
 export interface FormFieldProps extends Omit<TextInputProps, 'style'> {
   label: string;
   required?: boolean;
@@ -45,14 +38,14 @@ export const FormField = ({
   ...textInputProps
 }: FormFieldProps): React.ReactElement => (
   <Field containerStyle={containerStyle} error={error} label={label} required={required}>
-    {({ describedById, hasError }) => (
+    {({ describedById, hasError, controlId }) => (
       <ThemedTextInput
         accessibilityHint={`Enter ${label}`}
         accessibilityLabel={label}
         describedById={describedById}
         hasError={hasError}
+        id={controlId}
         requiredField={required}
-        style={styles.input}
         testID="form-field-input"
         {...textInputProps}
       />

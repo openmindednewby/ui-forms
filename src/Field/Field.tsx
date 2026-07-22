@@ -23,6 +23,7 @@ import { StyleSheet, View, Text, type StyleProp, type TextStyle, type ViewStyle 
 
 import { useUi } from '@dloizides/ui-feedback';
 
+import { attachControlId } from './attachControlId';
 import { FieldLabel } from './FieldLabel';
 import { DEFAULT_OPTIONAL_LABEL, resolveFieldMarker } from './fieldMarkers';
 import { fieldSpacingStyleSet, resolveFieldSpacing, type FieldSpacing } from './fieldSpacing';
@@ -67,6 +68,21 @@ export interface FieldChildContext {
    */
   describedById?: string;
   hasError: boolean;
+  /**
+   * `id` this field's `<label for>` points at. Assign it to the control (RN `id` → DOM `id`) and
+   * clicking the label text focuses the control — a free doubling of the hit area that every
+   * field was throwing away.
+   *
+   * A plain-node child gets this injected automatically (see below); a render-function child has
+   * to place it, because only the caller knows which element inside is the actual control.
+   */
+  controlId: string;
+  /**
+   * `id` OF the label element. For a control that `<label for>` cannot address — anything that is
+   * not a native form element, e.g. the `<div role="button">` a `SelectControl` trigger renders —
+   * point `aria-labelledby` here instead.
+   */
+  labelId: string;
 }
 
 export type FieldChildren = React.ReactNode | ((context: FieldChildContext) => React.ReactNode);
@@ -133,14 +149,20 @@ export interface FieldProps {
 
 let fieldSeq = 0;
 /**
- * Stable-per-instance id pair so the hint and error lines can be linked to the control via
- * `aria-describedby`. One counter bump per field keeps the two ids of a field in lockstep.
+ * Stable-per-instance ids so the label, hint and error lines can be linked to the control via
+ * `htmlFor` / `aria-labelledby` / `aria-describedby`. One counter bump per field keeps every id
+ * of a field in lockstep.
  */
-export function useFieldIds(): { hintId: string; errorId: string } {
+export function useFieldIds(): { hintId: string; errorId: string; controlId: string; labelId: string } {
   const [ids] = React.useState(() => {
     fieldSeq += 1;
     const seq = String(fieldSeq);
-    return { hintId: `field-hint-${seq}`, errorId: `field-error-${seq}` };
+    return {
+      hintId: `field-hint-${seq}`,
+      errorId: `field-error-${seq}`,
+      controlId: `field-control-${seq}`,
+      labelId: `field-label-${seq}`,
+    };
   });
   return ids;
 }
@@ -194,7 +216,7 @@ export const Field = ({
   const labelText = label ?? '';
   const hasLabel = labelText !== '';
   const marker = resolveFieldMarker(required, optional);
-  const { hintId, errorId } = useFieldIds();
+  const { hintId, errorId, controlId, labelId } = useFieldIds();
 
   const themeStyles = React.useMemo<ThemeStyles>(
     () => ({
@@ -210,13 +232,22 @@ export const Field = ({
 
   const describedById = joinDescribedBy(hasHint ? hintId : undefined, hasError ? errorId : undefined);
 
-  const control = typeof children === 'function' ? children({ describedById, hasError }) : children;
+  // A render-function child places `controlId` itself, so the label always targets it. A plain
+  // node has the id injected — and `attachControlId` reports back whether that was possible, so
+  // the label never emits an `htmlFor` pointing at an element that does not exist.
+  const isRenderChild = typeof children === 'function';
+  const attached = isRenderChild
+    ? { node: children({ describedById, hasError, controlId, labelId }), controlId }
+    : attachControlId(children, controlId, describedById);
+  const control = attached.node;
 
   return (
     <View style={[spacingStyles.container, containerStyle]} testID={testID}>
       {hasLabel ? (
         <FieldLabel
+          controlId={attached.controlId}
           label={labelText}
+          labelId={labelId}
           marker={marker}
           optionalLabel={optionalLabel}
           optionalMarkStyle={[styles.optionalMark, themeStyles.optionalMark]}

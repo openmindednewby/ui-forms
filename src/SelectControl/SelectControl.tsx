@@ -43,6 +43,17 @@ export interface SelectControlProps {
    */
   accessibilityLabel: string;
   accessibilityHint?: string;
+  /**
+   * `id` of the `Field` label naming this control — take it from the render-child context's
+   * `labelId`. The trigger is a `<div role="button">`, which `<label for>` cannot address (that
+   * only works for native form elements), so the association runs the other way: the trigger
+   * points AT the label.
+   *
+   * `accessibilityLabel` still wins for the accessible NAME, deliberately — it is the only one of
+   * the two that carries the current selection ("Status: Active"). This adds the structural link
+   * without changing a single announcement.
+   */
+  labelledById?: string;
   /** PRE-LOCALIZED accessibility hint applied to every option in the menu. */
   optionHint?: string;
   /** Merged LAST onto the anchor wrapper — the consumer always wins over the shared style. */
@@ -58,6 +69,7 @@ export function SelectControl({
   placeholder = '',
   accessibilityLabel,
   accessibilityHint,
+  labelledById,
   optionHint = '',
   style,
   testID,
@@ -90,6 +102,7 @@ export function SelectControl({
         accessibilityHint={accessibilityHint}
         accessibilityState={{ expanded: isOpen }}
         aria-expanded={isOpen}
+        aria-labelledby={labelledById}
         onPress={toggle}
         style={[s.selectTrigger, { borderColor: colors.border, backgroundColor: colors.surface }]}
         testID={`${testID}-trigger`}

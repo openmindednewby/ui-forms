@@ -13,6 +13,8 @@
  */
 import { StyleSheet } from 'react-native';
 
+import { MIN_TOUCH_TARGET_PX } from '@dloizides/a11y';
+
 const FIELD_GAP = 4;
 const LABEL_FONT = 11;
 const LABEL_LETTER_SPACING = 0.4;
@@ -38,16 +40,24 @@ const ERROR_FONT = 12;
 const ERROR_GAP = 3;
 
 export const controlStyles = StyleSheet.create({
-  /** The shared bordered box every dense text control renders in. */
+  /**
+   * The shared bordered box every dense text control renders in.
+   *
+   * `minHeight` is the kit floor: padding alone produced a ~38px box, and a bare input with no
+   * box style at all measured **19px** in production. Height is a hit-target guarantee, so it
+   * is stated rather than left to emerge from font size + padding.
+   */
   input: {
     borderWidth: INPUT_BORDER,
     borderRadius: INPUT_RADIUS,
     paddingHorizontal: INPUT_PAD_H,
     paddingVertical: INPUT_PAD_V,
     fontSize: INPUT_FONT,
+    minHeight: MIN_TOUCH_TARGET_PX,
   },
   /** The select trigger: a bordered field box matching the text inputs + a chevron. */
   selectTrigger: {
+    minHeight: MIN_TOUCH_TARGET_PX,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
