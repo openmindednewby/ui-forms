@@ -1,5 +1,37 @@
 # Changelog
 
+## 1.11.0
+
+**`ThemedTextInput` shipped no metrics, so every direct caller got a raw 19px input.**
+
+It documented itself as "the ONE source of truth for the input look" while shipping
+only **colours** — no border, radius, padding or height. `FormField` quietly passed its
+own private duplicate of those metrics, so anything reached *through* `FormField` looked
+correct and the gap was invisible. Every **direct** caller — the documented, blessed
+usage — got a raw browser input.
+
+Measured live in the Digital Kin CMS before: **10/10 inputs below the 48px floor**, text
+inputs 19px, textareas 38px. After: **0/10**, at 48/96px.
+
+**Label association was absent entirely** (0 `label[for]`, 0 ids). Two defects only a
+real browser could find, both fixed here:
+
+- **`htmlFor` is silently dropped by react-native-web** — it is not on the prop
+  allowlist, the same family as the dropped `accessibilityHint`. A prop-level assertion
+  passes against the broken build; only a DOM-level test catches it, so that is what the
+  new tests assert.
+- **Dangling `for`.** `Field` assumed render-function children place the id they are
+  handed, but `SelectControl` uses `aria-labelledby` instead — so the difficulty label
+  shipped `for="field-control-3"` pointing at **nothing**, passing every structural check
+  while focusing no field. `useHtmlFor` now sets `for` only when the target is genuinely
+  in the document.
+
+> ⚠️ **Cross-fleet visual change.** `controlStyles.input` gaining `minHeight: 48` lifts
+> dense filter inputs and select triggers in `aml-v2`/`agora-web` from ~38-41px to 48px.
+> This cannot be avoided: the input floor is what fixes the 19px defect, and nothing
+> fixes that without also lifting inputs that already had padding. Owner-approved.
+
+
 ## 1.9.0
 
 **Campaign F3 — `Field`'s spacing model, and the layout primitives.** `Field` hard-coded a 16px
