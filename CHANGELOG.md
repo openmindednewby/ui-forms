@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.11.0
+## 1.11.1
 
 **`ThemedTextInput` shipped no metrics, so every direct caller got a raw 19px input.**
 
