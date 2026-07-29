@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.12.0
+
+**`FormField` gained `labelHidden` — hide the visible label, keep the accessible name.**
+
+A field whose placeholder already names it (a toolbar search box, an inline filter) does
+not want a stacked visible label: the label wastes a row and, worse, pushes the input a
+label-row lower than a bare button beside it, so the two misalign. Until now the only way
+to drop the visible label was to blank `label` — which ALSO blanked the input's
+`accessibilityLabel`, silently stripping the accessible name.
+
+`labelHidden` removes ONLY the visible `<label>` row: `label` stays required and the input
+keeps `accessibilityLabel={label}`, so a screen reader reads the same name and the field
+still resolves by role + name. Additive and backward-compatible — default `false`, every
+existing call renders unchanged.
+
 ## 1.11.1
 
 **`ThemedTextInput` shipped no metrics, so every direct caller got a raw 19px input.**

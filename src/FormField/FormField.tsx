@@ -25,6 +25,17 @@ import { ThemedTextInput } from '../ThemedTextInput/ThemedTextInput';
  */
 export interface FormFieldProps extends Omit<TextInputProps, 'style'> {
   label: string;
+  /**
+   * Hide the VISIBLE label row while keeping the accessible name.
+   *
+   * For a field whose placeholder already names it (a toolbar search box, an inline
+   * filter) the stacked visible label both wastes a row and misaligns the input
+   * against a bare button beside it. Setting this drops ONLY the visible `<label>`:
+   * the input still carries `accessibilityLabel={label}`, so a screen reader reads
+   * the same name and `label` stays REQUIRED — you never lose the accessible name by
+   * blanking it, which is the trap this option exists to remove. Default `false`.
+   */
+  labelHidden?: boolean;
   required?: boolean;
   error?: string;
   containerStyle?: ViewStyle;
@@ -32,12 +43,21 @@ export interface FormFieldProps extends Omit<TextInputProps, 'style'> {
 
 export const FormField = ({
   label,
+  labelHidden = false,
   required = false,
   error,
   containerStyle,
   ...textInputProps
 }: FormFieldProps): React.ReactElement => (
-  <Field containerStyle={containerStyle} error={error} label={label} required={required}>
+  <Field
+    containerStyle={containerStyle}
+    error={error}
+    // An undefined label renders NO label row (see Field): that is how the visible
+    // label is hidden. The accessible name is kept on the input below, so hiding
+    // the label never strips the name.
+    label={labelHidden ? undefined : label}
+    required={required}
+  >
     {({ describedById, hasError, controlId }) => (
       <ThemedTextInput
         accessibilityHint={`Enter ${label}`}
