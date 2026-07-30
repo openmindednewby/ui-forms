@@ -1,6 +1,6 @@
 {
   "name": "@dloizides/ui-forms",
-  "version": "1.13.0",
+  "version": "1.13.1",
   "description": "Themable, brand-agnostic React Native (RN-web) form components â€” FormField, ChipSelector, FormSwitch â€” sharing the @dloizides/ui-feedback UI context. Part of the dloizides.com shared UI kit.",
   "keywords": [
     "react",
