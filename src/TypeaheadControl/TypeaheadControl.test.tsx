@@ -64,6 +64,32 @@ describe('TypeaheadControl — suggestions', () => {
   });
 });
 
+describe('TypeaheadControl — menu stacking (portal)', () => {
+  it('PORTALS the open menu to document.body so no ancestor stacking context / overflow can hide it', () => {
+    const { rerender } = renderTypeahead();
+    fireEvent.focus(screen.getByTestId(INPUT));
+    fireEvent.change(screen.getByTestId(INPUT), { target: { value: 'ca' } });
+    rerender('ca');
+    // The whole point of the fix: the menu is not nested in the anchor subtree (where RN-web would
+    // trap its z-index under later siblings) — it is a direct child of document.body.
+    expect(screen.getByTestId(MENU).parentElement).toBe(document.body);
+    // ...and therefore NOT a descendant of the input's own field container.
+    const input = screen.getByTestId(INPUT);
+    expect(input.parentElement?.contains(screen.getByTestId(MENU))).toBe(false);
+  });
+});
+
+describe('TypeaheadControl — open on focus (minChars 0)', () => {
+  it('surfaces the option list on focus with an empty box when minChars is 0 (click-to-open)', () => {
+    renderTypeahead({ minChars: 0 });
+    expect(screen.queryByTestId(MENU)).toBeNull();
+    fireEvent.focus(screen.getByTestId(INPUT));
+    // With no text yet, focusing shows the ranked full list rather than nothing.
+    expect(screen.getByTestId(MENU)).toBeTruthy();
+    expect(screen.getByTestId(`${TID}-option-CA`)).toBeTruthy();
+  });
+});
+
 describe('TypeaheadControl — picking', () => {
   it('fills the canonical LABEL, not the option value', () => {
     // The load-bearing behaviour: the box holds human text the caller normalises later.

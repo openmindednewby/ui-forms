@@ -136,6 +136,10 @@ export function TypeaheadControl({
           optionHint={optionHint}
           testID={testID}
           anchorRef={anchorRef}
+          // Portal the suggestions to document.body on web: a typeahead sits in a filter row above
+          // other content (fields, guides, a results table), and the in-tree popover was painted
+          // under / clipped by it ("hidden below"). The portal escapes that stacking + clipping.
+          usePortal
         />
       ) : null}
       {hasError ? (
