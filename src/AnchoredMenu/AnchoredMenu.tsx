@@ -19,7 +19,7 @@
 import React, { useEffect } from 'react';
 
 import { createPortal } from 'react-dom';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 
 import { controlStyles as s } from '../controls/controlStyles';
 import type { ControlOption } from '../controls/controlTypes';
@@ -118,6 +118,9 @@ export function AnchoredMenu({
       style={[s.menu, { borderColor: colors.border, backgroundColor: colors.surface }, portalStyle]}
       testID={`${testID}-menu`}
     >
+      {/* Scroll the options when they exceed the menu's maxHeight (s.menu). Without this the list was
+          clipped by `overflow: hidden` with no way to reach the options below the fold. */}
+      <ScrollView keyboardShouldPersistTaps="handled" nestedScrollEnabled>
       {options.map((opt) => {
         const active = opt.value === selectedValue;
         return (
@@ -145,6 +148,7 @@ export function AnchoredMenu({
           </Pressable>
         );
       })}
+      </ScrollView>
     </View>
   );
 
