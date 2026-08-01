@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.13.3
+
+**Placeholder text was too dark — it read like an already-filled value.**
+
+`useThemedInput` painted the placeholder with the theme's `textSecondary` — a deliberately
+dark, accessible grey (design-tokens UX-11) that also renders readable secondary *copy*. At
+full strength a placeholder (e.g. `follower` in a "Dance role" box) was hard to tell apart
+from entered text. It is now `textSecondary` composited toward the field background at 0.6
+alpha, so a hint reads clearly lighter than the solid entered text (`colors.text`) while
+keeping the theme hue — and it works in dark mode too (it composites toward whatever the
+field background is). The field's visible label still carries the accessible name, so this
+is a usability win, not an a11y regression. Affects every `@dloizides/ui-forms`-driven input
+(`FormField`, `Field`, `ThemedTextInput`, the `ui-tables` `Filters` search box) across all
+seven portals.
+
 ## 1.12.0
 
 **`FormField` gained `labelHidden` — hide the visible label, keep the accessible name.**

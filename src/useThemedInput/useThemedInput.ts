@@ -32,6 +32,16 @@ const TRANSITION_TIMING = 'ease';
 const FOCUS_RING_WIDTH = 3;
 const FOCUS_RING_ALPHA = 0.16;
 const HOVER_BORDER_ALPHA = 0.22;
+/**
+ * Placeholder opacity. The theme's `textSecondary` is deliberately a DARK, accessible grey
+ * (design-tokens UX-11) because it also paints readable secondary *copy* — so reusing it at
+ * full strength made placeholders look like already-typed text. Compositing it toward the field
+ * background at this alpha keeps the hue but pulls the placeholder clearly lighter than the solid
+ * entered text (`colors.text`), so "hint" vs "value" reads at a glance. Works in dark mode too
+ * (it composites toward whatever the field background is). The field's real visible label — not
+ * the placeholder — carries the accessible name, so a lighter hint is a usability win, not an a11y loss.
+ */
+const PLACEHOLDER_ALPHA = 0.6;
 
 const HEX_RADIX = 16;
 const HEX_SHORT_LENGTH = 4;
@@ -82,7 +92,11 @@ export interface UseThemedInputOptions {
 export interface ThemedInput {
   /** The themed input style for the current focus/hover state (memoised). Merge AFTER your box style. */
   style: TextStyle;
-  /** A readable mid-grey placeholder colour from the theme. */
+  /**
+   * The placeholder colour: the theme's `textSecondary` composited toward the field
+   * background ({@link PLACEHOLDER_ALPHA}) so a placeholder reads as a faint hint, clearly
+   * lighter than the solid entered text rather than looking like an already-filled value.
+   */
   placeholderTextColor: string;
   isFocused: boolean;
   isHovered: boolean;
@@ -167,7 +181,7 @@ export function useThemedInput(options: UseThemedInputOptions = {}): ThemedInput
 
   return {
     style,
-    placeholderTextColor: colors.textSecondary,
+    placeholderTextColor: withAlpha(colors.textSecondary, PLACEHOLDER_ALPHA),
     isFocused,
     isHovered,
     focusBind,

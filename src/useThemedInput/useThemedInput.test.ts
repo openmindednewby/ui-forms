@@ -16,7 +16,9 @@ describe('useThemedInput', () => {
     expect(result.current.isHovered).toBe(false);
     // Rest background is the subtle off-white surfaceElevated, NOT the plain surface.
     expect(result.current.style.backgroundColor).toBe('#ffffff');
-    expect(result.current.placeholderTextColor).toBe('#666666');
+    // The placeholder is the theme's textSecondary (#666666) composited toward the field
+    // background at 0.6 alpha, so a hint reads clearly lighter than solid entered text.
+    expect(result.current.placeholderTextColor).toBe('rgba(102, 102, 102, 0.6)');
   });
 
   it('applies the brand focus treatment on focus (border, brighter bg, ring) and reverts on blur', () => {
