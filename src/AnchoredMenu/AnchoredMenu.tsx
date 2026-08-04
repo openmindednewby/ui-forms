@@ -1,12 +1,13 @@
 /**
  * `AnchoredMenu` — the floating option list shared by `SelectControl` and `TypeaheadControl`.
  *
- * By default it renders an in-tree, absolutely-positioned popover under its anchor
- * (`position:absolute; top:100%; zIndex; elevation`). Set {@link AnchoredMenuProps.usePortal} to
- * render it — on web only — in a PORTAL to `document.body` with `position: fixed` at the trigger's
- * measured rect instead: that escapes react-native-web's trapped `z-index: 0` stacking contexts and
- * any ancestor `overflow: hidden`, so the menu is never painted under / clipped by later siblings
- * (the fix for the Country typeahead menu that hid behind the content below it). See {@link menuPortal}.
+ * By DEFAULT (web) it renders in a PORTAL to `document.body` with `position: fixed` at the trigger's
+ * measured rect: that escapes react-native-web's trapped `z-index: 0` stacking contexts and any
+ * ancestor `overflow: hidden`, so the menu is never painted under / clipped by later siblings (a
+ * table, a card, the next filter field). On native, and when {@link AnchoredMenuProps.usePortal} is
+ * explicitly `false`, it renders an in-tree, absolutely-positioned popover under its anchor
+ * (`position:absolute; top:100%; zIndex; elevation`) — which is exactly what left `SelectControl`'s
+ * menu hidden behind the attendee table until the default flipped. See {@link menuPortal}.
  * On web it dismisses on outside-click / Escape; on native the caller closes it on blur/select.
  * Purely presentational + theme-flat, so it stays reusable.
  *
@@ -55,8 +56,13 @@ export interface AnchoredMenuProps {
    * On web, render the popover in a portal to `document.body` with `position: fixed` at the anchor's
    * measured rect, so it escapes react-native-web's trapped stacking contexts and any ancestor
    * `overflow: hidden` (the fix for a menu that paints under / is clipped by the content below it).
-   * No effect on native. Default `false` — the existing in-tree behaviour, so `SelectControl`
-   * usages are unchanged; `TypeaheadControl` opts in.
+   * No effect on native (the `IS_WEB` guard keeps native in-tree regardless).
+   *
+   * Default `true` — portalling is the CORRECT default: an in-tree popover is always at risk of
+   * being painted under a later-painting sibling (a table, a card, the next filter field). The old
+   * default was `false`, which silently left `SelectControl`'s menu hidden behind the attendee table
+   * (a recurrence of the exact bug this mechanism fixed for `TypeaheadControl`). Pass `usePortal={false}`
+   * only for the rare case that genuinely wants the menu clipped to its container.
    */
   usePortal?: boolean;
 }
@@ -100,7 +106,7 @@ export function AnchoredMenu({
   optionHint,
   testID,
   anchorRef,
-  usePortal = false,
+  usePortal = true,
 }: AnchoredMenuProps): React.ReactElement {
   const menuRef = React.useRef<View>(null);
   useDismiss(anchorRef, menuRef, onDismiss);

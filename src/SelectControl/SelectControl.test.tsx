@@ -81,6 +81,18 @@ describe('SelectControl — menu interaction', () => {
     expect(screen.getByTestId(MENU)).toBeTruthy();
   });
 
+  it('PORTALS the open menu to document.body by default (not nested under the trigger)', () => {
+    // Regression guard: the menu used to render in-tree under the anchor, so a later-painting
+    // sibling (the attendees table) covered it. With the portal default it must be a DIRECT child
+    // of document.body — escaping every trapped RN-web stacking context + ancestor overflow.
+    renderSelect();
+    fireEvent.click(screen.getByTestId(TRIGGER));
+    const menu = screen.getByTestId(MENU);
+    expect(menu.parentElement).toBe(document.body);
+    // Mutation guard: an in-tree menu would be a descendant of the trigger's anchor.
+    expect(screen.getByTestId(TRIGGER).contains(menu)).toBe(false);
+  });
+
   it('emits the picked option VALUE (not its label) and closes', () => {
     const onChange = renderSelect();
     fireEvent.click(screen.getByTestId(TRIGGER));
