@@ -40,6 +40,15 @@ export type { ThemedTextInputProps } from './ThemedTextInput/ThemedTextInput';
 export { useThemedInput } from './useThemedInput/useThemedInput';
 export type { ThemedInput, UseThemedInputOptions } from './useThemedInput/useThemedInput';
 
+// ---------------------------------------------------------------------------
+// OPT-IN "recent values" store. Powers FormField's `recentKey` prop, but exported standalone so a
+// consumer can build a bespoke recents surface. Web-only persistence; a silent no-op on native.
+// ---------------------------------------------------------------------------
+
+export { useRecentValues } from './useRecentValues/useRecentValues';
+export { DEFAULT_MAX_RECENTS } from './useRecentValues/recentValuesCore';
+export type { RecentValues } from './useRecentValues/useRecentValues';
+
 export { ChipSelector } from './ChipSelector/ChipSelector';
 export type { ChipSelectorProps, ChipOption, ChipVariant } from './ChipSelector/ChipSelector';
 

@@ -14,6 +14,7 @@ import React from 'react';
 import { type TextInputProps, type ViewStyle } from 'react-native';
 
 import { Field } from '../Field/Field';
+import { RecentInputField } from './RecentInputField';
 import { ThemedTextInput } from '../ThemedTextInput/ThemedTextInput';
 
 /**
@@ -39,6 +40,19 @@ export interface FormFieldProps extends Omit<TextInputProps, 'style'> {
   required?: boolean;
   error?: string;
   containerStyle?: ViewStyle;
+  /**
+   * OPT-IN "recent values" behaviour. When set, the values submitted through this field are
+   * remembered (per this key) and offered in a dropdown on focus; picking one fills the input.
+   * Values are recorded on submit (Enter) and on blur-with-content. Persisted to `localStorage`
+   * under `@dloizides/ui-forms:recent:<recentKey>`; a silent no-op on native / when storage is
+   * unavailable.
+   *
+   * Leave it UNSET (the default) and the field behaves exactly as before — nothing rendered, no
+   * storage touched. NEVER set it on a password / secure field: recents must not persist secrets.
+   */
+  recentKey?: string;
+  /** Cap on remembered values when {@link recentKey} is set (most-recent-first). Default 10. */
+  recentMax?: number;
 }
 
 export const FormField = ({
@@ -47,6 +61,8 @@ export const FormField = ({
   required = false,
   error,
   containerStyle,
+  recentKey,
+  recentMax,
   ...textInputProps
 }: FormFieldProps): React.ReactElement => (
   <Field
@@ -58,18 +74,27 @@ export const FormField = ({
     label={labelHidden ? undefined : label}
     required={required}
   >
-    {({ describedById, hasError, controlId }) => (
-      <ThemedTextInput
-        accessibilityHint={`Enter ${label}`}
-        accessibilityLabel={label}
-        describedById={describedById}
-        hasError={hasError}
-        id={controlId}
-        requiredField={required}
-        testID="form-field-input"
-        {...textInputProps}
-      />
-    )}
+    {({ describedById, hasError, controlId }) => {
+      // Shared props for either input path — identical wiring, so a field looks and behaves the
+      // same whether or not it opts into recents.
+      const inputProps = {
+        accessibilityHint: `Enter ${label}`,
+        accessibilityLabel: label,
+        describedById,
+        hasError,
+        id: controlId,
+        requiredField: required,
+        testID: 'form-field-input',
+        ...textInputProps,
+      };
+      // recentKey set → the recents-enabled input; unset → the plain input, unchanged from before
+      // (no extra state/refs/effects/storage — the default path pays nothing).
+      return recentKey !== undefined && recentKey !== '' ? (
+        <RecentInputField label={label} recentKey={recentKey} recentMax={recentMax} {...inputProps} />
+      ) : (
+        <ThemedTextInput {...inputProps} />
+      );
+    }}
   </Field>
 );
 

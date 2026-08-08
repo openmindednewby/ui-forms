@@ -48,6 +48,12 @@ export interface AnchoredMenuProps {
   colors: AnchoredMenuColors;
   /** PRE-LOCALIZED accessibility hint applied to every option. */
   optionHint: string;
+  /**
+   * PRE-LOCALIZED accessible NAME for the menu container itself (e.g. "Recent values"). Optional and
+   * additive — omitted, the menu keeps only its `role="menu"` as before, so existing callers are
+   * unaffected. Supplied, a screen reader announces the list's purpose, not just "menu".
+   */
+  accessibilityLabel?: string;
   /** Base testID: the menu is `${testID}-menu`, each option `${testID}-option-${value}`. */
   testID: string;
   /** Node whose clicks count as "inside" (the anchor) so its own press doesn't self-dismiss. */
@@ -104,6 +110,7 @@ export function AnchoredMenu({
   onDismiss,
   colors,
   optionHint,
+  accessibilityLabel,
   testID,
   anchorRef,
   usePortal = true,
@@ -117,6 +124,7 @@ export function AnchoredMenu({
   const menu = (
     <View
       ref={menuRef}
+      accessibilityLabel={accessibilityLabel}
       accessibilityRole="menu"
       // `portalStyle` (position:fixed at the measured rect) is appended LAST so it wins over
       // s.menu's default `position:absolute; top:100%` when portalling; null (native / no portal)

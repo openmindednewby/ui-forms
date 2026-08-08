@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.14.0
+
+**`FormField` gained an opt-in `recentKey` — remember the last N submitted values and offer them on focus.**
+
+A search / filter / lookup box that the user retypes the same handful of values into now gets a
+"recent values" dropdown for free. Set `recentKey="<namespace>"` on a `FormField` and the values it
+submits are remembered (per key) and surfaced in a menu on focus; picking one fills the input. A
+value is recorded on submit (Enter) **and** on blur-with-content, so both "hit enter" and "typed then
+moved on" are captured. The dropdown reuses the kit's `AnchoredMenu` (portalled to `document.body`, so
+it is never painted behind a table / card / the next field) with full a11y (menu name, per-row label +
+hint + role).
+
+Persistence is `localStorage` under `@dloizides/ui-forms:recent:<recentKey>`; the list de-dupes
+case-insensitively, promotes a repeat to the front, and caps at `recentMax` (default 10). On native /
+SSR / when storage is disabled it is a silent no-op (recents are always `[]`), and every storage
+access is wrapped so a quota or privacy-mode failure can never throw into render.
+
+**Additive and backward-compatible.** Leave `recentKey` unset — the default — and the field behaves
+exactly as before: nothing rendered, no state/refs/effects, no storage touched. NEVER set it on a
+password / secure field. The engine is also exported standalone as `useRecentValues(key, max?)` for
+bespoke recents surfaces, and `AnchoredMenu` gained an optional `accessibilityLabel` for naming the menu.
+
 ## 1.13.3
 
 **Placeholder text was too dark — it read like an already-filled value.**
