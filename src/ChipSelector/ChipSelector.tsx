@@ -13,103 +13,27 @@
  * (`marginBottom: 8` vs 4, no `fontSize` at all so ~14 vs 13, `colors.text` vs `textSecondary`),
  * so a `ChipSelector` next to a `FormField` in a row/grid started a different distance down the
  * column and read as a different weight of text. Now there is exactly one label implementation.
+ *
+ * Structure: chip variants in `components/`, the radio keyboard wiring in `hooks/`, and the pure
+ * resolvers (`chipIdentity`, colours, radio key logic) in `utils/`.
  */
 import React from 'react';
 
-import {
-  StyleSheet,
-  View,
-  Text,
-  Pressable,
-  TouchableOpacity,
-  type StyleProp,
-  type TextStyle,
-  type ViewProps,
-  type ViewStyle,
-} from 'react-native';
+import { StyleSheet, View, type ViewProps } from 'react-native';
 
 import { webFieldA11y } from '../webFieldA11y/webFieldA11y';
 
 import { useUi } from '@dloizides/ui-feedback';
 
 import { Field } from '../Field/Field';
-import type { FieldSpacing } from '../Field/fieldSpacing';
 
-const TRANSPARENT_COLOR = 'transparent';
-const WHITE_COLOR = '#fff';
-const SOLID_RADIUS = 20;
-const OUTLINE_RADIUS = 999;
-const OUTLINE_PAD_H = 12;
-const OUTLINE_PAD_V = 5;
-const OUTLINE_FONT_SIZE = 13;
-const OUTLINE_TINT_ALPHA = 0.1;
-const HEX_SHORT_LENGTH = 3;
-const HEX_RADIX = 16;
-const RGB_R_START = 0;
-const RGB_R_END = 2;
-const RGB_G_END = 4;
-const RGB_B_END = 6;
-/**
- * Chips are visually compact (≈24–26px tall). `hitSlop` expands the pressable's TOUCH area
- * toward the WCAG ≥44px target WITHOUT changing the rendered pill size, so existing layouts are
- * byte-identical while taps/clicks get an easier target.
- */
-const CHIP_HIT_SLOP = { top: 10, bottom: 10, left: 4, right: 4 } as const;
-/** Gap between adjacent chips, horizontally and between wrapped rows. */
-const CHIP_GUTTER = 8;
-/** Gap between an option's icon and its label. */
-const CHIP_ICON_GAP = 6;
-
-/** Visual variant. `solid` = filled selected pill (default); `outline` = v1 tinted-outline. */
-export type ChipVariant = 'solid' | 'outline';
-
-/**
- * Role of a SINGLE-select chip. `button` (default) = today's semantics; `radio` = opt-in
- * `radiogroup` of `radio` chips carrying `aria-checked`. Ignored when `multiple` is set.
- * A string union rather than a `const enum` to match `ChipVariant`: a const enum does not
- * survive the package boundary for consumers compiled with `isolatedModules`.
- */
-export type ChipSingleSelectRole = 'button' | 'radio';
-
-/**
- * Default chip testID stem. NOT derived from the `testID` prop, because aml-v2's unit +
- * Playwright specs and erevna/katalogos's `Accessibility.test.tsx` already select on
- * `chip-selector-chip-<value>`. `chipTestIDPrefix` is the opt-in override for consumers
- * (kefi) that need their own stem; the default is frozen.
- */
-const DEFAULT_CHIP_TESTID_PREFIX = 'chip-selector-chip';
-
-/** Palette scale carrying the ink for content sitting ON the brand colour. */
-const ON_BRAND_SCALE = 'onBrand';
-/** The one step every theme scale is guaranteed to define. */
-const MAIN_STEP = '500';
-
-/**
- * Read the on-brand ink out of a theme palette.
- *
- * Deliberately typed as OPTIONAL rather than read through `palette.onBrand`. Two reasons:
- * this package's declared peer floor is `ui-feedback >= 1.1.0`, whose palette type has no
- * index signature at all; and even on current versions the index signature types every
- * scale as present, which is a lie — only `primary` is guaranteed, and most apps in the
- * fleet publish no `onBrand` scale today. Modelling it as absent-able is what makes the
- * `WHITE_COLOR` fallback honest instead of dead code.
- */
-function onBrandInk(palette: object): string {
-  const scales = palette as Record<string, Record<string, string> | undefined>;
-  return scales[ON_BRAND_SCALE]?.[MAIN_STEP] ?? WHITE_COLOR;
-}
-
-/** Composite a hex colour over the background at a given alpha (theme-driven tint). */
-function withAlpha(hex: string, alpha: number): string {
-  const normalized = hex.replace('#', '');
-  const isShort = normalized.length === HEX_SHORT_LENGTH;
-  const full = isShort ? normalized.split('').map((c) => c + c).join('') : normalized;
-  const r = parseInt(full.slice(RGB_R_START, RGB_R_END), HEX_RADIX);
-  const g = parseInt(full.slice(RGB_R_END, RGB_G_END), HEX_RADIX);
-  const b = parseInt(full.slice(RGB_G_END, RGB_B_END), HEX_RADIX);
-  const isValid = !Number.isNaN(r) && !Number.isNaN(g) && !Number.isNaN(b);
-  return isValid ? `rgba(${r}, ${g}, ${b}, ${alpha})` : hex;
-}
+import { OutlineChip } from './components/OutlineChip';
+import { SolidChip } from './components/SolidChip';
+import { CHIP_GUTTER, DEFAULT_CHIP_TESTID_PREFIX } from './constants';
+import { useRadioKeyboard } from './hooks/useRadioKeyboard';
+import type { ChipColors, ChipOption, ChipSelectorProps } from './types';
+import { buildChipColors } from './utils/chipColors';
+import { chipIdentity } from './utils/chipIdentity';
 
 const styles = StyleSheet.create({
   chipContainer: {
@@ -128,257 +52,7 @@ const styles = StyleSheet.create({
     // and is correct under BOTH of `Field`'s spacing models, not just the one it was tuned against.
     gap: CHIP_GUTTER,
   },
-  chip: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: SOLID_RADIUS,
-    backgroundColor: TRANSPARENT_COLOR,
-    borderWidth: 1,
-  },
-  chipOutline: {
-    paddingHorizontal: OUTLINE_PAD_H,
-    paddingVertical: OUTLINE_PAD_V,
-    borderRadius: OUTLINE_RADIUS,
-    borderWidth: 1,
-  },
-  chipContent: { flexDirection: 'row', alignItems: 'center', gap: CHIP_ICON_GAP },
-  chipText: {},
-  chipTextOutline: { fontSize: OUTLINE_FONT_SIZE },
 });
-
-/** Resolved, theme-derived colours for the two variants. */
-interface ChipColors {
-  border: string;
-  /** Strong ink for the solid variant's rest text (unchanged from the original). */
-  textStrong: string;
-  /** Muted ink for the outline variant's rest text (v1 ink-soft). */
-  textMuted: string;
-  primary: string;
-  /**
-   * Ink on a primary-filled chip. Reads the theme's `onBrand` scale when the app publishes one,
-   * falling back to white. It used to be a hardcoded `#fff`, which meant a tenant whose primary
-   * is light got white-on-light and failed contrast — the token slot is the fix, and the
-   * fallback keeps every app that has no `onBrand` scale rendering exactly as before.
-   */
-  onPrimary: string;
-  muted: string;
-  tint: string;
-}
-
-export interface ChipOption<T> {
-  value: T;
-  label: string;
-  /** Optional decorative icon rendered before the label; hidden from assistive tech. */
-  icon?: React.ReactNode;
-}
-
-export interface ChipSelectorProps<T> {
-  /** Optional — with no label, no label row is rendered (no phantom gap above the chips). */
-  label?: string;
-  options: Array<ChipOption<T>>;
-  value: T | T[];
-  onChange: (value: T) => void;
-  multiple?: boolean;
-  disabled?: boolean;
-  /** Visual variant. `solid` (default) = filled selected pill; `outline` = v1 tinted-outline. */
-  variant?: ChipVariant;
-  /**
-   * `StyleProp` (not a bare `ViewStyle`) so it composes the same way `Field`'s does — a caller can
-   * pass an array instead of restating a complete style per variant.
-   */
-  containerStyle?: StyleProp<ViewStyle>;
-  /**
-   * Forwarded verbatim to the underlying `Field`. `ChipSelector` deliberately holds NO spacing
-   * opinion of its own: it delegates, so the two cannot drift into disagreeing about how much room
-   * a chip block occupies. The guard for that is `chipSelectorFieldLockstep` in the tests.
-   */
-  spacing?: FieldSpacing;
-  /** Marks the selection mandatory — renders `Field`'s decorative `*` next to the label. */
-  required?: boolean;
-  /** Validation message under the chips, wired to the chip group via `aria-describedby`. */
-  error?: string;
-  testID?: string;
-  /**
-   * Stem for each chip's testID — a chip becomes `${chipTestIDPrefix}-${value}`. Defaults to
-   * `chip-selector-chip`, which existing specs select on; supply your own when a screen has
-   * several chip groups that must be addressed independently.
-   */
-  chipTestIDPrefix?: string;
-  /**
-   * Accessibility hint applied to every chip in the group. Supply a LOCALIZED string — the
-   * built-in default (`Selects <label>`) is English-only and exists solely so pre-existing
-   * consumers keep their current announcement.
-   */
-  optionAccessibilityHint?: string;
-  /**
-   * Opt-in radio semantics for a SINGLE-select group: the group becomes `role="radiogroup"` and
-   * each chip `role="radio"` + `aria-checked`. Defaults to `button` (unchanged behaviour).
-   * Ignored when `multiple` is set — a multi chip stays a toggle button with `aria-pressed`.
-   */
-  singleSelectRole?: ChipSingleSelectRole;
-}
-
-interface ChipProps<T> {
-  option: ChipOption<T>;
-  selected: boolean;
-  disabled: boolean;
-  colors: ChipColors;
-  /** Resolved `${prefix}-${value}` for this chip. */
-  testID: string;
-  /** Resolved hint for this chip — localized by the consumer, or the built-in English default. */
-  accessibilityHint: string;
-  /**
-   * Web-only toggle state for a MULTI-select chip; `undefined` for single-select.
-   *
-   * Why `aria-pressed` on a button and not `role="checkbox"`: react-native-web renders
-   * `accessibilityRole="button"` as a real `<button>`, but ANY other role as a plain `<div>`.
-   * Switching a multi chip to `checkbox` therefore trades native keyboard activation for a
-   * div that only looks right — the same RN-web trap that produced the held-Enter defect
-   * elsewhere in this fleet. A toggle button (`role=button` + `aria-pressed`) conveys the
-   * on/off state to assistive tech AND keeps Space/Enter working for free.
-   *
-   * It is passed as a literal web prop because RNW 0.21 emits NOTHING from
-   * `accessibilityState` on web — verified, not assumed — so the `accessibilityState` below
-   * is carrying native only.
-   */
-  ariaPressed?: boolean;
-  /** `radio` only for an opt-in radio group (see `singleSelectRole`); otherwise `button`. */
-  accessibilityRole: ChipSingleSelectRole;
-  /**
-   * Web-only checked state of a RADIO chip; `undefined` otherwise. Literal web prop for the
-   * same reason as `ariaPressed`. Trade-off of the opt-in: RNW renders a non-button role as a
-   * `<div>`, which RNW's press responder activates on Enter but NOT on Space — why the default
-   * stays `button`.
-   */
-  ariaChecked?: boolean;
-}
-
-/**
- * The a11y + testID triple a chip needs, resolved once for both variants.
- *
- * Exported for direct unit testing. It has to be tested as a pure function rather than
- * through the DOM because react-native-web DROPS `accessibilityHint` entirely — it reaches
- * native, but no web attribute carries it, so no rendering assertion can tell a correctly
- * threaded hint from one that was never passed. Testing the resolver is the only honest way
- * to pin the behaviour.
- */
-export function chipIdentity<T>(
-  option: ChipOption<T>,
-  selected: boolean,
-  config: { prefix: string; hint?: string; multiple: boolean; radio?: boolean },
-): Pick<ChipProps<T>, 'testID' | 'accessibilityHint' | 'ariaPressed' | 'accessibilityRole' | 'ariaChecked'> {
-  const isRadio = config.radio === true && !config.multiple;
-  return {
-    testID: `${config.prefix}-${String(option.value)}`,
-    // The English default is retained verbatim: erevna/katalogos assert the exact string
-    // `Selects Red`. Consumers that localize pass `optionAccessibilityHint`.
-    accessibilityHint: config.hint ?? `Selects ${option.label}`,
-    ariaPressed: config.multiple ? selected : undefined,
-    accessibilityRole: isRadio ? 'radio' : 'button',
-    ariaChecked: isRadio ? selected : undefined,
-  };
-}
-
-/** Chip label, preceded by the option's decorative icon when one is supplied. */
-function ChipContent({ icon, label, textStyle }: {
-  icon: React.ReactNode;
-  label: string;
-  textStyle: StyleProp<TextStyle>;
-}): React.ReactElement {
-  const text = <Text style={textStyle}>{label}</Text>;
-  if (icon === undefined || icon === null)
-    return text;
-
-  return (
-    <View style={styles.chipContent}>
-      <View aria-hidden>{icon}</View>
-      {text}
-    </View>
-  );
-}
-
-/** A single outline chip — owns its own hover state (web) for the border/ink lift. */
-function OutlineChip<T extends string | number>({
-  option,
-  selected,
-  disabled,
-  colors,
-  testID,
-  accessibilityHint,
-  ariaPressed,
-  accessibilityRole,
-  ariaChecked,
-  onPress,
-}: ChipProps<T> & { onPress: () => void }): React.ReactElement {
-  const [hovered, setHovered] = React.useState(false);
-  const active = selected || hovered;
-
-  const borderColor = active ? colors.primary : colors.border;
-  const backgroundColor = selected ? colors.tint : colors.muted;
-  // Selected AND hovered both lift the ink to the primary colour (v1's indigo / indigo-dark);
-  // the theme surface only guarantees the 500 step, so both use it — border + fill carry the state.
-  const textColor = active ? colors.primary : colors.textMuted;
-
-  return (
-    <Pressable
-      accessibilityHint={accessibilityHint}
-      accessibilityLabel={option.label}
-      accessibilityRole={accessibilityRole}
-      accessibilityState={{ selected, disabled }}
-      aria-checked={ariaChecked}
-      aria-pressed={ariaPressed}
-      disabled={disabled}
-      hitSlop={CHIP_HIT_SLOP}
-      testID={testID}
-      onHoverIn={() => setHovered(true)}
-      onHoverOut={() => setHovered(false)}
-      onPress={onPress}
-    >
-      <View style={[styles.chipOutline, { borderColor, backgroundColor }]}>
-        <ChipContent
-          icon={option.icon}
-          label={option.label}
-          textStyle={[styles.chipText, styles.chipTextOutline, { color: textColor }]}
-        />
-      </View>
-    </Pressable>
-  );
-}
-
-/** A single solid chip — the original filled-pill look (unchanged for existing consumers). */
-function SolidChip<T extends string | number>({
-  option,
-  selected,
-  disabled,
-  colors,
-  testID,
-  accessibilityHint,
-  ariaPressed,
-  accessibilityRole,
-  ariaChecked,
-  onPress,
-}: ChipProps<T> & { onPress: () => void }): React.ReactElement {
-  const backgroundColor = selected ? colors.primary : TRANSPARENT_COLOR;
-  const textColor = selected ? colors.onPrimary : colors.textStrong;
-  return (
-    <TouchableOpacity
-      accessibilityHint={accessibilityHint}
-      accessibilityLabel={option.label}
-      accessibilityRole={accessibilityRole}
-      accessibilityState={{ selected, disabled }}
-      aria-checked={ariaChecked}
-      aria-pressed={ariaPressed}
-      disabled={disabled}
-      hitSlop={CHIP_HIT_SLOP}
-      testID={testID}
-      onPress={onPress}
-    >
-      <View style={[styles.chip, { borderColor: colors.border, backgroundColor }]}>
-        <ChipContent icon={option.icon} label={option.label} textStyle={[styles.chipText, { color: textColor }]} />
-      </View>
-    </TouchableOpacity>
-  );
-}
 
 /*
  * `groupA11yProps` + its local `WebGroupA11y` type used to live here — a copy of
@@ -407,18 +81,7 @@ export const ChipSelector = <T extends string | number>({
   const { theme } = useUi();
   const { colors, palette } = theme;
 
-  const chipColors = React.useMemo<ChipColors>(() => {
-    const primary = palette.primary['500'];
-    return {
-      border: colors.border,
-      textStrong: colors.text,
-      textMuted: colors.textSecondary,
-      primary,
-      onPrimary: onBrandInk(palette),
-      muted: colors.background,
-      tint: withAlpha(primary, OUTLINE_TINT_ALPHA),
-    };
-  }, [colors.border, colors.text, colors.textSecondary, colors.background, palette]);
+  const chipColors = React.useMemo<ChipColors>(() => buildChipColors(colors, palette), [colors, palette]);
 
   function isSelected(optionValue: T): boolean {
     if (multiple && Array.isArray(value))
@@ -427,7 +90,15 @@ export const ChipSelector = <T extends string | number>({
     return value === optionValue;
   }
 
-  function renderChip(option: ChipOption<T>): React.ReactElement {
+  const radio = useRadioKeyboard({
+    enabled: isRadioGroup,
+    disabled,
+    values: options.map((option) => option.value),
+    selectedIndex: options.findIndex((option) => isSelected(option.value)),
+    onChange,
+  });
+
+  function renderChip(option: ChipOption<T>, index: number): React.ReactElement {
     const selected = isSelected(option.value);
     const chipProps = {
       colors: chipColors,
@@ -440,6 +111,10 @@ export const ChipSelector = <T extends string | number>({
         multiple,
         radio: isRadioGroup,
       }),
+      // Radio mode only: roving tab stop + host node for arrow-key focus moves. Both stay
+      // `undefined` otherwise, so button / multi chips keep their existing tab order.
+      tabIndex: radio.tabIndexFor(index),
+      hostRef: isRadioGroup ? radio.chipRef(index) : undefined,
       onPress: (): void => onChange(option.value),
     };
     const key = String(option.value);
@@ -460,6 +135,7 @@ export const ChipSelector = <T extends string | number>({
           accessibilityRole={isRadioGroup ? 'radiogroup' : undefined}
           style={styles.chipContainer}
           {...(webFieldA11y({ describedById, hasError }) as ViewProps)}
+          {...radio.groupProps}
         >
           {options.map(renderChip)}
         </View>

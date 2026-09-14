@@ -50,7 +50,7 @@ export { DEFAULT_MAX_RECENTS } from './useRecentValues/recentValuesCore';
 export type { RecentValues } from './useRecentValues/useRecentValues';
 
 export { ChipSelector } from './ChipSelector/ChipSelector';
-export type { ChipSelectorProps, ChipOption, ChipVariant, ChipSingleSelectRole } from './ChipSelector/ChipSelector';
+export type { ChipSelectorProps, ChipOption, ChipVariant, ChipSingleSelectRole } from './ChipSelector/types';
 
 export { FormSwitch } from './FormSwitch/FormSwitch';
 export type { FormSwitchProps } from './FormSwitch/FormSwitch';

@@ -78,16 +78,19 @@ export const FormSwitch = ({
         ) : null}
       </View>
       {/*
-        `aria-checked` / `aria-disabled` are literal web props because react-native-web 0.21 emits
-        NOTHING from `accessibilityState` on web (A11Y-ARIA-CHECKED-1); `accessibilityState` below
-        now carries native only.
+        Exactly ONE element exposes the switch (A11Y-ARIA-CHECKED-1). On web, react-native-web's
+        Switch renders a wrapper <div> around a native <input type="checkbox" role="switch"> that
+        already carries `checked` / `disabled` — the state assistive tech reads (HTML-AAM maps
+        `checked` to the checked state, so no `aria-checked` is needed or allowed on it).
+        Passing `accessibilityRole="switch"` here put a SECOND `role="switch"` on the wrapper,
+        which RNW then made a `tabindex="0"` stop even when disabled; literal `aria-checked` /
+        `aria-disabled` would land on that role-less wrapper too. So neither is passed: the
+        wrapper is plain and unfocusable, and native keeps its `switch` role from RN's Switch
+        default (`accessibilityRole ?? 'switch'`) plus `accessibilityState` below.
       */}
       <Switch
-        aria-checked={value}
-        aria-disabled={disabled || undefined}
         accessibilityHint={accessibilityHint ?? label}
         accessibilityLabel={label}
-        accessibilityRole="switch"
         accessibilityState={{ checked: value, disabled }}
         disabled={disabled}
         testID={testID}

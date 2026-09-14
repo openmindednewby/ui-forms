@@ -10,7 +10,8 @@ import { render, screen, fireEvent } from '@testing-library/react';
 
 import { FormField } from '../FormField/FormField';
 
-import { ChipSelector, chipIdentity } from './ChipSelector';
+import { ChipSelector } from './ChipSelector';
+import { chipIdentity } from './utils/chipIdentity';
 
 const OPTIONS = [
   { value: 'a', label: 'Alpha' },
@@ -290,8 +291,8 @@ describe('ChipSelector single-select radio semantics (opt-in)', () => {
   });
 
   it('activates a radio chip from the keyboard with Enter (RNW press responder)', () => {
-    // A radio chip is a <div>, not a <button>. RNW's press responder activates it on Enter but
-    // NOT on Space — the documented trade-off of the opt-in, and why the default stays button.
+    // A radio chip is a <div>, not a <button>. RNW's press responder activates it on Enter; Space
+    // and the arrow keys come from useRadioKeyboard (see hooks/useRadioKeyboard.test.tsx).
     const onChange = jest.fn();
     render(<ChipSelector options={OPTIONS} singleSelectRole="radio" value="a" onChange={onChange} />);
     const chip = screen.getByTestId('chip-selector-chip-b');
