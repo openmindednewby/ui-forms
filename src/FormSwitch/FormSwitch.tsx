@@ -77,11 +77,18 @@ export const FormSwitch = ({
           <Text style={[styles.description, themeStyles.description]}>{description}</Text>
         ) : null}
       </View>
+      {/*
+        `aria-checked` / `aria-disabled` are literal web props because react-native-web 0.21 emits
+        NOTHING from `accessibilityState` on web (A11Y-ARIA-CHECKED-1); `accessibilityState` below
+        now carries native only.
+      */}
       <Switch
+        aria-checked={value}
+        aria-disabled={disabled || undefined}
         accessibilityHint={accessibilityHint ?? label}
         accessibilityLabel={label}
         accessibilityRole="switch"
-        accessibilityState={{ checked: value }}
+        accessibilityState={{ checked: value, disabled }}
         disabled={disabled}
         testID={testID}
         value={value}

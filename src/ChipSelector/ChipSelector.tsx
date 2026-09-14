@@ -23,6 +23,7 @@ import {
   Pressable,
   TouchableOpacity,
   type StyleProp,
+  type TextStyle,
   type ViewProps,
   type ViewStyle,
 } from 'react-native';
@@ -56,9 +57,19 @@ const RGB_B_END = 6;
 const CHIP_HIT_SLOP = { top: 10, bottom: 10, left: 4, right: 4 } as const;
 /** Gap between adjacent chips, horizontally and between wrapped rows. */
 const CHIP_GUTTER = 8;
+/** Gap between an option's icon and its label. */
+const CHIP_ICON_GAP = 6;
 
 /** Visual variant. `solid` = filled selected pill (default); `outline` = v1 tinted-outline. */
 export type ChipVariant = 'solid' | 'outline';
+
+/**
+ * Role of a SINGLE-select chip. `button` (default) = today's semantics; `radio` = opt-in
+ * `radiogroup` of `radio` chips carrying `aria-checked`. Ignored when `multiple` is set.
+ * A string union rather than a `const enum` to match `ChipVariant`: a const enum does not
+ * survive the package boundary for consumers compiled with `isolatedModules`.
+ */
+export type ChipSingleSelectRole = 'button' | 'radio';
 
 /**
  * Default chip testID stem. NOT derived from the `testID` prop, because aml-v2's unit +
@@ -130,6 +141,7 @@ const styles = StyleSheet.create({
     borderRadius: OUTLINE_RADIUS,
     borderWidth: 1,
   },
+  chipContent: { flexDirection: 'row', alignItems: 'center', gap: CHIP_ICON_GAP },
   chipText: {},
   chipTextOutline: { fontSize: OUTLINE_FONT_SIZE },
 });
@@ -156,6 +168,8 @@ interface ChipColors {
 export interface ChipOption<T> {
   value: T;
   label: string;
+  /** Optional decorative icon rendered before the label; hidden from assistive tech. */
+  icon?: React.ReactNode;
 }
 
 export interface ChipSelectorProps<T> {
@@ -196,6 +210,12 @@ export interface ChipSelectorProps<T> {
    * consumers keep their current announcement.
    */
   optionAccessibilityHint?: string;
+  /**
+   * Opt-in radio semantics for a SINGLE-select group: the group becomes `role="radiogroup"` and
+   * each chip `role="radio"` + `aria-checked`. Defaults to `button` (unchanged behaviour).
+   * Ignored when `multiple` is set — a multi chip stays a toggle button with `aria-pressed`.
+   */
+  singleSelectRole?: ChipSingleSelectRole;
 }
 
 interface ChipProps<T> {
@@ -222,6 +242,15 @@ interface ChipProps<T> {
    * is carrying native only.
    */
   ariaPressed?: boolean;
+  /** `radio` only for an opt-in radio group (see `singleSelectRole`); otherwise `button`. */
+  accessibilityRole: ChipSingleSelectRole;
+  /**
+   * Web-only checked state of a RADIO chip; `undefined` otherwise. Literal web prop for the
+   * same reason as `ariaPressed`. Trade-off of the opt-in: RNW renders a non-button role as a
+   * `<div>`, which RNW's press responder activates on Enter but NOT on Space — why the default
+   * stays `button`.
+   */
+  ariaChecked?: boolean;
 }
 
 /**
@@ -236,15 +265,36 @@ interface ChipProps<T> {
 export function chipIdentity<T>(
   option: ChipOption<T>,
   selected: boolean,
-  config: { prefix: string; hint?: string; multiple: boolean },
-): Pick<ChipProps<T>, 'testID' | 'accessibilityHint' | 'ariaPressed'> {
+  config: { prefix: string; hint?: string; multiple: boolean; radio?: boolean },
+): Pick<ChipProps<T>, 'testID' | 'accessibilityHint' | 'ariaPressed' | 'accessibilityRole' | 'ariaChecked'> {
+  const isRadio = config.radio === true && !config.multiple;
   return {
     testID: `${config.prefix}-${String(option.value)}`,
     // The English default is retained verbatim: erevna/katalogos assert the exact string
     // `Selects Red`. Consumers that localize pass `optionAccessibilityHint`.
     accessibilityHint: config.hint ?? `Selects ${option.label}`,
     ariaPressed: config.multiple ? selected : undefined,
+    accessibilityRole: isRadio ? 'radio' : 'button',
+    ariaChecked: isRadio ? selected : undefined,
   };
+}
+
+/** Chip label, preceded by the option's decorative icon when one is supplied. */
+function ChipContent({ icon, label, textStyle }: {
+  icon: React.ReactNode;
+  label: string;
+  textStyle: StyleProp<TextStyle>;
+}): React.ReactElement {
+  const text = <Text style={textStyle}>{label}</Text>;
+  if (icon === undefined || icon === null)
+    return text;
+
+  return (
+    <View style={styles.chipContent}>
+      <View aria-hidden>{icon}</View>
+      {text}
+    </View>
+  );
 }
 
 /** A single outline chip — owns its own hover state (web) for the border/ink lift. */
@@ -256,6 +306,8 @@ function OutlineChip<T extends string | number>({
   testID,
   accessibilityHint,
   ariaPressed,
+  accessibilityRole,
+  ariaChecked,
   onPress,
 }: ChipProps<T> & { onPress: () => void }): React.ReactElement {
   const [hovered, setHovered] = React.useState(false);
@@ -271,8 +323,9 @@ function OutlineChip<T extends string | number>({
     <Pressable
       accessibilityHint={accessibilityHint}
       accessibilityLabel={option.label}
-      accessibilityRole="button"
+      accessibilityRole={accessibilityRole}
       accessibilityState={{ selected, disabled }}
+      aria-checked={ariaChecked}
       aria-pressed={ariaPressed}
       disabled={disabled}
       hitSlop={CHIP_HIT_SLOP}
@@ -282,7 +335,11 @@ function OutlineChip<T extends string | number>({
       onPress={onPress}
     >
       <View style={[styles.chipOutline, { borderColor, backgroundColor }]}>
-        <Text style={[styles.chipText, styles.chipTextOutline, { color: textColor }]}>{option.label}</Text>
+        <ChipContent
+          icon={option.icon}
+          label={option.label}
+          textStyle={[styles.chipText, styles.chipTextOutline, { color: textColor }]}
+        />
       </View>
     </Pressable>
   );
@@ -297,6 +354,8 @@ function SolidChip<T extends string | number>({
   testID,
   accessibilityHint,
   ariaPressed,
+  accessibilityRole,
+  ariaChecked,
   onPress,
 }: ChipProps<T> & { onPress: () => void }): React.ReactElement {
   const backgroundColor = selected ? colors.primary : TRANSPARENT_COLOR;
@@ -305,8 +364,9 @@ function SolidChip<T extends string | number>({
     <TouchableOpacity
       accessibilityHint={accessibilityHint}
       accessibilityLabel={option.label}
-      accessibilityRole="button"
+      accessibilityRole={accessibilityRole}
       accessibilityState={{ selected, disabled }}
+      aria-checked={ariaChecked}
       aria-pressed={ariaPressed}
       disabled={disabled}
       hitSlop={CHIP_HIT_SLOP}
@@ -314,7 +374,7 @@ function SolidChip<T extends string | number>({
       onPress={onPress}
     >
       <View style={[styles.chip, { borderColor: colors.border, backgroundColor }]}>
-        <Text style={[styles.chipText, { color: textColor }]}>{option.label}</Text>
+        <ChipContent icon={option.icon} label={option.label} textStyle={[styles.chipText, { color: textColor }]} />
       </View>
     </TouchableOpacity>
   );
@@ -341,7 +401,9 @@ export const ChipSelector = <T extends string | number>({
   testID,
   chipTestIDPrefix = DEFAULT_CHIP_TESTID_PREFIX,
   optionAccessibilityHint,
+  singleSelectRole = 'button',
 }: ChipSelectorProps<T>): React.ReactElement => {
+  const isRadioGroup = !multiple && singleSelectRole === 'radio';
   const { theme } = useUi();
   const { colors, palette } = theme;
 
@@ -376,6 +438,7 @@ export const ChipSelector = <T extends string | number>({
         prefix: chipTestIDPrefix,
         hint: optionAccessibilityHint,
         multiple,
+        radio: isRadioGroup,
       }),
       onPress: (): void => onChange(option.value),
     };
@@ -393,7 +456,11 @@ export const ChipSelector = <T extends string | number>({
       testID={testID}
     >
       {({ describedById, hasError }) => (
-        <View style={styles.chipContainer} {...(webFieldA11y({ describedById, hasError }) as ViewProps)}>
+        <View
+          accessibilityRole={isRadioGroup ? 'radiogroup' : undefined}
+          style={styles.chipContainer}
+          {...(webFieldA11y({ describedById, hasError }) as ViewProps)}
+        >
           {options.map(renderChip)}
         </View>
       )}

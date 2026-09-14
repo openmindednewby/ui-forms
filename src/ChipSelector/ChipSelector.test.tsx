@@ -244,3 +244,74 @@ describe('ChipSelector multi-select toggle semantics', () => {
     expect(onChange).toHaveBeenCalledWith('b');
   });
 });
+
+/**
+ * Radio semantics are OPT-IN (`singleSelectRole="radio"`, single-select only). The default stays
+ * `role=button` because every existing consumer's specs select on it and a `<button>` gets
+ * Space/Enter activation natively — see the multi-select block above for the RN-web trap.
+ */
+describe('ChipSelector single-select radio semantics (opt-in)', () => {
+  it('renders a radiogroup of radios with aria-checked when singleSelectRole="radio"', () => {
+    render(<ChipSelector options={OPTIONS} singleSelectRole="radio" value="a" onChange={noop} />);
+    const chipA = screen.getByTestId('chip-selector-chip-a');
+    expect(chipA.getAttribute('role')).toBe('radio');
+    expect(chipA.getAttribute('aria-checked')).toBe('true');
+    expect(screen.getByTestId('chip-selector-chip-b').getAttribute('aria-checked')).toBe('false');
+    expect(chipA.closest('[role="radiogroup"]')).not.toBeNull();
+  });
+
+  it('keeps button semantics by default (no radiogroup, no aria-checked)', () => {
+    render(<ChipSelector options={OPTIONS} value="a" onChange={noop} />);
+    const chipA = screen.getByTestId('chip-selector-chip-a');
+    expect(chipA.getAttribute('role')).toBe('button');
+    expect(chipA.getAttribute('aria-checked')).toBeNull();
+    expect(chipA.closest('[role="radiogroup"]')).toBeNull();
+  });
+
+  it('ignores singleSelectRole="radio" for a multi-select group', () => {
+    render(<ChipSelector multiple options={OPTIONS} singleSelectRole="radio" value={['a']} onChange={noop} />);
+    const chipA = screen.getByTestId('chip-selector-chip-a');
+    expect(chipA.getAttribute('role')).toBe('button');
+    expect(chipA.getAttribute('aria-pressed')).toBe('true');
+    expect(chipA.closest('[role="radiogroup"]')).toBeNull();
+  });
+
+  it('applies radio semantics to the outline variant too', () => {
+    render(<ChipSelector options={OPTIONS} singleSelectRole="radio" value="b" variant="outline" onChange={noop} />);
+    expect(screen.getByTestId('chip-selector-chip-b').getAttribute('role')).toBe('radio');
+    expect(screen.getByTestId('chip-selector-chip-b').getAttribute('aria-checked')).toBe('true');
+  });
+
+  it('still fires onChange when a radio chip is clicked', () => {
+    const onChange = jest.fn();
+    render(<ChipSelector options={OPTIONS} singleSelectRole="radio" value="a" onChange={onChange} />);
+    fireEvent.click(screen.getByTestId('chip-selector-chip-b'));
+    expect(onChange).toHaveBeenCalledWith('b');
+  });
+
+  it('activates a radio chip from the keyboard with Enter (RNW press responder)', () => {
+    // A radio chip is a <div>, not a <button>. RNW's press responder activates it on Enter but
+    // NOT on Space — the documented trade-off of the opt-in, and why the default stays button.
+    const onChange = jest.fn();
+    render(<ChipSelector options={OPTIONS} singleSelectRole="radio" value="a" onChange={onChange} />);
+    const chip = screen.getByTestId('chip-selector-chip-b');
+    fireEvent.keyDown(chip, { key: 'Enter' });
+    fireEvent.keyUp(chip, { key: 'Enter' });
+    expect(onChange).toHaveBeenCalledWith('b');
+  });
+});
+
+describe('ChipSelector option icon slot', () => {
+  it('renders an option icon before the label, hidden from assistive tech', () => {
+    const withIcon = [{ value: 'a', label: 'Alpha', icon: <span data-testid="icon-a" /> }];
+    render(<ChipSelector options={withIcon} value="" onChange={noop} />);
+    const icon = screen.getByTestId('icon-a');
+    const chip = screen.getByTestId('chip-selector-chip-a');
+    expect(chip.textContent).toBe('Alpha');
+    expect(icon.closest('[aria-hidden="true"]')).not.toBeNull();
+    const label = screen.getByText('Alpha');
+    // DOCUMENT_POSITION_FOLLOWING: the label comes after the icon in document order.
+    // eslint-disable-next-line no-bitwise
+    expect(icon.compareDocumentPosition(label) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+});

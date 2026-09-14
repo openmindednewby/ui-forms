@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.15.0
+
+**`FormSwitch` now emits `aria-checked` / `aria-disabled` on web; `ChipSelector` gained an option icon slot and opt-in radio semantics.**
+
+`FormSwitch` (A11Y-ARIA-CHECKED-1): react-native-web 0.21 emits nothing from `accessibilityState` on web, so the
+switch wrapper rendered `role="switch"` with no `aria-checked` - an invalid switch that announced no state. The
+state is now passed as literal `aria-checked` (always) and `aria-disabled` (only when disabled) web props;
+`accessibilityState` also carries `disabled` for native.
+
+`ChipSelector`:
+- `ChipOption.icon?: React.ReactNode` - rendered before the label inside the chip, wrapped `aria-hidden`. Options
+  without an icon render the exact same tree as before.
+- `singleSelectRole?: 'button' | 'radio'` (type `ChipSingleSelectRole`). Default `button` = unchanged. With
+  `radio` and `multiple` unset, the group is `role="radiogroup"` and each chip `role="radio"` + `aria-checked`.
+  Ignored for multi-select. Trade-off: RN-web renders a radio chip as a `<div>`, which activates on Enter but not
+  Space and has no arrow-key roving focus.
+
+**Additive and backward-compatible.** No prop set = identical DOM for every existing consumer.
+
 ## 1.14.0
 
 **`FormField` gained an opt-in `recentKey` — remember the last N submitted values and offer them on focus.**
