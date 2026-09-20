@@ -86,3 +86,15 @@ export type { AnchoredMenuProps, AnchoredMenuColors } from './AnchoredMenu/Ancho
 export { controlStyles } from './controls/controlStyles';
 export { suggestOptions, isUnmatched } from './controls/suggestOptions';
 export type { ControlOption, DateRangeValue } from './controls/controlTypes';
+
+// ---------------------------------------------------------------------------
+// GROUP SELECTION — pure tri-state logic for "select all" / "select this category" controls.
+//
+// Extracted from ui-tables' private DataTable/selection.ts, which could not be reached by a
+// second consumer: its tri-state is a `const enum` (an ambient const enum in a published .d.ts,
+// which isolatedModules consumers reject) and it is page-scoped. Component-free on purpose —
+// the control itself is app chrome; only the arithmetic is shared.
+// ---------------------------------------------------------------------------
+
+export { resolveGroupSelection, groupAriaChecked, toggleGroupSelection } from './groupSelection/groupSelection';
+export type { GroupSelection } from './groupSelection/groupSelection';
