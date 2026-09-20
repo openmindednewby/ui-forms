@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.17.0
+
+**Chips now have a 44px minimum touch target on web. `hitSlop` never did that — it is native-only.**
+
+`CHIP_HIT_SLOP` was documented as expanding the chip's touch area toward the WCAG ≥44px floor
+"without changing the rendered pill size". Measured in headless Chromium at 360x640 on 2026-09-21:
+a chip's box is 33px tall (`paddingVertical: 6`), and `document.elementFromPoint(68, 35)` — 5px
+above a top edge at y=40, inside `CHIP_HIT_SLOP.top: 10` — returns the PARENT element, not the
+chip. react-native-web 0.21.2 references `hitSlop` only inside the legacy `Touchable` mixin's
+press-RETENTION path (after the responder is already granted) and not at all in `Pressable`, so on
+web the rendered box is the entire tappable area. The chips were a 33px target in all seven portals.
+
+- `chipStyles.chip` and `chipStyles.chipOutline` gain `minHeight: 44` + `justifyContent: 'center'`.
+  Chip width is unchanged (56.7px and 68px before and after for the same labels), so wrapping and
+  `CHIP_GUTTER` spacing are untouched; a chip row grows 33px → 44px tall.
+- `CHIP_HIT_SLOP` is kept and still helps iOS/Android. Its doc comment now states the web result
+  instead of claiming one.
+- Consumers with a dense chip strip should re-check row spacing: the pill itself is taller now.
+
 ## 1.15.0
 
 **`FormSwitch` now emits `aria-checked` / `aria-disabled` on web; `ChipSelector` gained an option icon slot and opt-in radio semantics.**
