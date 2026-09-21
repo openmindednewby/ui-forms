@@ -7,7 +7,7 @@
  * its state follows the props, and that the wrapper is never a (second) tab stop.
  * `useUi()` falls back to the default theme with no provider, so a plain `render` is enough.
  */
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import { FormSwitch } from './FormSwitch';
 
@@ -58,5 +58,27 @@ describe('FormSwitch web semantics', () => {
   it('leaves the input as the only tab stop when enabled', () => {
     render(<FormSwitch value label="Optional" testID="sw" onValueChange={noop} />);
     expect(screen.getByTestId('sw').getAttribute('tabindex')).toBeNull();
+  });
+
+  it('toggles once from a press anywhere on the 44px row (SHOWCASE-1)', () => {
+    const onValueChange = jest.fn();
+    render(<FormSwitch label="Optional" testID="sw" value={false} onValueChange={onValueChange} />);
+    fireEvent.click(screen.getByTestId('sw-row'));
+    expect(onValueChange).toHaveBeenCalledTimes(1);
+    expect(onValueChange).toHaveBeenCalledWith(true);
+  });
+
+  it('ignores a row press when disabled', () => {
+    const onValueChange = jest.fn();
+    render(<FormSwitch disabled value label="Required" testID="sw" onValueChange={onValueChange} />);
+    fireEvent.click(screen.getByTestId('sw-row'));
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
+  it('never makes the row a tab stop or a second switch', () => {
+    render(<FormSwitch value label="Optional" testID="sw" onValueChange={noop} />);
+    const row = screen.getByTestId('sw-row');
+    expect(row.getAttribute('tabindex')).toBe('-1');
+    expect(row.getAttribute('role')).toBeNull();
   });
 });

@@ -8,6 +8,7 @@ import React from 'react';
 
 import { Platform, StyleSheet, View, Text, Pressable, type TextStyle, type ViewStyle } from 'react-native';
 
+import { MIN_TOUCH_TARGET_PX } from '@dloizides/a11y';
 import { useUi } from '@dloizides/ui-feedback';
 
 /**
@@ -34,6 +35,13 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     gap: 10,
     marginBottom: 12,
+    // The whole row is the Pressable, so the row IS the hit box: on RN-web `hitSlop` is inert and a
+    // one-line label measured 36px tall (SHOWCASE-1). The 20px visual box keeps its size inside.
+    minHeight: MIN_TOUCH_TARGET_PX,
+  },
+  /** With no hint the row is a single line, so centre it vertically inside the floor. */
+  centered: {
+    alignItems: 'center',
   },
   box: {
     width: BOX_SIZE,
@@ -133,7 +141,12 @@ export const FormCheckbox = ({
       disabled={disabled}
       onPress={toggle}
       role="checkbox"
-      style={[styles.container, containerStyle, disabled ? { opacity: DISABLED_OPACITY } : null]}
+      style={[
+        styles.container,
+        hasHint ? null : styles.centered,
+        containerStyle,
+        disabled ? { opacity: DISABLED_OPACITY } : null,
+      ]}
       testID={testID}
       {...keyboardProps}
     >

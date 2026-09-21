@@ -95,7 +95,13 @@ export const controlStyles = StyleSheet.create({
     elevation: MENU_ELEVATION,
     overflow: 'hidden',
   },
-  option: { paddingHorizontal: MENU_OPT_PAD_H, paddingVertical: MENU_OPT_PAD_V },
+  /** A menu option is a tap target, so it carries the kit floor (SHOWCASE-1). */
+  option: {
+    minHeight: MIN_TOUCH_TARGET_PX,
+    justifyContent: 'center',
+    paddingHorizontal: MENU_OPT_PAD_H,
+    paddingVertical: MENU_OPT_PAD_V,
+  },
   optionText: { fontSize: OPTION_FONT },
   error: { fontSize: ERROR_FONT, marginTop: ERROR_GAP },
 });
