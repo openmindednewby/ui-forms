@@ -14,6 +14,7 @@
 import { StyleSheet } from 'react-native';
 
 import { MIN_TOUCH_TARGET_PX } from '@dloizides/a11y';
+import { Z_INDEX } from '@dloizides/design-tokens';
 
 const FIELD_GAP = 4;
 const LABEL_FONT = 11;
@@ -32,7 +33,6 @@ const MENU_OPT_PAD_H = 12;
 const MENU_OPT_PAD_V = 8;
 const MENU_MIN_WIDTH = 160;
 const MENU_MAX_HEIGHT = 260;
-const MENU_Z = 1000;
 const MENU_ELEVATION = 8;
 const MENU_BOX_SHADOW = '0px 2px 8px rgba(0, 0, 0, 0.15)';
 const OPTION_FONT = 14;
@@ -90,7 +90,7 @@ export const controlStyles = StyleSheet.create({
     borderWidth: INPUT_BORDER,
     borderRadius: MENU_RADIUS,
     paddingVertical: MENU_PAD_V,
-    zIndex: MENU_Z,
+    zIndex: Z_INDEX.dropdown,
     boxShadow: MENU_BOX_SHADOW,
     elevation: MENU_ELEVATION,
     overflow: 'hidden',

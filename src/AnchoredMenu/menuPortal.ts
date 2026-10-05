@@ -27,10 +27,15 @@ import type { RefObject } from 'react';
 import { Platform, type ViewStyle } from 'react-native';
 import type { View as RNView } from 'react-native';
 
+import { Z_INDEX } from '@dloizides/design-tokens';
+
 const IS_WEB = Platform.OS === 'web';
 
-/** z-index for the open popover — high enough to clear app chrome (fields, guides, tables, cards). */
-export const MENU_PORTAL_Z_INDEX = 1000;
+/**
+ * z-index for the open popover: the shared `popover` layer, above RN-web's body-level `Modal`
+ * (9999) so a menu opened inside a dialog paints and clicks on top of it, and below toasts.
+ */
+export const MENU_PORTAL_Z_INDEX = Z_INDEX.popover;
 /** Gap between the trigger's bottom edge and the popover's top edge. */
 const MENU_TOP_GAP = 4;
 
