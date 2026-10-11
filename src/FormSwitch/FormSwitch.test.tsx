@@ -11,6 +11,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 
 import { FormSwitch } from './FormSwitch';
 
+const WCAG_MIN_TARGET_PX = 44;
 const noop = (): void => undefined;
 
 const theSwitch = (): HTMLInputElement => {
@@ -73,6 +74,24 @@ describe('FormSwitch web semantics', () => {
     render(<FormSwitch disabled value label="Required" testID="sw" onValueChange={onValueChange} />);
     fireEvent.click(screen.getByTestId('sw-row'));
     expect(onValueChange).not.toHaveBeenCalled();
+  });
+
+  it('with any containerStyle, gives the switch a pressable slot of at least 44x44', () => {
+    render(<FormSwitch value containerStyle={{ minHeight: 0 }} label="Optional" testID="sw" onValueChange={noop} />);
+
+    const slot = getComputedStyle(screen.getByTestId('sw-hitbox'));
+
+    expect(parseFloat(slot.minWidth)).toBeGreaterThanOrEqual(WCAG_MIN_TARGET_PX);
+    expect(parseFloat(slot.minHeight)).toBeGreaterThanOrEqual(WCAG_MIN_TARGET_PX);
+  });
+
+  it('with a press on the switch slot, toggles once through the row', () => {
+    const onValueChange = jest.fn();
+    render(<FormSwitch label="Optional" testID="sw" value={false} onValueChange={onValueChange} />);
+
+    fireEvent.click(screen.getByTestId('sw-hitbox'));
+
+    expect(onValueChange).toHaveBeenCalledTimes(1);
   });
 
   it('never makes the row a tab stop or a second switch', () => {
