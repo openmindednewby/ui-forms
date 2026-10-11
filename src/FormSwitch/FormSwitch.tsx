@@ -28,6 +28,12 @@ const styles = StyleSheet.create({
     // `hitSlop`, so a pointer target smaller than the floor cannot be widened any other way.
     minHeight: MIN_TOUCH_TARGET_PX,
   },
+  switchSlot: {
+    minWidth: MIN_TOUCH_TARGET_PX,
+    minHeight: MIN_TOUCH_TARGET_PX,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   textColumn: {
     flex: 1,
   },
@@ -115,7 +121,7 @@ export const FormSwitch = ({
         wrapper is plain and unfocusable, and native keeps its `switch` role from RN's Switch
         default (`accessibilityRole ?? 'switch'`) plus `accessibilityState` below.
       */}
-      <View pointerEvents="none">
+      <View pointerEvents="none" style={styles.switchSlot} testID={`${testID}-hitbox`}>
         <Switch
           accessibilityHint={accessibilityHint ?? label}
           accessibilityLabel={label}
