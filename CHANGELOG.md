@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.18.2
+
+**FormSwitch: the switch now sits in a 44x44 (MIN_TOUCH_TARGET_PX) pressable slot on web.**
+
+Visual QA on kefi-web Site settings (360 and 1280) measured the switch at 40x20: react-native-web sizes the
+native input to the Switch root, and `hitSlop` is inert on web. The switch is now centred in a slot with
+`minWidth`/`minHeight` MIN_TOUCH_TARGET_PX inside the pressable row, so the row stays at least 44 tall even when a
+`containerStyle` overrides `minHeight`. The track and thumb are unchanged; the switch gains a few px of horizontal gutter.
+New testID: `<testID>-hitbox`.
+
 ## 1.17.0
 
 **Chips now have a 44px minimum touch target on web. `hitSlop` never did that — it is native-only.**
