@@ -81,10 +81,11 @@ export function RecentInputField({
 
   const handleBlur = useCallback(
     (event: BlurEvent) => {
-      // Remember on blur-with-content so "typed then clicked away" is captured, not only Enter.
-      if (latestText.current.trim() !== '') remember(latestText.current);
-      // Delay the close so a pointer-down on a recent row lands before the menu unmounts.
-      setTimeout(() => setIsOpen(false), CLOSE_DELAY_MS);
+      const blurredText = latestText.current;
+      setTimeout(() => {
+        setIsOpen(false);
+        if (blurredText.trim() !== '') remember(blurredText);
+      }, CLOSE_DELAY_MS);
       onBlur?.(event);
     },
     [remember, onBlur],
