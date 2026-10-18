@@ -11,6 +11,8 @@ import { Platform, StyleSheet, View, Text, Pressable, type TextStyle, type ViewS
 import { MIN_TOUCH_TARGET_PX } from '@dloizides/a11y';
 import { useUi } from '@dloizides/ui-feedback';
 
+import { useFieldIds } from '../Field/Field';
+
 /**
  * Web-only keydown prop react-native-web's `Pressable` forwards but RN's types omit. A
  * `role="checkbox"` Pressable renders a `<div>` (not a native `<button>`), so — unlike a
@@ -105,6 +107,7 @@ export const FormCheckbox = ({
   const brand = palette.primary['500'];
   const hintText = typeof hint === 'string' && hint !== '' ? hint : description;
   const hasHint = typeof hintText === 'string' && hintText !== '';
+  const { hintId } = useFieldIds();
 
   const themeStyles = React.useMemo(() => {
     const boxOn: ViewStyle = { backgroundColor: brand, borderColor: brand };
@@ -138,6 +141,7 @@ export const FormCheckbox = ({
       accessibilityState={{ checked: value, disabled }}
       // RN-web maps this to the ARIA `role="checkbox"` + `aria-checked` a screen reader announces.
       aria-checked={value}
+      aria-describedby={hasHint ? hintId : undefined}
       disabled={disabled}
       onPress={toggle}
       role="checkbox"
@@ -159,7 +163,7 @@ export const FormCheckbox = ({
       </View>
       <View style={styles.textColumn}>
         <Text style={[styles.label, themeStyles.label]}>{label}</Text>
-        {hasHint ? <Text style={[styles.hint, themeStyles.hint]}>{hintText}</Text> : null}
+        {hasHint ? <Text nativeID={hintId} style={[styles.hint, themeStyles.hint]}>{hintText}</Text> : null}
       </View>
     </Pressable>
   );

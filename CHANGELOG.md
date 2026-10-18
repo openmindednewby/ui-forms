@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.18.3
+
+**FormCheckbox: the hint/description is now announced by screen readers.**
+
+The hint Text gets a stable per-instance id (`useFieldIds().hintId`, as `Field` does) and the role=checkbox
+Pressable sets `aria-describedby` to it when a hint is present; with no hint the attribute is omitted.
+
 ## 1.18.2
 
 **FormSwitch: the switch now sits in a 44x44 (MIN_TOUCH_TARGET_PX) pressable slot on web.**

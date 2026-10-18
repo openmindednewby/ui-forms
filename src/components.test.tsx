@@ -102,6 +102,23 @@ describe('FormSwitch', () => {
 });
 
 describe('FormCheckbox', () => {
+  it('with a hint, points aria-describedby at the hint text id', () => {
+    render(<FormCheckbox testID="cb-hint" label="Monitor" hint="Re-screen on a schedule" value={false} />);
+
+    const describedBy = screen.getByTestId('cb-hint').getAttribute('aria-describedby');
+
+    expect(describedBy).toBeTruthy();
+    expect(screen.getByText('Re-screen on a schedule').getAttribute('id')).toBe(describedBy);
+  });
+
+  it('without a hint, omits aria-describedby', () => {
+    render(<FormCheckbox testID="cb-nohint" label="Monitor" value={false} />);
+
+    const describedBy = screen.getByTestId('cb-nohint').getAttribute('aria-describedby');
+
+    expect(describedBy).toBeNull();
+  });
+
   it('renders label + hint and fires the toggled value on press', () => {
     const onValueChange = jest.fn();
     render(
