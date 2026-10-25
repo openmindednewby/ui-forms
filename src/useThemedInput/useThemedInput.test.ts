@@ -10,6 +10,17 @@ type FocusHandler = { onFocus: (e: unknown) => void; onBlur: (e: unknown) => voi
 type Hoverable = { onMouseEnter?: () => void; onMouseLeave?: () => void };
 
 describe('useThemedInput', () => {
+  it('gives a read-only field the recessed ground fill and the secondary ink', () => {
+    const { result } = renderHook(() => useThemedInput({ editable: false }));
+    expect(result.current.style.backgroundColor).toBe('#ffffff');
+    expect(result.current.style.color).toBe('#666666');
+  });
+
+  it('keeps an editable field on the elevated fill and the primary ink', () => {
+    const { result } = renderHook(() => useThemedInput({ editable: true }));
+    expect(result.current.style.color).not.toBe('#666666');
+  });
+
   it('starts unfocused/unhovered with the rest background', () => {
     const { result } = renderHook(() => useThemedInput());
     expect(result.current.isFocused).toBe(false);

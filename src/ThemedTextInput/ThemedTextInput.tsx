@@ -87,7 +87,7 @@ export const ThemedTextInput = React.forwardRef<TextInput, ThemedTextInputProps>
     placeholderTextColor: themedPlaceholder,
     focusBind,
     hoverBind,
-  } = useThemedInput({ hasError, onFocus, onBlur });
+  } = useThemedInput({ hasError, onFocus, onBlur, editable: rest.editable });
 
   // aria-invalid announces the error state; aria-describedby ties the error/hint text to the
   // field; aria-required marks it mandatory. Web-only (RN-web → DOM); omitted on native.

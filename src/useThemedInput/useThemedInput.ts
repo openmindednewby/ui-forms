@@ -22,6 +22,8 @@ import { focusRingOutline } from '@dloizides/design-tokens';
 import { themeFocusRingColor } from '@dloizides/ui-buttons';
 import { useUi } from '@dloizides/ui-feedback';
 
+import { fieldErrorInk } from '../fieldErrorInk/fieldErrorInk';
+
 /** The exact focus/blur event types of the installed `react-native` `TextInput` (version-safe). */
 type FocusEvent = Parameters<NonNullable<TextInputProps['onFocus']>>[0];
 type BlurEvent = Parameters<NonNullable<TextInputProps['onBlur']>>[0];
@@ -88,6 +90,8 @@ export interface UseThemedInputOptions {
   onFocus?: (e: FocusEvent) => void;
   /** Consumer blur handler — composed with the internal focus-state toggle. */
   onBlur?: (e: BlurEvent) => void;
+  /** `false` renders the read-only treatment: the recessed ground fill and the secondary ink. */
+  editable?: boolean;
 }
 
 export interface ThemedInput {
@@ -111,9 +115,9 @@ export interface ThemedInput {
 }
 
 export function useThemedInput(options: UseThemedInputOptions = {}): ThemedInput {
-  const { hasError = false, onFocus, onBlur } = options;
+  const { hasError = false, onFocus, onBlur, editable = true } = options;
   const { theme } = useUi();
-  const { colors, palette, semantic } = theme;
+  const { colors, palette } = theme;
 
   const [isFocused, setIsFocused] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -136,14 +140,15 @@ export function useThemedInput(options: UseThemedInputOptions = {}): ThemedInput
   const handleHoverOut = useCallback(() => setIsHovered(false), []);
 
   const primary = palette.primary['500'];
-  const errorColor = semantic.error['500'];
+  const errorColor = fieldErrorInk(theme);
 
   const style = useMemo<TextStyle>(() => {
     const restBorder = hasError ? errorColor : colors.border;
     const focusBorder = hasError ? errorColor : primary;
     const borderColor = isFocused ? focusBorder : isHovered ? withAlpha(colors.text, HOVER_BORDER_ALPHA) : restBorder;
-    const backgroundColor = isFocused ? colors.surface : colors.surfaceElevated;
-    const base: TextStyle = { color: colors.text, borderColor, backgroundColor };
+    const editableFill = isFocused ? colors.surface : colors.surfaceElevated;
+    const backgroundColor = editable ? editableFill : colors.background;
+    const base: TextStyle = { color: editable ? colors.text : colors.textSecondary, borderColor, backgroundColor };
     if (!IS_WEB) return base;
     // A focused field ALWAYS gets a ring — an errored one just changes its colour to the error
     // tint (v1: `input.invalid:focus { box-shadow: 0 0 0 3px var(--danger-tint) }`). Suppressing
@@ -167,6 +172,9 @@ export function useThemedInput(options: UseThemedInputOptions = {}): ThemedInput
     colors.border,
     colors.surface,
     colors.surfaceElevated,
+    colors.background,
+    colors.textSecondary,
+    editable,
     primary,
     errorColor,
     theme,

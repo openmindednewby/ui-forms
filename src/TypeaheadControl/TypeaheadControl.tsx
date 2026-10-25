@@ -21,6 +21,7 @@ import { AnchoredMenu } from '../AnchoredMenu/AnchoredMenu';
 import { controlStyles as s } from '../controls/controlStyles';
 import type { ControlOption } from '../controls/controlTypes';
 import { suggestOptions } from '../controls/suggestOptions';
+import { fieldErrorInk } from '../fieldErrorInk/fieldErrorInk';
 
 /** Delay before blur closes the menu, so a tap on an option registers first (aml CLOSE_DELAY_MS). */
 const CLOSE_DELAY_MS = 140;
@@ -71,7 +72,7 @@ export function TypeaheadControl({
   testID,
 }: TypeaheadControlProps): React.ReactElement {
   const { theme } = useUi();
-  const { colors, palette, semantic } = theme;
+  const { colors, palette } = theme;
   const anchorRef = useRef<View>(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -123,7 +124,7 @@ export function TypeaheadControl({
         onFocus={() => setIsOpen(true)}
         onBlur={handleBlur}
         onSubmitEditing={handleSubmit}
-        style={[s.input, { borderColor: hasError ? semantic.error['500'] : colors.border, backgroundColor: colors.surface, color: colors.text }]}
+        style={[s.input, { borderColor: hasError ? fieldErrorInk(theme) : colors.border, backgroundColor: colors.surface, color: colors.text }]}
         testID={`${testID}-input`}
       />
       {showMenu ? (
@@ -143,7 +144,7 @@ export function TypeaheadControl({
         />
       ) : null}
       {hasError ? (
-        <Text role="alert" style={[s.error, { color: semantic.error['500'] }]} testID={`${testID}-error`}>
+        <Text role="alert" style={[s.error, { color: fieldErrorInk(theme) }]} testID={`${testID}-error`}>
           {error}
         </Text>
       ) : null}

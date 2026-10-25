@@ -29,6 +29,7 @@ import { DEFAULT_OPTIONAL_LABEL, resolveFieldMarker } from './fieldMarkers';
 import { fieldSpacingStyleSet, resolveFieldSpacing, type FieldSpacing } from './fieldSpacing';
 import { resolveLabelVariantStyle, type FieldLabelVariant } from './labelVariants';
 import { useIsGapOwned } from '../FormGrid/formGridContext';
+import { fieldErrorInk } from '../fieldErrorInk/fieldErrorInk';
 
 const ERROR_FONT_SIZE = 12;
 const HINT_FONT_SIZE = 12;
@@ -209,8 +210,8 @@ export const Field = ({
   const { theme } = useUi();
   const gapOwned = useIsGapOwned();
   const spacingStyles = fieldSpacingStyleSet(resolveFieldSpacing(spacing, gapOwned));
-  const { colors, semantic } = theme;
-  const errorColor = semantic.error['500'];
+  const { colors } = theme;
+  const errorColor = fieldErrorInk(theme);
   const hasError = hasFieldError(error);
   const hasHint = isPresent(hint);
   const labelText = label ?? '';
