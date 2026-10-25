@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.18.5
+
+**ChipSelector: a short chip (e.g. "All") is at least 44 px wide, not only 44 px tall (KEFI-FIT-1 "kefi-web fit and hit-box fixes").**
+
+`chip` and `chipOutline` get `minWidth: 44` next to the existing `minHeight: 44`; measured 42x44 on kefi-web approvals at 360.
+
 ## 1.18.3
 
 **FormCheckbox: the hint/description is now announced by screen readers.**
