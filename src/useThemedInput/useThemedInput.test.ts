@@ -31,15 +31,13 @@ describe('useThemedInput', () => {
     expect(result.current.isFocused).toBe(true);
     expect(result.current.style.borderColor).toBe('#2563eb'); // primary 500
     expect(result.current.style.backgroundColor).not.toBe(restBg); // brightened to surface
-    // The soft ring is a box-shadow (compositor-only, no reflow), present only while focused.
-    const focusedShadow = (result.current.style as { boxShadow?: string }).boxShadow;
-    expect(focusedShadow).toContain('rgba(37, 99, 235, 0.16)');
+    expect(result.current.style).toMatchObject({ outlineColor: '#2563eb', outlineWidth: 2, outlineOffset: 2, outlineStyle: 'solid' });
 
     act(() => (result.current.focusBind as FocusHandler).onBlur({}));
 
     expect(result.current.isFocused).toBe(false);
     expect(result.current.style.borderColor).toBe(restBorder);
-    expect((result.current.style as { boxShadow?: string }).boxShadow).toBe('none');
+    expect((result.current.style as { outlineColor?: string; outlineWidth?: number }).outlineWidth).toBe(0);
   });
 
   it('composes a caller-supplied onFocus/onBlur with the internal focus toggle', () => {
@@ -85,14 +83,12 @@ describe('useThemedInput', () => {
    */
   it('gives a focused errored field a RED ring, never no ring', () => {
     const { result } = renderHook(() => useThemedInput({ hasError: true }));
-    expect((result.current.style as { boxShadow?: string }).boxShadow).toBe('none');
+    expect((result.current.style as { outlineColor?: string; outlineWidth?: number }).outlineWidth).toBe(0);
 
     act(() => (result.current.focusBind as FocusHandler).onFocus({}));
 
-    const ring = (result.current.style as { boxShadow?: string }).boxShadow;
-    expect(ring).not.toBe('none');
-    // The error colour (#dc2626 → 220,38,38), NOT the brand primary.
-    expect(ring).toBe('0 0 0 3px rgba(220, 38, 38, 0.16)');
+    expect((result.current.style as { outlineColor?: string; outlineWidth?: number }).outlineWidth).toBe(2);
+    expect((result.current.style as { outlineColor?: string; outlineWidth?: number }).outlineColor).toBe('#dc2626');
   });
 
   it('gives a focused valid field the BRAND ring, so the two states stay distinguishable', () => {
@@ -100,9 +96,8 @@ describe('useThemedInput', () => {
 
     act(() => (result.current.focusBind as FocusHandler).onFocus({}));
 
-    const ring = (result.current.style as { boxShadow?: string }).boxShadow;
-    expect(ring).not.toBe('none');
-    expect(ring).not.toBe('0 0 0 3px rgba(220, 38, 38, 0.16)');
+    expect((result.current.style as { outlineColor?: string; outlineWidth?: number }).outlineWidth).toBe(2);
+    expect((result.current.style as { outlineColor?: string; outlineWidth?: number }).outlineColor).toBe('#2563eb');
   });
 
   it('clears the ring on blur in both error states', () => {
@@ -111,9 +106,9 @@ describe('useThemedInput', () => {
     });
     act(() => (result.current.focusBind as FocusHandler).onFocus({}));
     act(() => (result.current.focusBind as FocusHandler).onBlur({}));
-    expect((result.current.style as { boxShadow?: string }).boxShadow).toBe('none');
+    expect((result.current.style as { outlineColor?: string; outlineWidth?: number }).outlineWidth).toBe(0);
 
     rerender({ hasError: false });
-    expect((result.current.style as { boxShadow?: string }).boxShadow).toBe('none');
+    expect((result.current.style as { outlineColor?: string; outlineWidth?: number }).outlineWidth).toBe(0);
   });
 });

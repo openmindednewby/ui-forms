@@ -18,6 +18,8 @@ import { useCallback, useMemo, useState } from 'react';
 
 import { Platform, type TextInputProps, type TextStyle } from 'react-native';
 
+import { focusRingOutline } from '@dloizides/design-tokens';
+import { themeFocusRingColor } from '@dloizides/ui-buttons';
 import { useUi } from '@dloizides/ui-feedback';
 
 /** The exact focus/blur event types of the installed `react-native` `TextInput` (version-safe). */
@@ -29,8 +31,7 @@ const IS_WEB = Platform.OS === 'web';
 const TRANSITION_PROPERTY = 'border-color, background-color, box-shadow';
 const TRANSITION_DURATION = '0.14s';
 const TRANSITION_TIMING = 'ease';
-const FOCUS_RING_WIDTH = 3;
-const FOCUS_RING_ALPHA = 0.16;
+const NO_RING = { outlineWidth: 0 };
 const HOVER_BORDER_ALPHA = 0.22;
 /**
  * Placeholder opacity. The theme's `textSecondary` is deliberately a DARK, accessible grey
@@ -148,15 +149,14 @@ export function useThemedInput(options: UseThemedInputOptions = {}): ThemedInput
     // tint (v1: `input.invalid:focus { box-shadow: 0 0 0 3px var(--danger-tint) }`). Suppressing
     // the ring while errored, as this did, removed the focus indicator (WCAG 2.4.7) from precisely
     // the field the user was sent back to fix, at the moment they are most likely on a keyboard.
-    const ringColor = hasError ? errorColor : primary;
-    const ring = isFocused ? `0 0 0 ${FOCUS_RING_WIDTH}px ${withAlpha(ringColor, FOCUS_RING_ALPHA)}` : 'none';
+    const ringColor = hasError ? errorColor : themeFocusRingColor(theme);
+    const ring = isFocused ? focusRingOutline(ringColor) : NO_RING;
     const webStyle = {
       transitionProperty: TRANSITION_PROPERTY,
       // Collapse the eased transition to instant when the user prefers reduced motion.
       transitionDuration: prefersReducedMotion() ? '0s' : TRANSITION_DURATION,
       transitionTimingFunction: TRANSITION_TIMING,
-      boxShadow: ring,
-      outlineStyle: 'none',
+      ...ring,
     };
     return { ...base, ...webStyle } as TextStyle;
   }, [
@@ -169,6 +169,7 @@ export function useThemedInput(options: UseThemedInputOptions = {}): ThemedInput
     colors.surfaceElevated,
     primary,
     errorColor,
+    theme,
   ]);
 
   const focusBind = useMemo(() => ({ onFocus: handleFocus, onBlur: handleBlur }), [handleFocus, handleBlur]);

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.18.7
+
+- Focused inputs draw the fleet focus ring (`@dloizides/design-tokens` 1.14 `FOCUS_RING`: 2 px solid outline, 2 px offset, contrast-checked colour; error colour when errored) instead of the 3 px 16% box-shadow halo (FOCUS-RING-1 "One focus ring across the shared kit").
+
 ## 1.18.6
 
 **ChipSelector: a short chip (e.g. "All") is at least 44 px wide, not only 44 px tall (KEFI-FIT-1 "kefi-web fit and hit-box fixes").**
