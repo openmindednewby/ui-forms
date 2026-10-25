@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.18.5
+## 1.18.6
 
 **ChipSelector: a short chip (e.g. "All") is at least 44 px wide, not only 44 px tall (KEFI-FIT-1 "kefi-web fit and hit-box fixes").**
 
