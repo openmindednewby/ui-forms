@@ -23,6 +23,14 @@ export type { FormGridProps } from './FormGrid/FormGrid';
 export { FormCell } from './FormGrid/FormCell';
 export type { FormCellProps } from './FormGrid/FormCell';
 
+export { AlignToControl } from './AlignToControl/AlignToControl';
+export type { AlignToControlProps } from './AlignToControl/AlignToControl';
+
+export { InlineFieldRow } from './InlineFieldRow/InlineFieldRow';
+export type { InlineFieldRowProps } from './InlineFieldRow/InlineFieldRow';
+export { INLINE_FIELD_ROW_MIN_WIDTH, inlineFieldRowLayout } from './InlineFieldRow/inlineFieldRowLayout';
+export type { InlineFieldRowLayout } from './InlineFieldRow/inlineFieldRowLayout';
+
 export { FormSection } from './FormSection/FormSection';
 export type { FormSectionProps } from './FormSection/FormSection';
 export type { FieldMarker } from './Field/fieldMarkers';

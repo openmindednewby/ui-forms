@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.20.0
+
+**Horizontal form fields line up (D-ALL-22 "Horizontal form fields are aligned").**
+
+- `FormGrid` rows set `alignItems: flex-start`: every cell starts on one top edge and a tall cell (hint, error) no longer stretches its neighbours.
+- New `AlignToControl`: an aria-hidden label line with the same font and spacing model as `Field`, so a button beside labelled fields sits on the input line, not the label line. `FormCell alignToControl` applies it to a cell.
+- New `InlineFieldRow` (extracted from kefi-web): a field and its action stacked below `inlineMinWidth` (default 1024) and on one row above it, the action placed by `AlignToControl` instead of a hand-measured offset.
+
 ## 1.18.7
 
 - Focused inputs draw the fleet focus ring (`@dloizides/design-tokens` 1.14 `FOCUS_RING`: 2 px solid outline, 2 px offset, contrast-checked colour; error colour when errored) instead of the 3 px 16% box-shadow halo (FOCUS-RING-1 "One focus ring across the shared kit").

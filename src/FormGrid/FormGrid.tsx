@@ -33,6 +33,7 @@ export const FORM_GRID_DEFAULT_BASIS = 260;
 
 const styles = StyleSheet.create({
   grid: {
+    alignItems: 'flex-start',
     flexDirection: 'row',
     flexWrap: 'wrap',
   },

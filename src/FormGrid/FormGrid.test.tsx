@@ -34,6 +34,20 @@ describe('FormGrid wrapping behaviour', () => {
     expect(style.gap).toBe(px(FORM_GRID_DEFAULT_GAP));
   });
 
+  it('aligns cells to the row top, so a taller cell never shifts or stretches its neighbours', () => {
+    render(
+      <FormGrid testID="grid">
+        <FormCell>
+          <span />
+        </FormCell>
+      </FormGrid>,
+    );
+
+    const style = getComputedStyle(screen.getByTestId('grid'));
+
+    expect(style.alignItems).toBe('flex-start');
+  });
+
   it('takes a custom gap, so a denser row does not have to fork the component', () => {
     render(
       <FormGrid gap={20} testID="grid">

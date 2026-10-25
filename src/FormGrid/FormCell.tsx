@@ -16,6 +16,8 @@ import React from 'react';
 
 import { View, type StyleProp, type ViewStyle } from 'react-native';
 
+import { AlignToControl } from '../AlignToControl/AlignToControl';
+
 import {
   FORM_GRID_DEFAULT_BASIS,
   FORM_GRID_DEFAULT_MIN_WIDTH,
@@ -35,6 +37,8 @@ export interface FormCellProps {
   basis?: number;
   /** `false` pins the cell to its basis instead of letting it absorb the row's slack. */
   grow?: boolean;
+  /** Puts an unlabelled control (a button) on the input line of the labelled cells beside it. */
+  alignToControl?: boolean;
   style?: StyleProp<ViewStyle>;
   testID?: string;
 }
@@ -44,6 +48,7 @@ export const FormCell = ({
   minWidth,
   basis,
   grow = true,
+  alignToControl = false,
   style,
   testID,
 }: FormCellProps): React.ReactElement => {
@@ -59,7 +64,7 @@ export const FormCell = ({
 
   return (
     <View style={[cellStyle, style]} testID={testID}>
-      {children}
+      {alignToControl ? <AlignToControl>{children}</AlignToControl> : children}
     </View>
   );
 };
