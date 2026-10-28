@@ -13,6 +13,8 @@ import { useUi } from '@dloizides/ui-feedback';
 
 import { useFieldIds } from '../Field/Field';
 
+import { checkboxBoxColors } from './checkboxColors';
+
 /**
  * Web-only keydown prop react-native-web's `Pressable` forwards but RN's types omit. A
  * `role="checkbox"` Pressable renders a `<div>` (not a native `<button>`), so — unlike a
@@ -30,6 +32,10 @@ const BOX_SIZE = 20;
 const BOX_RADIUS = 5;
 const CHECK_FONT_SIZE = 14;
 const DISABLED_OPACITY = 0.5;
+const FOCUS_RING_WIDTH = 2;
+const FOCUS_RING_GAP = 2;
+const WEB_NO_DEFAULT_OUTLINE = { outlineStyle: 'none' } as unknown as ViewStyle;
+const FOCUS_RING_INSET = -(FOCUS_RING_WIDTH + FOCUS_RING_GAP + FOCUS_RING_WIDTH);
 
 const styles = StyleSheet.create({
   container: {
@@ -54,6 +60,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     // Nudge the box to sit on the label's first text line.
     marginTop: 1,
+  },
+  focusRing: {
+    position: 'absolute',
+    top: FOCUS_RING_INSET,
+    left: FOCUS_RING_INSET,
+    right: FOCUS_RING_INSET,
+    bottom: FOCUS_RING_INSET,
+    borderWidth: FOCUS_RING_WIDTH,
+    borderRadius: BOX_RADIUS - FOCUS_RING_INSET,
   },
   check: {
     fontSize: CHECK_FONT_SIZE,
@@ -109,13 +124,16 @@ export const FormCheckbox = ({
   const hasHint = typeof hintText === 'string' && hintText !== '';
   const { hintId } = useFieldIds();
 
+  const [focused, setFocused] = React.useState(false);
+
   const themeStyles = React.useMemo(() => {
-    const boxOn: ViewStyle = { backgroundColor: brand, borderColor: brand };
-    const boxOff: ViewStyle = { backgroundColor: 'transparent', borderColor: colors.border };
+    const boxOn: ViewStyle = checkboxBoxColors(colors, brand, true);
+    const boxOff: ViewStyle = checkboxBoxColors(colors, brand, false);
+    const ring: ViewStyle = { borderColor: brand };
     const labelStyle: TextStyle = { color: colors.text };
     const hintStyle: TextStyle = { color: colors.textSecondary };
-    return { boxOn, boxOff, label: labelStyle, hint: hintStyle };
-  }, [brand, colors.border, colors.text, colors.textSecondary]);
+    return { boxOn, boxOff, ring, label: labelStyle, hint: hintStyle };
+  }, [brand, colors]);
 
   const toggle = (): void => {
     const next = !value;
@@ -143,6 +161,8 @@ export const FormCheckbox = ({
       aria-checked={value}
       aria-describedby={hasHint ? hintId : undefined}
       disabled={disabled}
+      onBlur={() => setFocused(false)}
+      onFocus={() => setFocused(true)}
       onPress={toggle}
       role="checkbox"
       style={[
@@ -150,11 +170,15 @@ export const FormCheckbox = ({
         hasHint ? null : styles.centered,
         containerStyle,
         disabled ? { opacity: DISABLED_OPACITY } : null,
+        Platform.OS === 'web' ? WEB_NO_DEFAULT_OUTLINE : null,
       ]}
       testID={testID}
       {...keyboardProps}
     >
-      <View style={[styles.box, value ? themeStyles.boxOn : themeStyles.boxOff]}>
+      <View style={[styles.box, value ? themeStyles.boxOn : themeStyles.boxOff]} testID={`${testID}-box`}>
+        {focused ? (
+          <View pointerEvents="none" style={[styles.focusRing, themeStyles.ring]} testID={`${testID}-focus-ring`} />
+        ) : null}
         {value ? (
           <Text style={[styles.check, { color: colors.surface }]} accessibilityElementsHidden>
             ✓
