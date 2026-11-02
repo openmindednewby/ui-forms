@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.22.0
+
+KEFI-EDITOR-UI-2 "Extract stepper and upload-with-link field to @dloizides/ui-forms", extracted from kefi-web.
+
+- New `StepperTabs`, `StepperNav` and pure `resolveStepNeighbours`: step tabs sharing the row width, back and next under the step. Generic over the step key; every string is a prop.
+- New `UploadWithLinkField`: preview, an upload control slot and a link input revealed on request. The slot keeps ui-forms free of ui-media; pass `ImagePickerButton`.
+
 ## 1.20.0
 
 **Horizontal form fields line up (D-ALL-22 "Horizontal form fields are aligned").**

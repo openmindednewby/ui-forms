@@ -106,3 +106,13 @@ export type { ControlOption, DateRangeValue } from './controls/controlTypes';
 
 export { resolveGroupSelection, groupAriaChecked, toggleGroupSelection } from './groupSelection/groupSelection';
 export type { GroupSelection } from './groupSelection/groupSelection';
+
+export { StepperTabs } from './Stepper/StepperTabs';
+export type { StepperTabsProps } from './Stepper/StepperTabs';
+export { StepperNav } from './Stepper/StepperNav';
+export type { StepperNavProps, StepperNavLabels } from './Stepper/StepperNav';
+export { resolveStepNeighbours } from './Stepper/stepperModel';
+export type { StepperStep, StepNeighbours } from './Stepper/stepperModel';
+
+export { UploadWithLinkField } from './UploadWithLinkField/UploadWithLinkField';
+export type { UploadWithLinkFieldProps, UploadWithLinkLabels } from './UploadWithLinkField/UploadWithLinkField';
