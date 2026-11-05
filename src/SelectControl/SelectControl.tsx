@@ -104,7 +104,7 @@ export function SelectControl({
         aria-expanded={isOpen}
         aria-labelledby={labelledById}
         onPress={toggle}
-        style={[s.selectTrigger, { borderColor: colors.border, backgroundColor: colors.surface }]}
+        style={[s.selectTrigger, { borderColor: colors.border, backgroundColor: colors.surfaceElevated }]}
         testID={`${testID}-trigger`}
       >
         <Text numberOfLines={1} style={[s.selectTriggerText, { color: value === '' ? colors.textSecondary : colors.text }]}>

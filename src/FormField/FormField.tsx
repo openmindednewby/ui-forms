@@ -11,7 +11,7 @@
  */
 import React from 'react';
 
-import { type TextInputProps, type ViewStyle } from 'react-native';
+import { type TextInput, type TextInputProps, type ViewStyle } from 'react-native';
 
 import { Field } from '../Field/Field';
 import { RecentInputField } from './RecentInputField';
@@ -53,6 +53,8 @@ export interface FormFieldProps extends Omit<TextInputProps, 'style'> {
   recentKey?: string;
   /** Cap on remembered values when {@link recentKey} is set (most-recent-first). Default 10. */
   recentMax?: number;
+  /** Reaches the input, for focusing it without scrolling the page. Not forwarded when `recentKey` is set. */
+  inputRef?: React.Ref<TextInput>;
 }
 
 export const FormField = ({
@@ -63,6 +65,7 @@ export const FormField = ({
   containerStyle,
   recentKey,
   recentMax,
+  inputRef,
   ...textInputProps
 }: FormFieldProps): React.ReactElement => (
   <Field
@@ -92,7 +95,7 @@ export const FormField = ({
       return recentKey !== undefined && recentKey !== '' ? (
         <RecentInputField label={label} recentKey={recentKey} recentMax={recentMax} {...inputProps} />
       ) : (
-        <ThemedTextInput {...inputProps} />
+        <ThemedTextInput ref={inputRef} {...inputProps} />
       );
     }}
   </Field>

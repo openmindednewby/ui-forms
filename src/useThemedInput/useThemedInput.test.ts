@@ -17,27 +17,32 @@ describe('useThemedInput', () => {
     expect(result.current.style.color).toBe('#666666');
   });
 
-  it('with a read-only field, draws the border in the fill colour, so it has no input outline', () => {
-    const { result } = renderHook(() => useThemedInput({ editable: false }));
+  it('with a read-only field, draws the rest border of an editable field, so it shows a box on a form of the same fill', () => {
+    const { result: readOnly } = renderHook(() => useThemedInput({ editable: false }));
+    const { result: editable } = renderHook(() => useThemedInput());
 
-    expect(result.current.style.borderColor).toBe('#f7f7f7');
+    expect(readOnly.current.style.borderColor).toBe(editable.current.style.borderColor);
   });
 
   it('with a read-only field under hover, keeps the border', () => {
     const { result } = renderHook(() => useThemedInput({ editable: false }));
 
+    const restBorder = result.current.style.borderColor;
+
     act(() => (result.current.hoverBind as Hoverable).onMouseEnter?.());
 
-    expect(result.current.style.borderColor).toBe('#f7f7f7');
+    expect(result.current.style.borderColor).toBe(restBorder);
   });
 
   it('with a read-only field under focus, keeps fill and border but draws the focus ring', () => {
     const { result } = renderHook(() => useThemedInput({ editable: false }));
 
+    const restBorder = result.current.style.borderColor;
+
     act(() => (result.current.focusBind as FocusHandler).onFocus({}));
 
     expect(result.current.style.backgroundColor).toBe('#f7f7f7');
-    expect(result.current.style.borderColor).toBe('#f7f7f7');
+    expect(result.current.style.borderColor).toBe(restBorder);
     expect(result.current.style).toMatchObject({ outlineWidth: 2 });
   });
 
@@ -59,9 +64,7 @@ describe('useThemedInput', () => {
     expect(result.current.isHovered).toBe(false);
     // Rest background is the subtle off-white surfaceElevated, NOT the plain surface.
     expect(result.current.style.backgroundColor).toBe('#ffffff');
-    // The placeholder is the theme's textSecondary (#666666) composited toward the field
-    // background at 0.6 alpha, so a hint reads clearly lighter than solid entered text.
-    expect(result.current.placeholderTextColor).toBe('rgba(102, 102, 102, 0.6)');
+    expect(result.current.placeholderTextColor).toBe('#666666');
   });
 
   it('applies the brand focus treatment on focus (border, brighter bg, ring) and reverts on blur', () => {

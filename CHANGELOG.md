@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.26.0
+
+INVOICE-3 "Invoice interface over a user-chosen folder": owner picks.
+
+- `SelectControl` trigger fills with `surfaceElevated`, like an editable field, so it differs from read-only.
+- Read-only `useThemedInput` draws the rest border, so the box shows on a form of the same fill.
+- Placeholder is solid `textSecondary`: 0.6 alpha measured 2.38 against the 4.5 AA floor.
+- `FormField` gains `inputRef`.
+
 ## 1.25.0
 
 INVOICE-3 "Invoice interface over a user-chosen folder": extracted from invoice-web.

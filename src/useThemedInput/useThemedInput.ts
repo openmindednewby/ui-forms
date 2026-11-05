@@ -35,17 +35,6 @@ const TRANSITION_DURATION = '0.14s';
 const TRANSITION_TIMING = 'ease';
 const NO_RING = { outlineWidth: 0 };
 const HOVER_BORDER_ALPHA = 0.22;
-/**
- * Placeholder opacity. The theme's `textSecondary` is deliberately a DARK, accessible grey
- * (design-tokens UX-11) because it also paints readable secondary *copy* — so reusing it at
- * full strength made placeholders look like already-typed text. Compositing it toward the field
- * background at this alpha keeps the hue but pulls the placeholder clearly lighter than the solid
- * entered text (`colors.text`), so "hint" vs "value" reads at a glance. Works in dark mode too
- * (it composites toward whatever the field background is). The field's real visible label — not
- * the placeholder — carries the accessible name, so a lighter hint is a usability win, not an a11y loss.
- */
-const PLACEHOLDER_ALPHA = 0.6;
-
 const HEX_RADIX = 16;
 const HEX_SHORT_LENGTH = 4;
 const HEX_FULL_LENGTH = 7;
@@ -146,8 +135,7 @@ export function useThemedInput(options: UseThemedInputOptions = {}): ThemedInput
     const restBorder = hasError ? errorColor : colors.border;
     const focusBorder = hasError ? errorColor : primary;
     const editableBorder = isFocused ? focusBorder : isHovered ? withAlpha(colors.text, HOVER_BORDER_ALPHA) : restBorder;
-    const readOnlyBorder = hasError ? errorColor : colors.surface;
-    const borderColor = editable ? editableBorder : readOnlyBorder;
+    const borderColor = editable ? editableBorder : restBorder;
     const editableFill = isFocused ? colors.surface : colors.surfaceElevated;
     const backgroundColor = editable ? editableFill : colors.surface;
     const base: TextStyle = { color: editable ? colors.text : colors.textSecondary, borderColor, backgroundColor };
@@ -192,7 +180,7 @@ export function useThemedInput(options: UseThemedInputOptions = {}): ThemedInput
 
   return {
     style,
-    placeholderTextColor: withAlpha(colors.textSecondary, PLACEHOLDER_ALPHA),
+    placeholderTextColor: colors.textSecondary,
     isFocused,
     isHovered,
     focusBind,

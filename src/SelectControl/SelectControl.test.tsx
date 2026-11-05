@@ -32,6 +32,16 @@ function renderSelect(overrides: Partial<React.ComponentProps<typeof SelectContr
   return onChange;
 }
 
+describe('SelectControl — trigger fill', () => {
+  it('with a closed menu, fills the trigger like an editable field, not like a read-only one', () => {
+    renderSelect();
+
+    const fill = window.getComputedStyle(screen.getByTestId(TRIGGER)).backgroundColor;
+
+    expect(fill).toBe('rgb(255, 255, 255)');
+  });
+});
+
 describe('SelectControl — displayed value', () => {
   it('shows the SELECTED option label, not the placeholder, when a value is set', () => {
     renderSelect({ placeholder: 'Any', value: 'closed' });
