@@ -24,13 +24,11 @@ import { controlStyles as s } from '../controls/controlStyles';
 import type { ControlOption } from '../controls/controlTypes';
 import { fieldErrorInk } from '../fieldErrorInk/fieldErrorInk';
 import { webFieldA11y } from '../webFieldA11y/webFieldA11y';
+import { useDelayedBlurClose } from './hooks/useDelayedBlurClose';
 import { useTypeaheadState } from './hooks/useTypeaheadState';
 import type { FieldControlWiring, TypeaheadSearch } from './types';
 
 export type { TypeaheadSearch } from './types';
-
-/** Delay before blur closes the menu, so a tap on an option registers first (aml CLOSE_DELAY_MS). */
-const CLOSE_DELAY_MS = 140;
 
 /** Default min characters before suggestions surface. */
 export const DEFAULT_TYPEAHEAD_MIN_CHARS = 1;
@@ -88,6 +86,7 @@ function TypeaheadControlImpl(props: (TypeaheadControlProps | TypeaheadSearchPro
   const { colors, palette } = theme;
   const anchorRef = useRef<View>(null);
   const state = useTypeaheadState({ options, search, value, minChars, maxSuggestions, onChange, onSubmit });
+  const { handleFocus, handleBlur } = useDelayedBlurClose(state.open, state.close);
   const showMenu = state.isOpen && (state.rows.length > 0 || state.statusText !== undefined);
   const isExpanded = state.isOpen && state.rows.length > 0;
   const hasError = error !== undefined && error !== '';
@@ -111,8 +110,8 @@ function TypeaheadControlImpl(props: (TypeaheadControlProps | TypeaheadSearchPro
         spellCheck={false}
         value={value}
         onChangeText={state.handleChange}
-        onFocus={state.open}
-        onBlur={() => setTimeout(state.close, CLOSE_DELAY_MS)}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         onKeyPress={state.handleKeyPress}
         onSubmitEditing={state.handleSubmit}
         style={[s.input, { borderColor: hasError ? fieldErrorInk(theme) : colors.border, backgroundColor: colors.surface, color: colors.text }]}

@@ -23,6 +23,7 @@ export interface OptionRowColors {
   text: string;
   textSecondary?: string;
   border: string;
+  surface: string;
   brand: string;
 }
 
@@ -53,6 +54,11 @@ export function isDetailBesideTitle(menuWidth: number): boolean {
   return menuWidth >= DETAIL_BESIDE_MIN_MENU_WIDTH;
 }
 
+function rowInk(colors: OptionRowColors, isActive: boolean, isHighlighted: boolean): { title: string; detail: string } {
+  if (isHighlighted) return { title: colors.surface, detail: colors.surface };
+  return { title: isActive ? colors.brand : colors.text, detail: colors.textSecondary ?? colors.text };
+}
+
 export function OptionRow({ option, isActive, isHighlighted, isListboxRow, menuWidth, hint, colors, testID, onSelect }: OptionRowProps): React.ReactElement {
   const hasDetail = option.detail !== undefined && option.detail !== '';
   const label = hasDetail ? `${option.label}, ${option.detail}` : option.label;
@@ -60,7 +66,7 @@ export function OptionRow({ option, isActive, isHighlighted, isListboxRow, menuW
     ? { role: 'option' as const, tabIndex: -1 as const, id: optionDomId(testID, option.value), 'aria-selected': isHighlighted }
     : { accessibilityRole: 'menuitem' as const, 'aria-selected': isActive };
   const isBold = isActive || isHighlighted;
-  const titleColor = isActive ? colors.brand : colors.text;
+  const ink = rowInk(colors, isActive, isHighlighted);
 
   return (
     <Pressable
@@ -69,14 +75,14 @@ export function OptionRow({ option, isActive, isHighlighted, isListboxRow, menuW
       accessibilityHint={hint}
       accessibilityState={{ selected: isActive }}
       onPress={() => onSelect(option.value)}
-      style={[s.option, isHighlighted ? { backgroundColor: colors.border } : null]}
+      style={[s.option, isHighlighted ? { backgroundColor: colors.text } : null]}
       testID={`${testID}-option-${option.value}`}
     >
       <View style={isDetailBesideTitle(menuWidth) ? styles.beside : styles.stacked}>
-        <Text style={[s.optionText, styles.shrink, { color: titleColor, fontWeight: isBold ? ACTIVE_WEIGHT : IDLE_WEIGHT }]}>
+        <Text style={[s.optionText, styles.shrink, { color: ink.title, fontWeight: isBold ? ACTIVE_WEIGHT : IDLE_WEIGHT }]}>
           {option.label}
         </Text>
-        {hasDetail ? <Text style={[styles.detail, { color: colors.textSecondary ?? colors.text }]}>{option.detail}</Text> : null}
+        {hasDetail ? <Text style={[styles.detail, { color: ink.detail }]}>{option.detail}</Text> : null}
       </View>
     </Pressable>
   );
