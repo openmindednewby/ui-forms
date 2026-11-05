@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.25.0
+
+INVOICE-3 "Invoice interface over a user-chosen folder": extracted from invoice-web.
+
+- New `SelectField`: `Field` + `SelectControl`, its accessible name carries the selection.
+
 ## 1.24.0
 
 BEAD-3 "Report form: searchable pattern field": review fix.

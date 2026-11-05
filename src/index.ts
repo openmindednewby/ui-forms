@@ -78,6 +78,9 @@ export type { FormCheckboxProps } from './FormCheckbox/FormCheckbox';
 export { SelectControl } from './SelectControl/SelectControl';
 export type { SelectControlProps } from './SelectControl/SelectControl';
 
+export { SelectField } from './SelectField/SelectField';
+export type { SelectFieldProps } from './SelectField/SelectField';
+
 export {
   TypeaheadControl,
   DEFAULT_TYPEAHEAD_MIN_CHARS,
