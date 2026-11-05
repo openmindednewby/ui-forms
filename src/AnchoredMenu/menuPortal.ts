@@ -29,6 +29,8 @@ import type { View as RNView } from 'react-native';
 
 import { Z_INDEX } from '@dloizides/design-tokens';
 
+import { MENU_MAX_HEIGHT } from '../controls/controlStyles';
+
 const IS_WEB = Platform.OS === 'web';
 
 /**
@@ -38,6 +40,10 @@ const IS_WEB = Platform.OS === 'web';
 export const MENU_PORTAL_Z_INDEX = Z_INDEX.popover;
 /** Gap between the trigger's bottom edge and the popover's top edge. */
 const MENU_TOP_GAP = 4;
+const MENU_MIN_HEIGHT = 96;
+const VIEWPORT_MARGIN = 8;
+
+export const COMPACT_VIEWPORT_MAX_WIDTH = 768;
 
 /** The trigger's viewport-space rect (from `getBoundingClientRect`) needed to place a fixed menu. */
 export interface AnchorRect {
@@ -69,8 +75,9 @@ export function readAnchorRect(ref: RefObject<RNView | null>): AnchorRect | null
  * `document.body`, so `fixed` positions it against the viewport and it tracks the trigger via the
  * measured rect (recomputed on scroll/resize/reflow) — clipped by nothing, above everything.
  */
-export function buildPortalPopoverStyle(rect: AnchorRect): ViewStyle {
+export function buildPortalPopoverStyle(rect: AnchorRect, viewportBottom?: number): ViewStyle {
   return {
+    ...(viewportBottom !== undefined ? { maxHeight: menuMaxHeight(rect.bottom, viewportBottom) } : null),
     // RN's ViewStyle union omits 'fixed', but react-native-web honours it at runtime.
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- web-only position value
     position: 'fixed' as unknown as ViewStyle['position'],
@@ -131,4 +138,50 @@ export function useAnchorRect(ref: RefObject<RNView | null>, enabled: boolean): 
   }, [ref, enabled]);
 
   return IS_WEB && enabled ? rect : null;
+}
+
+export function menuMaxHeight(anchorBottom: number, viewportBottom: number): number {
+  const room = viewportBottom - anchorBottom - MENU_TOP_GAP - VIEWPORT_MARGIN;
+  return Math.min(MENU_MAX_HEIGHT, Math.max(MENU_MIN_HEIGHT, room));
+}
+
+function readViewportBottom(): number {
+  const viewport = window.visualViewport ?? null;
+  return viewport === null ? window.innerHeight : viewport.offsetTop + viewport.height;
+}
+
+export function useVisualViewportBottom(enabled: boolean): number | null {
+  const [bottom, setBottom] = useState<number | null>(null);
+
+  useLayoutEffect(() => {
+    if (!IS_WEB || !enabled) {
+      setBottom(null);
+      return undefined;
+    }
+    const update = (): void => setBottom(readViewportBottom());
+    update();
+    const viewport = window.visualViewport ?? null;
+    viewport?.addEventListener('resize', update);
+    viewport?.addEventListener('scroll', update);
+    window.addEventListener('resize', update);
+    return () => {
+      viewport?.removeEventListener('resize', update);
+      viewport?.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+    };
+  }, [enabled]);
+
+  return bottom;
+}
+
+export function scrollNodeIntoView(node: HTMLElement | null, block: ScrollLogicalPosition): void {
+  if (node !== null && typeof node.scrollIntoView === 'function') node.scrollIntoView({ block });
+}
+
+export function scrollAnchorIntoView(ref: RefObject<RNView | null>, marginTop: number): void {
+  if (!IS_WEB) return;
+  const node = toDomNode(ref);
+  if (node === null) return;
+  node.style.scrollMarginTop = `${marginTop}px`;
+  scrollNodeIntoView(node, window.innerWidth < COMPACT_VIEWPORT_MAX_WIDTH ? 'start' : 'nearest');
 }

@@ -12,6 +12,7 @@
 export interface ControlOption {
   readonly label: string;
   readonly value: string;
+  readonly detail?: string;
 }
 
 /** The inclusive from/to value of a date-range control (each an ISO `YYYY-MM-DD` string, or ''). */

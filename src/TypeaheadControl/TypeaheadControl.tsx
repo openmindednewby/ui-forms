@@ -11,17 +11,22 @@
  *
  * Label-free by design — wrap in a `Field` for the label/hint slots.
  */
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { forwardRef, useRef, type ForwardedRef } from 'react';
 
 import { TextInput, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { useUi } from '@dloizides/ui-feedback';
 
 import { AnchoredMenu } from '../AnchoredMenu/AnchoredMenu';
+import { listboxDomId, optionDomId } from '../AnchoredMenu/components/OptionRow';
+import { scrollAnchorIntoView } from '../AnchoredMenu/menuPortal';
 import { controlStyles as s } from '../controls/controlStyles';
 import type { ControlOption } from '../controls/controlTypes';
-import { suggestOptions } from '../controls/suggestOptions';
 import { fieldErrorInk } from '../fieldErrorInk/fieldErrorInk';
+import { useTypeaheadState } from './hooks/useTypeaheadState';
+import type { TypeaheadSearch } from './types';
+
+export type { TypeaheadSearch } from './types';
 
 /** Delay before blur closes the menu, so a tap on an option registers first (aml CLOSE_DELAY_MS). */
 const CLOSE_DELAY_MS = 140;
@@ -31,8 +36,7 @@ export const DEFAULT_TYPEAHEAD_MIN_CHARS = 1;
 /** Default cap on rendered suggestions. */
 export const DEFAULT_TYPEAHEAD_MAX_SUGGESTIONS = 8;
 
-export interface TypeaheadControlProps {
-  options: readonly ControlOption[];
+interface TypeaheadCommonProps {
   /** The raw text in the box — NOT necessarily an option value. */
   value: string;
   onChange: (value: string) => void;
@@ -48,70 +52,56 @@ export interface TypeaheadControlProps {
   error?: string;
   /** Minimum characters before suggestions surface. Default 1. */
   minChars?: number;
-  /** Cap on rendered suggestions. Default 8. */
-  maxSuggestions?: number;
   /** Merged LAST onto the anchor wrapper. */
   style?: StyleProp<ViewStyle>;
   /** Input is `${testID}-input`, menu `${testID}-menu`, error `${testID}-error`. */
   testID: string;
 }
 
-export function TypeaheadControl({
-  options,
-  value,
-  onChange,
-  onSubmit,
-  placeholder,
-  accessibilityLabel,
-  accessibilityHint,
-  optionHint = '',
-  error,
-  minChars = DEFAULT_TYPEAHEAD_MIN_CHARS,
-  maxSuggestions = DEFAULT_TYPEAHEAD_MAX_SUGGESTIONS,
-  style,
-  testID,
-}: TypeaheadControlProps): React.ReactElement {
+export interface TypeaheadStaticProps extends TypeaheadCommonProps {
+  options: readonly ControlOption[];
+  /** Cap on rendered suggestions. Default 8. */
+  maxSuggestions?: number;
+}
+
+export interface TypeaheadSearchProps extends TypeaheadCommonProps {
+  search: TypeaheadSearch;
+}
+
+export type TypeaheadControlProps = TypeaheadStaticProps | TypeaheadSearchProps;
+
+function comboboxAria(testID: string, isExpanded: boolean, highlighted: ControlOption | undefined): Record<string, string | boolean | undefined> {
+  return {
+    role: 'combobox',
+    'aria-autocomplete': 'list',
+    'aria-expanded': isExpanded,
+    'aria-controls': isExpanded ? listboxDomId(testID) : undefined,
+    'aria-activedescendant': highlighted !== undefined ? optionDomId(testID, highlighted.value) : undefined,
+  };
+}
+
+function TypeaheadControlImpl(props: TypeaheadControlProps, ref: ForwardedRef<TextInput>): React.ReactElement {
+  const { value, onChange, onSubmit, placeholder, accessibilityLabel, accessibilityHint, optionHint = '', error, minChars = DEFAULT_TYPEAHEAD_MIN_CHARS, style, testID } = props;
+  const search = 'search' in props ? props.search : undefined;
+  const options = 'options' in props ? props.options : undefined;
+  const maxSuggestions = ('search' in props ? props.search.maxResults : props.maxSuggestions) ?? DEFAULT_TYPEAHEAD_MAX_SUGGESTIONS;
   const { theme } = useUi();
   const { colors, palette } = theme;
   const anchorRef = useRef<View>(null);
-  const [isOpen, setIsOpen] = useState(false);
-
-  // Hide the menu once the field already holds an exact pick (nothing left to disambiguate).
-  const exactPick = useMemo(() => options.some((o) => o.label === value), [options, value]);
-  const suggestions = useMemo(
-    () => (exactPick ? [] : suggestOptions(options, value, minChars, maxSuggestions)),
-    [exactPick, options, value, minChars, maxSuggestions],
-  );
-  const showMenu = isOpen && suggestions.length > 0;
-
-  const handleChange = useCallback(
-    (next: string) => {
-      onChange(next);
-      setIsOpen(true);
-    },
-    [onChange],
-  );
-  const pick = useCallback(
-    (optionValue: string) => {
-      const opt = options.find((o) => o.value === optionValue);
-      onChange(opt?.label ?? optionValue);
-      setIsOpen(false);
-    },
-    [options, onChange],
-  );
-  const handleBlur = useCallback(() => {
-    setTimeout(() => setIsOpen(false), CLOSE_DELAY_MS);
-  }, []);
-  const handleSubmit = useCallback(() => {
-    setIsOpen(false);
-    onSubmit?.();
-  }, [onSubmit]);
-
+  const state = useTypeaheadState({ options, search, value, minChars, maxSuggestions, onChange, onSubmit });
+  const showMenu = state.isOpen && (state.rows.length > 0 || state.statusText !== undefined);
+  const isExpanded = state.isOpen && state.rows.length > 0;
   const hasError = error !== undefined && error !== '';
+  const handleFocus = (): void => {
+    state.open();
+    if (search !== undefined) scrollAnchorIntoView(anchorRef, search.scrollMarginTop ?? 0);
+  };
 
   return (
     <View ref={anchorRef} style={[s.anchor, style]}>
       <TextInput
+        ref={ref}
+        {...comboboxAria(testID, isExpanded, state.highlighted)}
         accessibilityLabel={accessibilityLabel}
         accessibilityHint={accessibilityHint}
         autoCapitalize="none"
@@ -120,23 +110,26 @@ export function TypeaheadControl({
         placeholderTextColor={colors.textSecondary}
         spellCheck={false}
         value={value}
-        onChangeText={handleChange}
-        onFocus={() => setIsOpen(true)}
-        onBlur={handleBlur}
-        onSubmitEditing={handleSubmit}
+        onChangeText={state.handleChange}
+        onFocus={handleFocus}
+        onBlur={() => setTimeout(state.close, CLOSE_DELAY_MS)}
+        onKeyPress={state.handleKeyPress}
+        onSubmitEditing={state.handleSubmit}
         style={[s.input, { borderColor: hasError ? fieldErrorInk(theme) : colors.border, backgroundColor: colors.surface, color: colors.text }]}
-        testID={`${testID}-input`}
+        testID={search?.inputTestID ?? `${testID}-input`}
       />
       {showMenu ? (
         <AnchoredMenu
-          options={suggestions}
-          selectedValue={value}
-          onSelect={pick}
-          onDismiss={() => setIsOpen(false)}
-          colors={{ text: colors.text, border: colors.border, surface: colors.surface, brand: palette.primary['500'] }}
+          accessibilityLabel={accessibilityLabel}
+          options={state.rows}
+          selectedValue={search !== undefined ? (state.picked?.value ?? '') : value}
+          onSelect={state.selectValue}
+          onDismiss={state.close}
+          colors={{ text: colors.text, textSecondary: colors.textSecondary, border: colors.border, surface: colors.surface, brand: palette.primary['500'] }}
           optionHint={optionHint}
           testID={testID}
           anchorRef={anchorRef}
+          listbox={{ highlightedValue: state.highlighted?.value ?? '', statusText: state.statusText }}
           // Portal the suggestions to document.body on web: a typeahead sits in a filter row above
           // other content (fields, guides, a results table), and the in-tree popover was painted
           // under / clipped by it ("hidden below"). The portal escapes that stacking + clipping.
@@ -151,5 +144,7 @@ export function TypeaheadControl({
     </View>
   );
 }
+
+export const TypeaheadControl = forwardRef(TypeaheadControlImpl);
 
 export default TypeaheadControl;

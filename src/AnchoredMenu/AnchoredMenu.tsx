@@ -20,23 +20,30 @@
 import React, { useEffect } from 'react';
 
 import { createPortal } from 'react-dom';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 import { controlStyles as s } from '../controls/controlStyles';
 import type { ControlOption } from '../controls/controlTypes';
-import { buildPortalPopoverStyle, useAnchorRect } from './menuPortal';
+import { listboxDomId, optionDomId, OptionRow } from './components/OptionRow';
+import { buildPortalPopoverStyle, scrollNodeIntoView, useAnchorRect, useVisualViewportBottom } from './menuPortal';
 
 const IS_WEB = typeof document !== 'undefined';
 const ESCAPE_KEY = 'Escape';
-const ACTIVE_WEIGHT = '700' as const;
-const IDLE_WEIGHT = '400' as const;
+const LISTBOX_ROLE: Readonly<Record<string, string>> = { role: 'listbox' };
+const KEEP_FIELD_FOCUS = { onMouseDown: (event: { preventDefault: () => void }): void => event.preventDefault() };
 
 /** The four theme colours the menu paints with — passed in, so the menu stays theme-flat. */
 export interface AnchoredMenuColors {
   text: string;
+  textSecondary?: string;
   border: string;
   surface: string;
   brand: string;
+}
+
+export interface AnchoredMenuListbox {
+  highlightedValue: string;
+  statusText?: string;
 }
 
 export interface AnchoredMenuProps {
@@ -71,6 +78,7 @@ export interface AnchoredMenuProps {
    * only for the rare case that genuinely wants the menu clipped to its container.
    */
   usePortal?: boolean;
+  listbox?: AnchoredMenuListbox;
 }
 
 /** Web-only outside-click + Escape dismissal (no-op on native). */
@@ -103,6 +111,13 @@ function useDismiss(
   }, [anchorRef, menuRef, onDismiss]);
 }
 
+function useKeepHighlightInView(testID: string, highlightedValue: string | undefined): void {
+  useEffect(() => {
+    if (!IS_WEB || highlightedValue === undefined || highlightedValue === '') return;
+    scrollNodeIntoView(document.getElementById(optionDomId(testID, highlightedValue)), 'nearest');
+  }, [testID, highlightedValue]);
+}
+
 export function AnchoredMenu({
   options,
   selectedValue,
@@ -114,54 +129,55 @@ export function AnchoredMenu({
   testID,
   anchorRef,
   usePortal = true,
+  listbox,
 }: AnchoredMenuProps): React.ReactElement {
   const menuRef = React.useRef<View>(null);
   useDismiss(anchorRef, menuRef, onDismiss);
+  useKeepHighlightInView(testID, listbox?.highlightedValue);
   // Web + usePortal: track the anchor rect so the fixed, portalled menu stays glued to the trigger.
   const rect = useAnchorRect(anchorRef, usePortal);
-  const portalStyle = rect !== null ? buildPortalPopoverStyle(rect) : null;
+  const viewportBottom = useVisualViewportBottom(usePortal);
+  const portalStyle = rect !== null ? buildPortalPopoverStyle(rect, viewportBottom ?? undefined) : null;
+  const isListbox = listbox !== undefined;
+  const statusText = listbox?.statusText;
+  const rows = options.map((option) => (
+    <OptionRow
+      key={option.value}
+      colors={colors}
+      hint={optionHint}
+      isActive={option.value === selectedValue}
+      isHighlighted={option.value === listbox?.highlightedValue}
+      isListboxRow={isListbox}
+      option={option}
+      testID={testID}
+      onSelect={onSelect}
+    />
+  ));
+  const listboxBody = options.length > 0 ? (
+    <View accessibilityLabel={accessibilityLabel} id={listboxDomId(testID)} {...LISTBOX_ROLE} testID={listboxDomId(testID)}>
+      {rows}
+    </View>
+  ) : null;
 
   const menu = (
     <View
+      {...(isListbox ? KEEP_FIELD_FOCUS : null)}
       ref={menuRef}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole="menu"
+      accessibilityLabel={isListbox ? undefined : accessibilityLabel}
+      accessibilityRole={isListbox ? undefined : 'menu'}
       // `portalStyle` (position:fixed at the measured rect) is appended LAST so it wins over
       // s.menu's default `position:absolute; top:100%` when portalling; null (native / no portal)
       // leaves the in-tree anchored style untouched.
       style={[s.menu, { borderColor: colors.border, backgroundColor: colors.surface }, portalStyle]}
       testID={`${testID}-menu`}
     >
+      {statusText !== undefined ? (
+        <Text role="status" style={[s.option, s.optionText, { color: colors.text }]}>{statusText}</Text>
+      ) : null}
       {/* Scroll the options when they exceed the menu's maxHeight (s.menu). Without this the list was
           clipped by `overflow: hidden` with no way to reach the options below the fold. */}
       <ScrollView keyboardShouldPersistTaps="handled" nestedScrollEnabled>
-      {options.map((opt) => {
-        const active = opt.value === selectedValue;
-        return (
-          <Pressable
-            key={opt.value}
-            accessibilityRole="menuitem"
-            accessibilityLabel={opt.label}
-            accessibilityHint={optionHint}
-            // `accessibilityState` is NATIVE-ONLY: react-native-web does not read it at all, so
-            // on web the selected option was distinguished by colour + font-weight ALONE — no
-            // screen reader could tell which option was current (WCAG 1.4.1, use of colour).
-            // `aria-selected` is the web channel and RN-web forwards it verbatim. Both are
-            // passed so each platform gets the one it honours. The trigger's `aria-expanded`
-            // beside `accessibilityState` is the same pairing — this option row was simply
-            // missed when that was done.
-            accessibilityState={{ selected: active }}
-            aria-selected={active}
-            onPress={() => onSelect(opt.value)}
-            style={s.option}
-            testID={`${testID}-option-${opt.value}`}
-          >
-            <Text style={[s.optionText, { color: active ? colors.brand : colors.text, fontWeight: active ? ACTIVE_WEIGHT : IDLE_WEIGHT }]}>
-              {opt.label}
-            </Text>
-          </Pressable>
-        );
-      })}
+      {isListbox ? listboxBody : rows}
       </ScrollView>
     </View>
   );

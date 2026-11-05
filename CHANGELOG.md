@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.23.0
+
+BEAD-3 "Report form: searchable pattern field and shared form feedback".
+
+- `TypeaheadControl` takes `search` instead of `options` for async results: `load(query, signal)`, `onPick(option | null)`, loading, empty and error text, 250 ms debounce, stale responses ignored, editing after a pick clears it.
+- `TypeaheadControl` is a WAI-ARIA combobox in both modes: Down, Up, Enter, Esc, `aria-activedescendant`, a ref to its input. Its rows change role from `menuitem` to `option`; testIDs are unchanged.
+- `ControlOption` gains an optional `detail`, shown under the title on a phone and beside it from 768 px.
+- `AnchoredMenu` fits its height above the on-screen keyboard through `visualViewport`; new `listbox` prop for listbox roles and a status line.
+- New `FormStatusLine` and `useFocusFirstInvalid`.
+
 ## 1.22.0
 
 KEFI-EDITOR-UI-2 "Extract stepper and upload-with-link field to @dloizides/ui-forms", extracted from kefi-web.

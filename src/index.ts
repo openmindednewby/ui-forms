@@ -83,13 +83,13 @@ export {
   DEFAULT_TYPEAHEAD_MIN_CHARS,
   DEFAULT_TYPEAHEAD_MAX_SUGGESTIONS,
 } from './TypeaheadControl/TypeaheadControl';
-export type { TypeaheadControlProps } from './TypeaheadControl/TypeaheadControl';
+export type { TypeaheadControlProps, TypeaheadStaticProps, TypeaheadSearchProps, TypeaheadSearch } from './TypeaheadControl/TypeaheadControl';
 
 export { DateRangeControl } from './DateRangeControl/DateRangeControl';
 export type { DateRangeControlProps } from './DateRangeControl/DateRangeControl';
 
 export { AnchoredMenu } from './AnchoredMenu/AnchoredMenu';
-export type { AnchoredMenuProps, AnchoredMenuColors } from './AnchoredMenu/AnchoredMenu';
+export type { AnchoredMenuProps, AnchoredMenuColors, AnchoredMenuListbox } from './AnchoredMenu/AnchoredMenu';
 
 export { controlStyles } from './controls/controlStyles';
 export { suggestOptions, isUnmatched } from './controls/suggestOptions';
@@ -113,6 +113,12 @@ export { StepperNav } from './Stepper/StepperNav';
 export type { StepperNavProps, StepperNavLabels } from './Stepper/StepperNav';
 export { resolveStepNeighbours } from './Stepper/stepperModel';
 export type { StepperStep, StepNeighbours } from './Stepper/stepperModel';
+
+export { FormStatusLine } from './FormStatusLine/FormStatusLine';
+export type { FormStatusLineProps } from './FormStatusLine/FormStatusLine';
+
+export { useFocusFirstInvalid } from './useFocusFirstInvalid/useFocusFirstInvalid';
+export type { Focusable, FocusableRefs } from './useFocusFirstInvalid/useFocusFirstInvalid';
 
 export { UploadWithLinkField } from './UploadWithLinkField/UploadWithLinkField';
 export type { UploadWithLinkFieldProps, UploadWithLinkLabels } from './UploadWithLinkField/UploadWithLinkField';
