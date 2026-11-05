@@ -1,15 +1,17 @@
+import React from 'react';
+
 import { act, fireEvent, render, renderHook, screen } from '@testing-library/react';
 
 import { AnchoredMenu } from './AnchoredMenu';
 import { isDetailBesideTitle, optionDomId } from './components/OptionRow';
-import { buildPortalPopoverStyle, menuMaxHeight, useVisualViewportBottom } from './menuPortal';
+import { anchorScrollBlock, buildPortalPopoverStyle, menuMaxHeight, useVisualViewportBottom } from './menuPortal';
 
 const RECT = { top: 100, left: 0, width: 300, bottom: 144 };
 const COLORS = { text: 'a', border: 'b', surface: 'c', brand: 'd' };
 const OPTIONS = [{ label: 'Rose', value: 'r1', detail: 'Peyote, cuff' }];
 
-function renderListbox(statusText?: string): void {
-  render(
+function listboxMenu(statusText?: string): React.ReactElement {
+  return (
     <AnchoredMenu
       accessibilityLabel="Pattern"
       anchorRef={{ current: null }}
@@ -21,8 +23,12 @@ function renderListbox(statusText?: string): void {
       testID="m"
       onDismiss={jest.fn()}
       onSelect={jest.fn()}
-    />,
+    />
   );
+}
+
+function renderListbox(statusText?: string): void {
+  render(listboxMenu(statusText));
 }
 
 describe('menuMaxHeight', () => {
@@ -42,6 +48,20 @@ describe('menuMaxHeight', () => {
     const result = menuMaxHeight(144, 160);
 
     expect(result).toBe(96);
+  });
+});
+
+describe('anchorScrollBlock', () => {
+  it('with the full list fitting under the field, scrolls only as far as needed', () => {
+    const result = anchorScrollBlock(144, 800);
+
+    expect(result).toBe('nearest');
+  });
+
+  it('with less room than the full list needs, scrolls the field to the top', () => {
+    const result = anchorScrollBlock(144, 376);
+
+    expect(result).toBe('start');
   });
 });
 
@@ -102,6 +122,16 @@ describe('AnchoredMenu listbox mode', () => {
     expect(screen.getByRole('listbox').contains(status)).toBe(false);
   });
 
+  it('with the status text cleared, keeps the same empty status node', () => {
+    const { rerender } = render(listboxMenu('Searching'));
+    const status = screen.getByRole('status');
+
+    rerender(listboxMenu());
+
+    expect(screen.getByRole('status')).toBe(status);
+    expect(status.textContent).toBe('');
+  });
+
   it('with a mouse press on the list, keeps focus on the field', () => {
     renderListbox();
 
@@ -116,6 +146,12 @@ describe('isDetailBesideTitle', () => {
     const result = isDetailBesideTitle(360);
 
     expect(result).toBe(false);
+  });
+
+  it('with a 500 px menu, puts the detail beside the title', () => {
+    const result = isDetailBesideTitle(500);
+
+    expect(result).toBe(true);
   });
 
   it('at a desktop width, puts the detail beside the title', () => {

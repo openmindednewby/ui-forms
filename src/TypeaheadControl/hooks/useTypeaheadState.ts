@@ -79,6 +79,7 @@ export function useTypeaheadState(input: TypeaheadStateInput): TypeaheadState {
   const highlighted: ControlOption | undefined = isOpen ? rows[highlightIndex] : undefined;
 
   useEffect(() => setHighlightIndex(NO_HIGHLIGHT), [rowKey]);
+  useEffect(() => setPicked((current) => (current !== null && current.label !== value ? null : current)), [value]);
 
   const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => {
@@ -109,6 +110,7 @@ export function useTypeaheadState(input: TypeaheadStateInput): TypeaheadState {
       }
       onChange(next);
       setIsOpen(true);
+      setHighlightIndex(NO_HIGHLIGHT);
     },
     [picked, search, onChange],
   );

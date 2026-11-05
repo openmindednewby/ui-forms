@@ -19,12 +19,13 @@ import { useUi } from '@dloizides/ui-feedback';
 
 import { AnchoredMenu } from '../AnchoredMenu/AnchoredMenu';
 import { listboxDomId, optionDomId } from '../AnchoredMenu/components/OptionRow';
-import { scrollAnchorIntoView } from '../AnchoredMenu/menuPortal';
+import { useKeepAnchorInRoom } from '../AnchoredMenu/menuPortal';
 import { controlStyles as s } from '../controls/controlStyles';
 import type { ControlOption } from '../controls/controlTypes';
 import { fieldErrorInk } from '../fieldErrorInk/fieldErrorInk';
+import { webFieldA11y } from '../webFieldA11y/webFieldA11y';
 import { useTypeaheadState } from './hooks/useTypeaheadState';
-import type { TypeaheadSearch } from './types';
+import type { FieldControlWiring, TypeaheadSearch } from './types';
 
 export type { TypeaheadSearch } from './types';
 
@@ -60,7 +61,6 @@ interface TypeaheadCommonProps {
 
 export interface TypeaheadControlProps extends TypeaheadCommonProps {
   options: readonly ControlOption[];
-  /** Cap on rendered suggestions. Default 8. */
   maxSuggestions?: number;
 }
 
@@ -78,8 +78,9 @@ function comboboxAria(testID: string, isExpanded: boolean, highlighted: ControlO
   };
 }
 
-function TypeaheadControlImpl(props: TypeaheadControlProps | TypeaheadSearchProps, ref: ForwardedRef<TextInput>): React.ReactElement {
+function TypeaheadControlImpl(props: (TypeaheadControlProps | TypeaheadSearchProps) & FieldControlWiring, ref: ForwardedRef<TextInput>): React.ReactElement {
   const { value, onChange, onSubmit, placeholder, accessibilityLabel, accessibilityHint, optionHint = '', error, minChars = DEFAULT_TYPEAHEAD_MIN_CHARS, style, testID } = props;
+  const { id, describedById } = props;
   const search = 'search' in props ? props.search : undefined;
   const options = 'options' in props ? props.options : undefined;
   const maxSuggestions = ('search' in props ? props.search.maxResults : props.maxSuggestions) ?? DEFAULT_TYPEAHEAD_MAX_SUGGESTIONS;
@@ -90,26 +91,27 @@ function TypeaheadControlImpl(props: TypeaheadControlProps | TypeaheadSearchProp
   const showMenu = state.isOpen && (state.rows.length > 0 || state.statusText !== undefined);
   const isExpanded = state.isOpen && state.rows.length > 0;
   const hasError = error !== undefined && error !== '';
-  const handleFocus = (): void => {
-    state.open();
-    if (search !== undefined) scrollAnchorIntoView(anchorRef, search.scrollMarginTop ?? 0);
-  };
+  useKeepAnchorInRoom(anchorRef, search?.scrollMarginTop ?? 0, search !== undefined && state.isOpen);
 
   return (
     <View ref={anchorRef} style={[s.anchor, style]}>
       <TextInput
         ref={ref}
+        id={id}
         {...comboboxAria(testID, isExpanded, state.highlighted)}
+        {...webFieldA11y({ describedById })}
         accessibilityLabel={accessibilityLabel}
         accessibilityHint={accessibilityHint}
         autoCapitalize="none"
+        autoComplete="off"
         autoCorrect={false}
+        blurOnSubmit={search === undefined}
         placeholder={placeholder}
         placeholderTextColor={colors.textSecondary}
         spellCheck={false}
         value={value}
         onChangeText={state.handleChange}
-        onFocus={handleFocus}
+        onFocus={state.open}
         onBlur={() => setTimeout(state.close, CLOSE_DELAY_MS)}
         onKeyPress={state.handleKeyPress}
         onSubmitEditing={state.handleSubmit}

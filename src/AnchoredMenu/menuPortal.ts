@@ -43,8 +43,6 @@ const MENU_TOP_GAP = 4;
 const MENU_MIN_HEIGHT = 96;
 const VIEWPORT_MARGIN = 8;
 
-export const COMPACT_VIEWPORT_MAX_WIDTH = 768;
-
 /** The trigger's viewport-space rect (from `getBoundingClientRect`) needed to place a fixed menu. */
 export interface AnchorRect {
   top: number;
@@ -140,9 +138,17 @@ export function useAnchorRect(ref: RefObject<RNView | null>, enabled: boolean): 
   return IS_WEB && enabled ? rect : null;
 }
 
+function roomUnderAnchor(anchorBottom: number, viewportBottom: number): number {
+  return viewportBottom - anchorBottom - MENU_TOP_GAP - VIEWPORT_MARGIN;
+}
+
 export function menuMaxHeight(anchorBottom: number, viewportBottom: number): number {
-  const room = viewportBottom - anchorBottom - MENU_TOP_GAP - VIEWPORT_MARGIN;
-  return Math.min(MENU_MAX_HEIGHT, Math.max(MENU_MIN_HEIGHT, room));
+  return Math.min(MENU_MAX_HEIGHT, Math.max(MENU_MIN_HEIGHT, roomUnderAnchor(anchorBottom, viewportBottom)));
+}
+
+/** Where to scroll the field: to the top only when the full list does not fit under it. */
+export function anchorScrollBlock(anchorBottom: number, viewportBottom: number): ScrollLogicalPosition {
+  return roomUnderAnchor(anchorBottom, viewportBottom) < MENU_MAX_HEIGHT ? 'start' : 'nearest';
 }
 
 function readViewportBottom(): number {
@@ -183,5 +189,17 @@ export function scrollAnchorIntoView(ref: RefObject<RNView | null>, marginTop: n
   const node = toDomNode(ref);
   if (node === null) return;
   node.style.scrollMarginTop = `${marginTop}px`;
-  scrollNodeIntoView(node, window.innerWidth < COMPACT_VIEWPORT_MAX_WIDTH ? 'start' : 'nearest');
+  scrollNodeIntoView(node, anchorScrollBlock(node.getBoundingClientRect().bottom, readViewportBottom()));
+}
+
+/** While enabled, keeps room for the list under the field, also when a keyboard shrinks the viewport. */
+export function useKeepAnchorInRoom(ref: RefObject<RNView | null>, marginTop: number, enabled: boolean): void {
+  useLayoutEffect(() => {
+    if (!IS_WEB || !enabled) return undefined;
+    const place = (): void => scrollAnchorIntoView(ref, marginTop);
+    place();
+    const viewport = window.visualViewport ?? null;
+    viewport?.addEventListener('resize', place);
+    return () => viewport?.removeEventListener('resize', place);
+  }, [ref, marginTop, enabled]);
 }

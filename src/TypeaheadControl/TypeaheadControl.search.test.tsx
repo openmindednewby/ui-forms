@@ -192,28 +192,56 @@ describe('TypeaheadControl picking from search', () => {
   });
 });
 
-describe('TypeaheadControl focus scroll', () => {
-  it('with a search field focused at a phone width, scrolls the field to the top below the given margin', () => {
-    const scrollIntoView = jest.fn();
-    Element.prototype.scrollIntoView = scrollIntoView;
-    window.innerWidth = 360;
-    render(<Harness search={{ ...buildSearch(mockLoad([])), scrollMarginTop: 64 }} />);
+describe('TypeaheadControl highlight after an edit', () => {
+  it('with a row highlighted and new text pasted, a quick Enter does not pick the stale row', async () => {
+    const onPick = jest.fn();
+    render(<Harness search={buildSearch(mockLoad([ROSE]), onPick)} />);
+    typeText('ro');
+    await advance(DEBOUNCE_MS);
+    const input = screen.getByTestId(INPUT);
+    fireEvent.keyDown(input, { key: 'ArrowDown' });
+    fireEvent.change(input, { target: { value: 'iris' } });
 
-    fireEvent.focus(screen.getByTestId(INPUT));
+    fireEvent.keyDown(input, { key: 'Enter' });
 
-    expect(scrollIntoView).toHaveBeenCalledWith({ block: 'start' });
-    expect(screen.getByTestId(INPUT).parentElement?.style.scrollMarginTop).toBe('64px');
+    expect(inputValue()).toBe('iris');
+    expect(onPick).not.toHaveBeenCalledWith(ROSE);
   });
+});
 
-  it('with a search field focused at a desktop width, scrolls only as far as needed', () => {
-    const scrollIntoView = jest.fn();
-    Element.prototype.scrollIntoView = scrollIntoView;
-    window.innerWidth = 1280;
+describe('TypeaheadControl Enter in search mode', () => {
+  it('with Enter pressed and no row highlighted, keeps focus on the field', async () => {
     render(<Harness search={buildSearch(mockLoad([]))} />);
+    const input = screen.getByTestId(INPUT);
+    act(() => input.focus());
+
+    fireEvent.keyDown(input, { key: 'Enter' });
+    await advance(0);
+
+    expect(document.activeElement).toBe(input);
+  });
+});
+
+describe('TypeaheadControl parent reset', () => {
+  it('with the parent clearing the value after a pick, searches again when the same text returns', async () => {
+    const load = mockLoad([ROSE]);
+    const search = buildSearch(load);
+    const view = (value: string): React.ReactElement => (
+      <TypeaheadControl accessibilityLabel="Pattern" minChars={MIN_CHARS} search={search} testID={TID} value={value} onChange={jest.fn()} />
+    );
+    const { rerender } = render(view('ro'));
+    fireEvent.focus(screen.getByTestId(INPUT));
+    await advance(DEBOUNCE_MS);
+    fireEvent.click(screen.getByTestId(`${TID}-option-r1`));
+    rerender(view('Rose'));
+    rerender(view(''));
+    rerender(view('Rose'));
 
     fireEvent.focus(screen.getByTestId(INPUT));
+    await advance(DEBOUNCE_MS);
 
-    expect(scrollIntoView).toHaveBeenCalledWith({ block: 'nearest' });
+    expect(load).toHaveBeenLastCalledWith('Rose', expect.anything());
+    expect(load).toHaveBeenCalledTimes(2);
   });
 });
 

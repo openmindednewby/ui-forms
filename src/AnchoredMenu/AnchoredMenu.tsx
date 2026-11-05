@@ -20,7 +20,7 @@
 import React, { useEffect } from 'react';
 
 import { createPortal } from 'react-dom';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View, useWindowDimensions } from 'react-native';
 
 import { controlStyles as s } from '../controls/controlStyles';
 import type { ControlOption } from '../controls/controlTypes';
@@ -138,6 +138,8 @@ export function AnchoredMenu({
   const rect = useAnchorRect(anchorRef, usePortal);
   const viewportBottom = useVisualViewportBottom(usePortal);
   const portalStyle = rect !== null ? buildPortalPopoverStyle(rect, viewportBottom ?? undefined) : null;
+  const { width: windowWidth } = useWindowDimensions();
+  const menuWidth = rect?.width ?? windowWidth;
   const isListbox = listbox !== undefined;
   const statusText = listbox?.statusText;
   const rows = options.map((option) => (
@@ -148,6 +150,7 @@ export function AnchoredMenu({
       isActive={option.value === selectedValue}
       isHighlighted={option.value === listbox?.highlightedValue}
       isListboxRow={isListbox}
+      menuWidth={menuWidth}
       option={option}
       testID={testID}
       onSelect={onSelect}
@@ -171,8 +174,8 @@ export function AnchoredMenu({
       style={[s.menu, { borderColor: colors.border, backgroundColor: colors.surface }, portalStyle]}
       testID={`${testID}-menu`}
     >
-      {statusText !== undefined ? (
-        <Text role="status" style={[s.option, s.optionText, { color: colors.text }]}>{statusText}</Text>
+      {isListbox ? (
+        <Text role="status" style={statusText !== undefined ? [s.option, s.optionText, { color: colors.text }] : undefined}>{statusText ?? ''}</Text>
       ) : null}
       {/* Scroll the options when they exceed the menu's maxHeight (s.menu). Without this the list was
           clipped by `overflow: hidden` with no way to reach the options below the fold. */}

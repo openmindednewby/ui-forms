@@ -1,16 +1,16 @@
 import React from 'react';
 
-import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { controlStyles as s } from '../../controls/controlStyles';
 import type { ControlOption } from '../../controls/controlTypes';
-import { COMPACT_VIEWPORT_MAX_WIDTH } from '../menuPortal';
 
 const ACTIVE_WEIGHT = '700' as const;
 const IDLE_WEIGHT = '400' as const;
 const DETAIL_FONT = 12;
 const DETAIL_GAP = 12;
 const STACK_GAP = 2;
+const DETAIL_BESIDE_MIN_MENU_WIDTH = 400;
 
 const styles = StyleSheet.create({
   beside: { alignItems: 'baseline', flexDirection: 'row', gap: DETAIL_GAP, justifyContent: 'space-between' },
@@ -31,6 +31,7 @@ export interface OptionRowProps {
   isActive: boolean;
   isHighlighted: boolean;
   isListboxRow: boolean;
+  menuWidth: number;
   hint: string;
   colors: OptionRowColors;
   testID: string;
@@ -48,12 +49,11 @@ export function listboxDomId(testID: string): string {
 }
 
 /** Whether a row has the width to show its detail beside the title instead of under it. */
-export function isDetailBesideTitle(windowWidth: number): boolean {
-  return windowWidth >= COMPACT_VIEWPORT_MAX_WIDTH;
+export function isDetailBesideTitle(menuWidth: number): boolean {
+  return menuWidth >= DETAIL_BESIDE_MIN_MENU_WIDTH;
 }
 
-export function OptionRow({ option, isActive, isHighlighted, isListboxRow, hint, colors, testID, onSelect }: OptionRowProps): React.ReactElement {
-  const { width } = useWindowDimensions();
+export function OptionRow({ option, isActive, isHighlighted, isListboxRow, menuWidth, hint, colors, testID, onSelect }: OptionRowProps): React.ReactElement {
   const hasDetail = option.detail !== undefined && option.detail !== '';
   const label = hasDetail ? `${option.label}, ${option.detail}` : option.label;
   const roleProps = isListboxRow
@@ -72,7 +72,7 @@ export function OptionRow({ option, isActive, isHighlighted, isListboxRow, hint,
       style={[s.option, isHighlighted ? { backgroundColor: colors.border } : null]}
       testID={`${testID}-option-${option.value}`}
     >
-      <View style={isDetailBesideTitle(width) ? styles.beside : styles.stacked}>
+      <View style={isDetailBesideTitle(menuWidth) ? styles.beside : styles.stacked}>
         <Text style={[s.optionText, styles.shrink, { color: titleColor, fontWeight: isBold ? ACTIVE_WEIGHT : IDLE_WEIGHT }]}>
           {option.label}
         </Text>
