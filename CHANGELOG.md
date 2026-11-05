@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.24.0
+
+BEAD-3 "Report form: searchable pattern field": review fix.
+
+- New `useKeepInView(trigger)`, moved from Jinx: scrolls the returned view into sight each time `trigger` takes a new value, as far as needed and no further. Web only; a no-op on native.
+
 ## 1.23.0
 
 BEAD-3 "Report form: searchable pattern field and shared form feedback".

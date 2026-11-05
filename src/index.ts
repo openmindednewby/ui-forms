@@ -120,5 +120,7 @@ export type { FormStatusLineProps } from './FormStatusLine/FormStatusLine';
 export { useFocusFirstInvalid } from './useFocusFirstInvalid/useFocusFirstInvalid';
 export type { Focusable, FocusableRefs } from './useFocusFirstInvalid/useFocusFirstInvalid';
 
+export { useKeepInView } from './useKeepInView/useKeepInView';
+
 export { UploadWithLinkField } from './UploadWithLinkField/UploadWithLinkField';
 export type { UploadWithLinkFieldProps, UploadWithLinkLabels } from './UploadWithLinkField/UploadWithLinkField';
