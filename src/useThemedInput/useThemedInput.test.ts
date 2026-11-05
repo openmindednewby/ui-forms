@@ -10,10 +10,42 @@ type FocusHandler = { onFocus: (e: unknown) => void; onBlur: (e: unknown) => voi
 type Hoverable = { onMouseEnter?: () => void; onMouseLeave?: () => void };
 
 describe('useThemedInput', () => {
-  it('gives a read-only field the recessed ground fill and the secondary ink', () => {
+  it('with a read-only field, fills it with the surface and the secondary ink, unlike an editable field or a card', () => {
     const { result } = renderHook(() => useThemedInput({ editable: false }));
-    expect(result.current.style.backgroundColor).toBe('#ffffff');
+
+    expect(result.current.style.backgroundColor).toBe('#f7f7f7');
     expect(result.current.style.color).toBe('#666666');
+  });
+
+  it('with a read-only field, draws the border in the fill colour, so it has no input outline', () => {
+    const { result } = renderHook(() => useThemedInput({ editable: false }));
+
+    expect(result.current.style.borderColor).toBe('#f7f7f7');
+  });
+
+  it('with a read-only field under hover, keeps the border', () => {
+    const { result } = renderHook(() => useThemedInput({ editable: false }));
+
+    act(() => (result.current.hoverBind as Hoverable).onMouseEnter?.());
+
+    expect(result.current.style.borderColor).toBe('#f7f7f7');
+  });
+
+  it('with a read-only field under focus, keeps fill and border but draws the focus ring', () => {
+    const { result } = renderHook(() => useThemedInput({ editable: false }));
+
+    act(() => (result.current.focusBind as FocusHandler).onFocus({}));
+
+    expect(result.current.style.backgroundColor).toBe('#f7f7f7');
+    expect(result.current.style.borderColor).toBe('#f7f7f7');
+    expect(result.current.style).toMatchObject({ outlineWidth: 2 });
+  });
+
+  it('with a read-only field holding an error, keeps the error border', () => {
+    const { result: readOnly } = renderHook(() => useThemedInput({ editable: false, hasError: true }));
+    const { result: editable } = renderHook(() => useThemedInput({ hasError: true }));
+
+    expect(readOnly.current.style.borderColor).toBe(editable.current.style.borderColor);
   });
 
   it('keeps an editable field on the elevated fill and the primary ink', () => {

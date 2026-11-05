@@ -90,7 +90,7 @@ export interface UseThemedInputOptions {
   onFocus?: (e: FocusEvent) => void;
   /** Consumer blur handler — composed with the internal focus-state toggle. */
   onBlur?: (e: BlurEvent) => void;
-  /** `false` renders the read-only treatment: the recessed ground fill and the secondary ink. */
+  /** `false` renders the read-only treatment: flat surface fill, no input outline, secondary ink. */
   editable?: boolean;
 }
 
@@ -145,9 +145,11 @@ export function useThemedInput(options: UseThemedInputOptions = {}): ThemedInput
   const style = useMemo<TextStyle>(() => {
     const restBorder = hasError ? errorColor : colors.border;
     const focusBorder = hasError ? errorColor : primary;
-    const borderColor = isFocused ? focusBorder : isHovered ? withAlpha(colors.text, HOVER_BORDER_ALPHA) : restBorder;
+    const editableBorder = isFocused ? focusBorder : isHovered ? withAlpha(colors.text, HOVER_BORDER_ALPHA) : restBorder;
+    const readOnlyBorder = hasError ? errorColor : colors.surface;
+    const borderColor = editable ? editableBorder : readOnlyBorder;
     const editableFill = isFocused ? colors.surface : colors.surfaceElevated;
-    const backgroundColor = editable ? editableFill : colors.background;
+    const backgroundColor = editable ? editableFill : colors.surface;
     const base: TextStyle = { color: editable ? colors.text : colors.textSecondary, borderColor, backgroundColor };
     if (!IS_WEB) return base;
     // A focused field ALWAYS gets a ring — an errored one just changes its colour to the error
