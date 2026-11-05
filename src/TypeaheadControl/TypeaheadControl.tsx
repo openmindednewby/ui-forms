@@ -58,7 +58,7 @@ interface TypeaheadCommonProps {
   testID: string;
 }
 
-export interface TypeaheadStaticProps extends TypeaheadCommonProps {
+export interface TypeaheadControlProps extends TypeaheadCommonProps {
   options: readonly ControlOption[];
   /** Cap on rendered suggestions. Default 8. */
   maxSuggestions?: number;
@@ -67,8 +67,6 @@ export interface TypeaheadStaticProps extends TypeaheadCommonProps {
 export interface TypeaheadSearchProps extends TypeaheadCommonProps {
   search: TypeaheadSearch;
 }
-
-export type TypeaheadControlProps = TypeaheadStaticProps | TypeaheadSearchProps;
 
 function comboboxAria(testID: string, isExpanded: boolean, highlighted: ControlOption | undefined): Record<string, string | boolean | undefined> {
   return {
@@ -80,7 +78,7 @@ function comboboxAria(testID: string, isExpanded: boolean, highlighted: ControlO
   };
 }
 
-function TypeaheadControlImpl(props: TypeaheadControlProps, ref: ForwardedRef<TextInput>): React.ReactElement {
+function TypeaheadControlImpl(props: TypeaheadControlProps | TypeaheadSearchProps, ref: ForwardedRef<TextInput>): React.ReactElement {
   const { value, onChange, onSubmit, placeholder, accessibilityLabel, accessibilityHint, optionHint = '', error, minChars = DEFAULT_TYPEAHEAD_MIN_CHARS, style, testID } = props;
   const search = 'search' in props ? props.search : undefined;
   const options = 'options' in props ? props.options : undefined;

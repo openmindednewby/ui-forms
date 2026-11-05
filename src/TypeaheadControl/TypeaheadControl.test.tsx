@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { TypeaheadControl, type TypeaheadStaticProps } from './TypeaheadControl';
+import { TypeaheadControl, type TypeaheadControlProps } from './TypeaheadControl';
 
 const OPTIONS = [
   { label: 'Cyprus', value: 'CY' },
@@ -13,7 +13,7 @@ const INPUT = `${TID}-input`;
 const MENU = `${TID}-menu`;
 
 function renderTypeahead(
-  overrides: Partial<TypeaheadStaticProps> = {},
+  overrides: Partial<TypeaheadControlProps> = {},
 ): { onChange: jest.Mock; rerender: (value: string) => void } {
   const onChange = jest.fn();
   const props = { accessibilityLabel: 'Country', options: OPTIONS, testID: TID, value: '', onChange, ...overrides };
