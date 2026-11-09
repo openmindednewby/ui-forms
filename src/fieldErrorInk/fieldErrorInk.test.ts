@@ -16,8 +16,8 @@ const ERROR_SCALE = {
 const DARK_SURFACE = '#1c1f26';
 const LIGHT_SURFACE = '#ffffff';
 
-const themeOn = (surface: string, error: Record<string, string>): UiTheme =>
-  ({ colors: { surface }, palette: { primary: { '500': '#2563eb' } }, semantic: { error } }) as unknown as UiTheme;
+const themeOn = (surface: string, error: Record<string, string>, semanticText?: Record<string, string>): UiTheme =>
+  ({ colors: { surface }, palette: { primary: { '500': '#2563eb' } }, semantic: { error }, semanticText }) as unknown as UiTheme;
 
 describe('fieldErrorInk', () => {
   it('keeps error 500 on a light surface, where it already clears 4.5:1', () => {
@@ -32,5 +32,35 @@ describe('fieldErrorInk', () => {
 
   it('falls back to error 500 when the theme defines no other step', () => {
     expect(fieldErrorInk(themeOn(DARK_SURFACE, { '500': '#ae2012' }))).toBe('#ae2012');
+  });
+});
+
+describe('fieldErrorInk with semanticText', () => {
+  const readableOnDark = '#e16a5e';
+  const textOnDark = '#ff9c8f';
+
+  it('with semanticText.error present, returns it instead of the scale step', () => {
+    const theme = themeOn(DARK_SURFACE, ERROR_SCALE, { error: textOnDark });
+
+    const ink = fieldErrorInk(theme);
+
+    expect(ink).toBe(textOnDark);
+  });
+
+  it('with semanticText lacking error, returns the readable scale step', () => {
+    const theme = themeOn(DARK_SURFACE, ERROR_SCALE, { success: textOnDark });
+
+    const ink = fieldErrorInk(theme);
+
+    expect(ink).toBe(readableOnDark);
+  });
+
+  it('with semanticText.error present, leaves the semantic.error fill scale unchanged', () => {
+    const fill = { ...ERROR_SCALE };
+    const theme = themeOn(DARK_SURFACE, fill, { error: textOnDark });
+
+    fieldErrorInk(theme);
+
+    expect(theme.semantic.error).toEqual(ERROR_SCALE);
   });
 });
