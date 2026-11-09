@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.29.0
+
+FINREG-BRAND-1 "Logo without its background and one palette from the logo": error and status TEXT reads `semanticText` when the theme provides it, readable in dark mode. Unchanged without it.
+
 ## 1.28.2
 
 INVOICE-FU-22 "To and Cc dropdown of saved people".
