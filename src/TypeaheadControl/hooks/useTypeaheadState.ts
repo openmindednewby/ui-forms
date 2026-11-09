@@ -3,11 +3,11 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { NativeSyntheticEvent, TextInputKeyPressEventData } from 'react-native';
 
 import type { ControlOption } from '../../controls/controlTypes';
+import { NO_HIGHLIGHT, nextHighlight } from '../../controls/nextHighlight';
 import { suggestOptions } from '../../controls/suggestOptions';
 import type { TypeaheadSearch } from '../types';
 import { DEFAULT_TYPEAHEAD_DEBOUNCE_MS, useTypeaheadSearch, type TypeaheadSearchState } from './useTypeaheadSearch';
 
-const NO_HIGHLIGHT = -1;
 const FORWARD = 1;
 const BACKWARD = -1;
 const NO_ROWS: readonly ControlOption[] = [];
@@ -34,13 +34,6 @@ export interface TypeaheadState {
   handleChange: (next: string) => void;
   handleKeyPress: (event: NativeSyntheticEvent<TextInputKeyPressEventData>) => void;
   handleSubmit: () => void;
-}
-
-/** The row index an arrow key moves to: wraps at both ends, -1 when there are no rows. */
-export function nextHighlight(current: number, count: number, delta: number): number {
-  if (count === 0) return NO_HIGHLIGHT;
-  if (current === NO_HIGHLIGHT) return delta > 0 ? 0 : count - 1;
-  return (current + delta + count) % count;
 }
 
 function searchStatusText(found: TypeaheadSearchState, search: TypeaheadSearch): string | undefined {

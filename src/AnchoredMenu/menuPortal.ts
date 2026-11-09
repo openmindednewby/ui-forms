@@ -29,7 +29,7 @@ import type { View as RNView } from 'react-native';
 
 import { Z_INDEX } from '@dloizides/design-tokens';
 
-import { MENU_MAX_HEIGHT } from '../controls/controlStyles';
+import { MENU_MAX_HEIGHT, MENU_MIN_WIDTH } from '../controls/controlStyles';
 
 const IS_WEB = Platform.OS === 'web';
 
@@ -73,17 +73,23 @@ export function readAnchorRect(ref: RefObject<RNView | null>): AnchorRect | null
  * `document.body`, so `fixed` positions it against the viewport and it tracks the trigger via the
  * measured rect (recomputed on scroll/resize/reflow) — clipped by nothing, above everything.
  */
-export function buildPortalPopoverStyle(rect: AnchorRect, viewportBottom?: number): ViewStyle {
+export function buildPortalPopoverStyle(rect: AnchorRect, viewportBottom?: number, viewportWidth?: number): ViewStyle {
   return {
     ...(viewportBottom !== undefined ? { maxHeight: menuMaxHeight(rect.bottom, viewportBottom) } : null),
     // RN's ViewStyle union omits 'fixed', but react-native-web honours it at runtime.
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- web-only position value
     position: 'fixed' as unknown as ViewStyle['position'],
     top: rect.bottom + MENU_TOP_GAP,
-    left: rect.left,
-    width: rect.width,
+    ...horizontalPlacement(rect, viewportWidth),
     zIndex: MENU_PORTAL_Z_INDEX,
   };
+}
+
+function horizontalPlacement(rect: AnchorRect, viewportWidth: number | undefined): { left: number; width: number } {
+  if (viewportWidth === undefined) return { left: rect.left, width: rect.width };
+  const width = Math.min(Math.max(rect.width, MENU_MIN_WIDTH), viewportWidth - 2 * VIEWPORT_MARGIN);
+  const left = Math.max(VIEWPORT_MARGIN, Math.min(rect.left, viewportWidth - VIEWPORT_MARGIN - width));
+  return { left, width };
 }
 
 /**

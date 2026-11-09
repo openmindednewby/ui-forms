@@ -1,4 +1,4 @@
-import { nextHighlight } from './useTypeaheadState';
+import { nextHighlight } from './nextHighlight';
 
 describe('nextHighlight', () => {
   it('with nothing highlighted and a forward move, returns the first row', () => {

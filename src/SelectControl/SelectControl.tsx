@@ -23,11 +23,19 @@ import { Pressable, Text, View, type StyleProp, type ViewStyle } from 'react-nat
 import { useUi } from '@dloizides/ui-feedback';
 
 import { AnchoredMenu } from '../AnchoredMenu/AnchoredMenu';
+import { listboxDomId, optionDomId } from '../AnchoredMenu/components/OptionRow';
 import { controlStyles as s } from '../controls/controlStyles';
 import type { ControlOption } from '../controls/controlTypes';
+import { useSelectListbox } from './useSelectListbox';
 
 const CHEVRON_DOWN = '▾';
 const CHEVRON_UP = '▴';
+
+/** Opts in to a menu that stays on screen with focus on the trigger, for screen edges and focus-trapped sheets. */
+export interface SelectMenuAnchor {
+  listboxLabel: string;
+  anchorRef?: React.RefObject<View | null>;
+}
 
 export interface SelectControlProps {
   options: readonly ControlOption[];
@@ -56,10 +64,20 @@ export interface SelectControlProps {
   labelledById?: string;
   /** PRE-LOCALIZED accessibility hint applied to every option in the menu. */
   optionHint?: string;
+  menuAnchor?: SelectMenuAnchor;
   /** Merged LAST onto the anchor wrapper — the consumer always wins over the shared style. */
   style?: StyleProp<ViewStyle>;
   /** Trigger is `${testID}-trigger`, menu `${testID}-menu`, options `${testID}-option-${value}`. */
   testID: string;
+}
+
+function listboxTriggerAria(testID: string, hasList: boolean, highlighted: ControlOption | undefined): Record<string, string | undefined> {
+  return {
+    role: 'combobox',
+    'aria-haspopup': 'listbox',
+    'aria-controls': hasList ? listboxDomId(testID) : undefined,
+    'aria-activedescendant': highlighted !== undefined ? optionDomId(testID, highlighted.value) : undefined,
+  };
 }
 
 export function SelectControl({
@@ -71,6 +89,7 @@ export function SelectControl({
   accessibilityHint,
   labelledById,
   optionHint = '',
+  menuAnchor,
   style,
   testID,
 }: SelectControlProps): React.ReactElement {
@@ -85,6 +104,7 @@ export function SelectControl({
   }, [options, placeholder, value]);
 
   const close = useCallback(() => { setIsOpen(false); }, []);
+  const open = useCallback(() => { setIsOpen(true); }, []);
   const toggle = useCallback(() => { setIsOpen((prev) => !prev); }, []);
   const select = useCallback(
     (next: string) => {
@@ -93,16 +113,22 @@ export function SelectControl({
     },
     [onChange],
   );
+  const listbox = useSelectListbox({ options, isOpen, open, toggle, select });
+  const isListbox = menuAnchor !== undefined;
+  const captureKeys: Record<string, unknown> = isListbox ? { onKeyDownCapture: listbox.onKeyDown } : {};
+  const triggerAria = isListbox ? listboxTriggerAria(testID, isOpen && options.length > 0, listbox.highlighted) : {};
 
   return (
-    <View ref={anchorRef} style={[s.anchor, style]}>
+    <View ref={anchorRef} style={[s.anchor, style]} {...captureKeys}>
       <Pressable
-        accessibilityRole="button"
+        {...triggerAria}
+        accessibilityRole={isListbox ? undefined : 'button'}
         accessibilityLabel={accessibilityLabel}
         accessibilityHint={accessibilityHint}
         accessibilityState={{ expanded: isOpen }}
         aria-expanded={isOpen}
         aria-labelledby={labelledById}
+        onBlur={isListbox ? close : undefined}
         onPress={toggle}
         style={[s.selectTrigger, { borderColor: colors.border, backgroundColor: colors.surfaceElevated }]}
         testID={`${testID}-trigger`}
@@ -118,10 +144,13 @@ export function SelectControl({
           selectedValue={value}
           onSelect={select}
           onDismiss={close}
-          colors={{ text: colors.text, border: colors.border, surface: colors.surface, brand: palette.primary['500'] }}
+          colors={{ text: colors.text, ...(isListbox ? { textSecondary: colors.textSecondary } : null), border: colors.border, surface: colors.surface, brand: palette.primary['500'] }}
           optionHint={optionHint}
           testID={testID}
           anchorRef={anchorRef}
+          accessibilityLabel={menuAnchor?.listboxLabel}
+          listbox={isListbox ? { highlightedValue: listbox.highlighted?.value } : undefined}
+          placement={isListbox ? { positionRef: menuAnchor.anchorRef } : undefined}
         />
       ) : null}
     </View>

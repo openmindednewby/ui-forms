@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.28.0
+
+INVOICE-FU-22 "To and Cc dropdown of saved people", D-FU22-5 "Review findings are fixed in the packages".
+
+- `SelectControl` gains `menuAnchor` (`listboxLabel`, `anchorRef`): the menu stays on screen, focus stays on the trigger, arrows, Enter and Space work from it, and the trigger is a combobox with `aria-activedescendant`. Callers without it are unchanged.
+- `AnchoredMenu` gains `placement`; `AnchoredMenuListbox.highlightedValue` is optional.
+- `nextHighlight` is exported.
+
 ## 1.27.0
 
 DATE-INPUT-1 "Every date or date-time field uses the shared input".

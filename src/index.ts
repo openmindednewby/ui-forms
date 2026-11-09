@@ -76,7 +76,8 @@ export type { FormCheckboxProps } from './FormCheckbox/FormCheckbox';
 // ---------------------------------------------------------------------------
 
 export { SelectControl } from './SelectControl/SelectControl';
-export type { SelectControlProps } from './SelectControl/SelectControl';
+export type { SelectControlProps, SelectMenuAnchor } from './SelectControl/SelectControl';
+export { nextHighlight } from './controls/nextHighlight';
 
 export { SelectField } from './SelectField/SelectField';
 export type { SelectFieldProps } from './SelectField/SelectField';
@@ -95,7 +96,7 @@ export { DateTimeField } from './DateField/DateTimeField';
 export type { DateFieldProps, DateTimeFieldProps } from './DateField/types';
 
 export { AnchoredMenu } from './AnchoredMenu/AnchoredMenu';
-export type { AnchoredMenuProps, AnchoredMenuColors, AnchoredMenuListbox } from './AnchoredMenu/AnchoredMenu';
+export type { AnchoredMenuProps, AnchoredMenuColors, AnchoredMenuListbox, AnchoredMenuPlacement } from './AnchoredMenu/AnchoredMenu';
 
 export { controlStyles } from './controls/controlStyles';
 export { suggestOptions, isUnmatched } from './controls/suggestOptions';

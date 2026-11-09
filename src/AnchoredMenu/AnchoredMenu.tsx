@@ -42,8 +42,13 @@ export interface AnchoredMenuColors {
 }
 
 export interface AnchoredMenuListbox {
-  highlightedValue: string;
+  highlightedValue?: string;
   statusText?: string;
+}
+
+/** Web: keeps the portalled menu on screen, lined up with positionRef when given, else with anchorRef. */
+export interface AnchoredMenuPlacement {
+  positionRef?: React.RefObject<View | null>;
 }
 
 export interface AnchoredMenuProps {
@@ -79,6 +84,7 @@ export interface AnchoredMenuProps {
    */
   usePortal?: boolean;
   listbox?: AnchoredMenuListbox;
+  placement?: AnchoredMenuPlacement;
 }
 
 /** Web-only outside-click + Escape dismissal (no-op on native). */
@@ -130,15 +136,16 @@ export function AnchoredMenu({
   anchorRef,
   usePortal = true,
   listbox,
+  placement,
 }: AnchoredMenuProps): React.ReactElement {
   const menuRef = React.useRef<View>(null);
   useDismiss(anchorRef, menuRef, onDismiss);
   useKeepHighlightInView(testID, listbox?.highlightedValue);
   // Web + usePortal: track the anchor rect so the fixed, portalled menu stays glued to the trigger.
-  const rect = useAnchorRect(anchorRef, usePortal);
+  const rect = useAnchorRect(placement?.positionRef ?? anchorRef, usePortal);
   const viewportBottom = useVisualViewportBottom(usePortal);
-  const portalStyle = rect !== null ? buildPortalPopoverStyle(rect, viewportBottom ?? undefined) : null;
   const { width: windowWidth } = useWindowDimensions();
+  const portalStyle = rect !== null ? buildPortalPopoverStyle(rect, viewportBottom ?? undefined, placement !== undefined ? windowWidth : undefined) : null;
   const menuWidth = rect?.width ?? windowWidth;
   const isListbox = listbox !== undefined;
   const statusText = listbox?.statusText;
