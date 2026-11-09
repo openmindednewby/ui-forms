@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.27.0
+
+DATE-INPUT-1 "Every date or date-time field uses the shared input".
+
+- New `DateField` (`YYYY-MM-DD`) and `DateTimeField` (`YYYY-MM-DDTHH:mm`), rendered through `Field`; a real `<input type>` on web.
+
 ## 1.26.0
 
 INVOICE-3 "Invoice interface over a user-chosen folder": owner picks.
