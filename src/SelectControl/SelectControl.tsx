@@ -74,7 +74,6 @@ export interface SelectControlProps {
 function listboxTriggerAria(testID: string, hasList: boolean, highlighted: ControlOption | undefined): Record<string, string | undefined> {
   return {
     role: 'combobox',
-    'aria-haspopup': 'listbox',
     'aria-controls': hasList ? listboxDomId(testID) : undefined,
     'aria-activedescendant': highlighted !== undefined ? optionDomId(testID, highlighted.value) : undefined,
   };
@@ -127,6 +126,7 @@ export function SelectControl({
         accessibilityHint={accessibilityHint}
         accessibilityState={{ expanded: isOpen }}
         aria-expanded={isOpen}
+        aria-haspopup="listbox"
         aria-labelledby={labelledById}
         onBlur={isListbox ? close : undefined}
         onPress={toggle}

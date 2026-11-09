@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.28.1
+
+INVOICE-FU-22 "To and Cc dropdown of saved people".
+
+- Every `SelectControl` trigger sets `aria-haspopup="listbox"`, which `useEscapeKey` in `ui-layout` reads to give Escape to the open menu.
+
 ## 1.28.0
 
 INVOICE-FU-22 "To and Cc dropdown of saved people", D-FU22-5 "Review findings are fixed in the packages".
