@@ -244,12 +244,12 @@ describe('SelectControl without menuAnchor', () => {
     expect(screen.getByTestId(MENU)).toBeTruthy();
   });
 
-  it('with a closed menu, announces the popup so Escape in a sheet belongs to the menu', () => {
+  it('with a closed menu, announces a menu popup so Escape in a sheet belongs to the menu', () => {
     render(<SelectControl accessibilityLabel="Status" options={OPTIONS} testID={TID} value="" onChange={jest.fn()} />);
 
     const popup = screen.getByTestId(TRIGGER).getAttribute('aria-haspopup');
 
-    expect(popup).toBe('listbox');
+    expect(popup).toBe('menu');
   });
 
   it('with an arrow key on the trigger, sets no active descendant', () => {

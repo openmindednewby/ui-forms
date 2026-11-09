@@ -126,7 +126,7 @@ export function SelectControl({
         accessibilityHint={accessibilityHint}
         accessibilityState={{ expanded: isOpen }}
         aria-expanded={isOpen}
-        aria-haspopup="listbox"
+        aria-haspopup={isListbox ? 'listbox' : 'menu'}
         aria-labelledby={labelledById}
         onBlur={isListbox ? close : undefined}
         onPress={toggle}

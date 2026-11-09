@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.28.2
+
+INVOICE-FU-22 "To and Cc dropdown of saved people".
+
+- A `SelectControl` without `menuAnchor` sets `aria-haspopup="menu"`, matching its `role=menu` popup; with `menuAnchor` it stays `"listbox"`.
+
 ## 1.28.1
 
 INVOICE-FU-22 "To and Cc dropdown of saved people".
