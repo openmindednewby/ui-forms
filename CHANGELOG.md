@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.32.0
+
+KEFI-LAUNCH-1 "Do every open Kefi task" (UI-COMPOSE-1 extraction from kefi-web landing parity).
+
+- New `AddOnRequest`: an optional field group, an Add button until asked for or filled, then the children and a Remove button. Labels and hints are pre-localized props; testIDs `<testID>-add` / `<testID>-remove`. `isAddOnOpen` exported.
+- New `FixBar`: a pre-localized message (alert, error ink from the theme) naming the fields that stop the save, and a Show button; renders nothing at count 0. testIDs `<testID>-count` / `<testID>-show`. `isFixBarVisible` exported.
+
 ## 1.30.0
 
 FINREG-DATE-2 "Every FinReg date field uses the shared input".

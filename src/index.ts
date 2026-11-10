@@ -139,3 +139,8 @@ export { useKeepInView } from './useKeepInView/useKeepInView';
 
 export { UploadWithLinkField } from './UploadWithLinkField/UploadWithLinkField';
 export type { UploadWithLinkFieldProps, UploadWithLinkLabels } from './UploadWithLinkField/UploadWithLinkField';
+
+export { AddOnRequest, isAddOnOpen } from './AddOnRequest/AddOnRequest';
+export type { AddOnRequestProps } from './AddOnRequest/AddOnRequest';
+export { FixBar, isFixBarVisible } from './FixBar/FixBar';
+export type { FixBarProps } from './FixBar/FixBar';
