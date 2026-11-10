@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.30.0
+
+FINREG-DATE-2 "Every FinReg date field uses the shared input".
+
+- `DateRangeControl` renders the shared `DateField` for From and To (DATE-INPUT-1): on web each side is a real `type="date"` input. Props and testIDs unchanged.
+- `DateField` / `DateTimeField` accept an optional `placeholder` (native text input only).
+- New `FormStack`: a vertical form column whose `gap` owns the rhythm, so nested `Field`s drop their bottom margin.
+- New `ResponsiveFormLayout` (`narrow` / `wide` / `breakpoint`, default 768) and `isWideFormLayout`.
+
 ## 1.29.0
 
 FINREG-BRAND-1 "Logo without its background and one palette from the logo": error and status TEXT reads `semanticText` when the theme provides it, readable in dark mode. Unchanged without it.

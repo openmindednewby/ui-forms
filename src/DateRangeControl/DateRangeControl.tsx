@@ -1,25 +1,12 @@
-/**
- * `DateRangeControl` — an inclusive from/to pair (aml cases `from`/`to`, kefi audit `from`/`to`).
- * Each side is a `YYYY-MM-DD` text input; on web the browser's native date UI is offered via
- * `type="date"` (a react-native-web `TextInput` passes unknown props to the DOM input). Editing
- * either side patches ONLY that side, so the other survives the edit.
- *
- * Promoted out of `@dloizides/ui-tables`' private `Filters/fields/DateRangeField`, which is why
- * the fleet grew FIVE independent date fields.
- *
- * Label-free by design — the From/To sub-labels name the two HALVES; wrap in a `Field` for the
- * range's own label.
- */
 import React from 'react';
 
-import { TextInput, View, Text, type StyleProp, type ViewStyle } from 'react-native';
-
-import { useUi } from '@dloizides/ui-feedback';
+import { View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { controlStyles as s } from '../controls/controlStyles';
-import type { DateRangeValue } from '../controls/controlTypes';
+import { DateField } from '../DateField/DateField';
+import { GapOwnedProvider } from '../FormGrid/formGridContext';
 
-const WEB_DATE_PROPS = typeof document !== 'undefined' ? { type: 'date' } : {};
+import type { DateRangeValue } from '../controls/controlTypes';
 
 export interface DateRangeControlProps {
   value: DateRangeValue;
@@ -40,41 +27,7 @@ export interface DateRangeControlProps {
   testID: string;
 }
 
-interface DateInputProps {
-  side: 'from' | 'to';
-  label: string;
-  placeholder?: string;
-  value: string;
-  color: string;
-  border: string;
-  surface: string;
-  muted: string;
-  testID: string;
-  hint?: string;
-  onChangeText: (v: string) => void;
-  onSubmit?: () => void;
-}
-
-function DateInput(p: DateInputProps): React.ReactElement {
-  return (
-    <View style={s.dateCol}>
-      <Text style={[s.subLabel, { color: p.muted }]}>{p.label}</Text>
-      <TextInput
-        accessibilityLabel={p.label}
-        accessibilityHint={p.hint}
-        placeholder={p.placeholder}
-        placeholderTextColor={p.muted}
-        value={p.value}
-        onChangeText={p.onChangeText}
-        onSubmitEditing={p.onSubmit}
-        style={[s.input, { borderColor: p.border, backgroundColor: p.surface, color: p.color }]}
-        testID={`${p.testID}-${p.side}`}
-        {...WEB_DATE_PROPS}
-      />
-    </View>
-  );
-}
-
+/** An inclusive from/to date pair of two shared `DateField`s; each edit patches only its own side. */
 export function DateRangeControl({
   value,
   onChange,
@@ -87,40 +40,35 @@ export function DateRangeControl({
   style,
   testID,
 }: DateRangeControlProps): React.ReactElement {
-  const { theme } = useUi();
-  const { colors } = theme;
+  const hint = accessibilityHint ?? '';
 
   return (
-    <View style={[s.dateRow, style]} testID={`${testID}-range`}>
-      <DateInput
-        side="from"
-        label={fromLabel}
-        placeholder={fromPlaceholder}
-        value={value.from}
-        color={colors.text}
-        border={colors.border}
-        surface={colors.surface}
-        muted={colors.textSecondary}
-        hint={accessibilityHint}
-        testID={testID}
-        onChangeText={(from) => onChange({ from, to: value.to })}
-        onSubmit={onSubmit}
-      />
-      <DateInput
-        side="to"
-        label={toLabel}
-        placeholder={toPlaceholder}
-        value={value.to}
-        color={colors.text}
-        border={colors.border}
-        surface={colors.surface}
-        muted={colors.textSecondary}
-        hint={accessibilityHint}
-        testID={testID}
-        onChangeText={(to) => onChange({ from: value.from, to })}
-        onSubmit={onSubmit}
-      />
-    </View>
+    <GapOwnedProvider value>
+      <View style={[s.dateRow, style]} testID={`${testID}-range`}>
+        <View style={s.dateCol}>
+          <DateField
+            accessibilityHint={hint}
+            label={fromLabel}
+            placeholder={fromPlaceholder}
+            testID={`${testID}-from`}
+            value={value.from}
+            onChange={(from) => onChange({ from, to: value.to })}
+            onSubmit={onSubmit}
+          />
+        </View>
+        <View style={s.dateCol}>
+          <DateField
+            accessibilityHint={hint}
+            label={toLabel}
+            placeholder={toPlaceholder}
+            testID={`${testID}-to`}
+            value={value.to}
+            onChange={(to) => onChange({ from: value.from, to })}
+            onSubmit={onSubmit}
+          />
+        </View>
+      </View>
+    </GapOwnedProvider>
   );
 }
 

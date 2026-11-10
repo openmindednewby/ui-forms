@@ -31,6 +31,13 @@ export type { InlineFieldRowProps } from './InlineFieldRow/InlineFieldRow';
 export { INLINE_FIELD_ROW_MIN_WIDTH, inlineFieldRowLayout } from './InlineFieldRow/inlineFieldRowLayout';
 export type { InlineFieldRowLayout } from './InlineFieldRow/inlineFieldRowLayout';
 
+export { FormStack } from './FormStack/FormStack';
+export type { FormStackProps } from './FormStack/FormStack';
+
+export { ResponsiveFormLayout } from './ResponsiveFormLayout/ResponsiveFormLayout';
+export type { ResponsiveFormLayoutProps } from './ResponsiveFormLayout/ResponsiveFormLayout';
+export { RESPONSIVE_FORM_DEFAULT_BREAKPOINT, isWideFormLayout } from './ResponsiveFormLayout/isWideFormLayout';
+
 export { FormSection } from './FormSection/FormSection';
 export type { FormSectionProps } from './FormSection/FormSection';
 export type { FieldMarker } from './Field/fieldMarkers';

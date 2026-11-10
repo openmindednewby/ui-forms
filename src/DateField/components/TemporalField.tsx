@@ -24,6 +24,7 @@ function renderNativeInput(fieldProps: DateFieldProps, context: FieldChildContex
       editable={fieldProps.disabled !== true}
       hasError={context.hasError}
       id={context.controlId}
+      placeholder={fieldProps.placeholder}
       requiredField={fieldProps.required}
       testID={fieldProps.testID}
       value={fieldProps.value}

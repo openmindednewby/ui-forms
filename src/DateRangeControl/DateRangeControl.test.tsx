@@ -60,3 +60,13 @@ describe('DateRangeControl — submit', () => {
     expect(onSubmit).toHaveBeenCalledTimes(2);
   });
 });
+
+describe('DateRangeControl — shared date input', () => {
+  it('on web, renders each side as the shared DateField native date input', () => {
+    renderRange({ from: '', to: '' });
+
+    const types = [screen.getByTestId(`${TID}-from`), screen.getByTestId(`${TID}-to`)].map((el) => el.getAttribute('type'));
+
+    expect(types).toEqual(['date', 'date']);
+  });
+});
