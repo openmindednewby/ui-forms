@@ -162,7 +162,6 @@ export function useThemedInput(options: UseThemedInputOptions = {}): ThemedInput
     colors.border,
     colors.surface,
     colors.surfaceElevated,
-    colors.background,
     colors.textSecondary,
     editable,
     primary,
