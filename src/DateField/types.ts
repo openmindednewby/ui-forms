@@ -14,7 +14,6 @@ export interface DateFieldProps {
   disabled?: boolean;
   min?: string;
   max?: string;
-  placeholder?: string;
 }
 
 export type DateTimeFieldProps = DateFieldProps;

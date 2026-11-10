@@ -17,9 +17,11 @@ export interface DateRangeControlProps {
   fromLabel: string;
   /** PRE-LOCALIZED sub-label for the TO input (e.g. "To"). Also its accessible name. */
   toLabel: string;
+  /** @deprecated Ignored: a date input shows no typed format hint (DATE-INPUT-1). */
   fromPlaceholder?: string;
+  /** @deprecated Ignored: a date input shows no typed format hint (DATE-INPUT-1). */
   toPlaceholder?: string;
-  /** PRE-LOCALIZED hint applied to BOTH inputs. */
+  /** PRE-LOCALIZED hint applied to BOTH inputs; defaults to `<fromLabel> – <toLabel>`. */
   accessibilityHint?: string;
   /** Merged LAST onto the row wrapper. */
   style?: StyleProp<ViewStyle>;
@@ -34,13 +36,11 @@ export function DateRangeControl({
   onSubmit,
   fromLabel,
   toLabel,
-  fromPlaceholder,
-  toPlaceholder,
   accessibilityHint,
   style,
   testID,
 }: DateRangeControlProps): React.ReactElement {
-  const hint = accessibilityHint ?? '';
+  const hint = accessibilityHint ?? `${fromLabel} – ${toLabel}`;
 
   return (
     <GapOwnedProvider value>
@@ -49,7 +49,6 @@ export function DateRangeControl({
           <DateField
             accessibilityHint={hint}
             label={fromLabel}
-            placeholder={fromPlaceholder}
             testID={`${testID}-from`}
             value={value.from}
             onChange={(from) => onChange({ from, to: value.to })}
@@ -60,7 +59,6 @@ export function DateRangeControl({
           <DateField
             accessibilityHint={hint}
             label={toLabel}
-            placeholder={toPlaceholder}
             testID={`${testID}-to`}
             value={value.to}
             onChange={(to) => onChange({ from: value.from, to })}

@@ -70,3 +70,21 @@ describe('DateRangeControl — shared date input', () => {
     expect(types).toEqual(['date', 'date']);
   });
 });
+
+describe('DateRangeControl — accessibility hint', () => {
+  it('with no accessibilityHint, hints both inputs with the from and to labels', () => {
+    renderRange({ from: '', to: '' }, { fromLabel: 'Start', toLabel: 'End' });
+
+    const hints = [screen.getByTestId(`${TID}-from`), screen.getByTestId(`${TID}-to`)].map((el) => el.getAttribute('title'));
+
+    expect(hints).toEqual(['Start – End', 'Start – End']);
+  });
+
+  it('with an accessibilityHint, hints both inputs with it', () => {
+    renderRange({ from: '', to: '' }, { accessibilityHint: 'Pick the screening window' });
+
+    const hints = [screen.getByTestId(`${TID}-from`), screen.getByTestId(`${TID}-to`)].map((el) => el.getAttribute('title'));
+
+    expect(hints).toEqual(['Pick the screening window', 'Pick the screening window']);
+  });
+});
