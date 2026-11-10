@@ -100,7 +100,8 @@ export { DateRangeControl } from './DateRangeControl/DateRangeControl';
 export type { DateRangeControlProps } from './DateRangeControl/DateRangeControl';
 export { DateField } from './DateField/DateField';
 export { DateTimeField } from './DateField/DateTimeField';
-export type { DateFieldProps, DateTimeFieldProps } from './DateField/types';
+export { DateInput } from './DateField/DateInput';
+export type { DateFieldProps, DateInputProps, DateTimeFieldProps } from './DateField/types';
 
 export { AnchoredMenu } from './AnchoredMenu/AnchoredMenu';
 export type { AnchoredMenuProps, AnchoredMenuColors, AnchoredMenuListbox, AnchoredMenuPlacement } from './AnchoredMenu/AnchoredMenu';

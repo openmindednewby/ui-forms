@@ -1,3 +1,5 @@
+import type { FieldChildContext } from '../Field/Field';
+
 export interface DateFieldProps {
   /** PRE-LOCALIZED label; also the accessible name. */
   label: string;
@@ -17,3 +19,10 @@ export interface DateFieldProps {
 }
 
 export type DateTimeFieldProps = DateFieldProps;
+
+export interface DateInputProps {
+  /** The same props a `DateField` takes; `label` is the accessible name only. */
+  fieldProps: DateFieldProps;
+  /** The context `Field` hands its render-prop child. */
+  context: FieldChildContext;
+}
