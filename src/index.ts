@@ -139,3 +139,14 @@ export { useKeepInView } from './useKeepInView/useKeepInView';
 
 export { UploadWithLinkField } from './UploadWithLinkField/UploadWithLinkField';
 export type { UploadWithLinkFieldProps, UploadWithLinkLabels } from './UploadWithLinkField/UploadWithLinkField';
+
+export { SearchSelect, DetailPlacement, SelectSurface, buildSearchSelectSections, findOption, moveHighlight, toRow, resolveSelectMotion, PHONE_MAX_WIDTH, useSearchSelectState, useReducedMotion } from './SearchSelect';
+export type { SearchSelectProps, SearchSelectLabels, SearchSelectSections, SearchSelectRow, SelectMotion, SearchSelectState } from './SearchSelect';
+
+export { CountryField } from './CountryField';
+export type { CountryFieldProps } from './CountryField';
+export { COUNTRIES, countryOptions, countryFlag, toCountryValue } from './countries';
+export type { Country } from './countries';
+
+export { IbanInput, BicInput, IbanRejection, BicRejection, IBAN_MAX_LENGTH, IBAN_REGISTERED_COUNTRY_COUNT, ibanLengthFor, validateIban, validateBic, draftIban, draftBic, groupInFours, ibanCounter, useBlurVerdict } from './IbanInput';
+export type { IbanInputProps, BicInputProps, IbanVerdict, BicVerdict, IbanDraft, BicDraft, BlurVerdict } from './IbanInput';
