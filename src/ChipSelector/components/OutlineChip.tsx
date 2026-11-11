@@ -5,6 +5,8 @@ import { Pressable, View } from 'react-native';
 import { CHIP_HIT_SLOP } from '../constants';
 import type { ChipProps } from '../types';
 
+import { chipLabelLayout } from '../utils/chipLabelLayout';
+
 import { ChipContent } from './ChipContent';
 import { chipStyles } from './chipStyles';
 
@@ -19,6 +21,7 @@ export function OutlineChip<T extends string | number>(props: ChipProps<T>): Rea
   // Selected AND hovered both lift the ink to the primary colour (v1's indigo / indigo-dark);
   // the theme surface only guarantees the 500 step, so both use it — border + fill carry the state.
   const textColor = active ? colors.primary : colors.textMuted;
+  const layout = chipLabelLayout(option.labelWrap);
 
   return (
     <Pressable
@@ -31,17 +34,19 @@ export function OutlineChip<T extends string | number>(props: ChipProps<T>): Rea
       aria-pressed={props.ariaPressed}
       disabled={disabled}
       hitSlop={CHIP_HIT_SLOP}
+      style={layout.boxStyle}
       tabIndex={props.tabIndex}
       testID={testID}
       onHoverIn={() => setHovered(true)}
       onHoverOut={() => setHovered(false)}
       onPress={onPress}
     >
-      <View style={[chipStyles.chipOutline, { borderColor, backgroundColor }]}>
+      <View style={[chipStyles.chipOutline, { borderColor, backgroundColor }, layout.boxStyle]}>
         <ChipContent
           icon={option.icon}
           label={option.label}
-          textStyle={[chipStyles.chipText, chipStyles.chipTextOutline, { color: textColor }]}
+          numberOfLines={layout.numberOfLines}
+          textStyle={[chipStyles.chipText, chipStyles.chipTextOutline, { color: textColor }, layout.textStyle]}
         />
       </View>
     </Pressable>

@@ -19,11 +19,16 @@ export type ChipVariant = 'solid' | 'outline';
  */
 export type ChipSingleSelectRole = 'button' | 'radio';
 
+/** How a long chip label fits: `none` (default) grows the chip, `wrap` and `truncate` cap it at its container. */
+export type ChipLabelWrap = 'none' | 'wrap' | 'truncate';
+
 export interface ChipOption<T> {
   value: T;
   label: string;
   /** Optional decorative icon rendered before the label; hidden from assistive tech. */
   icon?: React.ReactNode;
+  /** Long-label behaviour for this chip; defaults to `none`. */
+  labelWrap?: ChipLabelWrap;
 }
 
 export interface ChipSelectorProps<T> {
