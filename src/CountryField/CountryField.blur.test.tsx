@@ -33,7 +33,27 @@ function renderField(onBlur: () => void, onChange: (code: string) => void = jest
   return screen.getByTestId(TID);
 }
 
+function openPhoneSheet(trigger: HTMLElement): HTMLElement {
+  act(() => {
+    trigger.focus();
+    fireEvent.click(trigger);
+  });
+  const search = screen.getByTestId(`${TID}-search`);
+  fireEvent.keyDown(search, { key: 'ArrowDown' });
+  return search;
+}
+
+function pickHighlighted(search: HTMLElement): void {
+  act(() => {
+    fireEvent.keyDown(search, { key: 'Enter' });
+    jest.advanceTimersByTime(PAST_MOTION_MS);
+  });
+}
+
 describe('CountryField onBlur', () => {
+  beforeEach(() => jest.useFakeTimers());
+  afterEach(() => jest.useRealTimers());
+
   it('with the list closed and the field left, calls onBlur once', () => {
     const onBlur = jest.fn();
     const trigger = renderField(onBlur);
@@ -57,27 +77,24 @@ describe('CountryField onBlur', () => {
     expect(onBlur).not.toHaveBeenCalled();
   });
 
-  it('with a country picked on the phone sheet, calls onBlur only once the field is left', () => {
-    jest.useFakeTimers();
+  it('with a country picked on the phone sheet, does not call onBlur', () => {
     const onBlur = jest.fn();
     const onChange = jest.fn();
-    const trigger = renderField(onBlur, onChange, PHONE_WIDTH);
-    act(() => {
-      trigger.focus();
-      fireEvent.click(trigger);
-    });
-    const search = screen.getByTestId(`${TID}-search`);
-    fireEvent.keyDown(search, { key: 'ArrowDown' });
+    const search = openPhoneSheet(renderField(onBlur, onChange, PHONE_WIDTH));
 
-    act(() => {
-      fireEvent.keyDown(search, { key: 'Enter' });
-      jest.advanceTimersByTime(PAST_MOTION_MS);
-    });
+    pickHighlighted(search);
+
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onBlur).not.toHaveBeenCalled();
+  });
+
+  it('after a pick on the phone sheet, leaving the field calls onBlur once', () => {
+    const onBlur = jest.fn();
+    const trigger = renderField(onBlur, jest.fn(), PHONE_WIDTH);
+    pickHighlighted(openPhoneSheet(trigger));
+
     fireEvent.blur(trigger);
 
     expect(onBlur).toHaveBeenCalledTimes(1);
-    jest.useRealTimers();
   });
 });
