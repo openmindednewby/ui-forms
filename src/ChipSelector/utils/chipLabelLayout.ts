@@ -1,6 +1,6 @@
 import type { TextStyle, ViewStyle } from 'react-native';
 
-import type { ChipLabelWrap } from '../types';
+import { ChipLabelWrap } from '../ChipLabelWrap';
 
 export interface ChipLabelLayout {
   boxStyle: ViewStyle | undefined;
@@ -14,9 +14,9 @@ const SINGLE_LINE = 1;
 
 /** Resolves a chip's box and label layout for its `labelWrap` mode; `none` keeps today's render. */
 export function chipLabelLayout(labelWrap: ChipLabelWrap | undefined): ChipLabelLayout {
-  if (labelWrap === 'wrap')
+  if (labelWrap === ChipLabelWrap.Wrap)
     return { boxStyle: CAPPED_BOX, textStyle: SHRINKING_TEXT, numberOfLines: undefined };
-  if (labelWrap === 'truncate')
+  if (labelWrap === ChipLabelWrap.Truncate)
     return { boxStyle: CAPPED_BOX, textStyle: SHRINKING_TEXT, numberOfLines: SINGLE_LINE };
 
   return { boxStyle: undefined, textStyle: undefined, numberOfLines: undefined };

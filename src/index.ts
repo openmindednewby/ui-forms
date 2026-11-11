@@ -65,9 +65,8 @@ export { DEFAULT_MAX_RECENTS } from './useRecentValues/recentValuesCore';
 export type { RecentValues } from './useRecentValues/useRecentValues';
 
 export { ChipSelector } from './ChipSelector/ChipSelector';
-export type { ChipSelectorProps, ChipOption, ChipVariant, ChipSingleSelectRole, ChipLabelWrap } from './ChipSelector/types';
-export { chipLabelLayout } from './ChipSelector/utils/chipLabelLayout';
-export type { ChipLabelLayout } from './ChipSelector/utils/chipLabelLayout';
+export type { ChipSelectorProps, ChipOption, ChipVariant, ChipSingleSelectRole } from './ChipSelector/types';
+export { ChipLabelWrap } from './ChipSelector/ChipLabelWrap';
 
 export { FormSwitch } from './FormSwitch/FormSwitch';
 export type { FormSwitchProps } from './FormSwitch/FormSwitch';

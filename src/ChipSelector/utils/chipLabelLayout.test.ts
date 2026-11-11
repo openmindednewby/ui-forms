@@ -1,3 +1,5 @@
+import { ChipLabelWrap } from '../ChipLabelWrap';
+
 import { chipLabelLayout } from './chipLabelLayout';
 
 describe('chipLabelLayout', () => {
@@ -10,7 +12,7 @@ describe('chipLabelLayout', () => {
   });
 
   it('with labelWrap none, returns no styles', () => {
-    const labelWrap = 'none';
+    const labelWrap = ChipLabelWrap.None;
 
     const layout = chipLabelLayout(labelWrap);
 
@@ -18,7 +20,7 @@ describe('chipLabelLayout', () => {
   });
 
   it('with labelWrap wrap, caps the chip at its container width and lets the label wrap', () => {
-    const labelWrap = 'wrap';
+    const labelWrap = ChipLabelWrap.Wrap;
 
     const layout = chipLabelLayout(labelWrap);
 
@@ -30,7 +32,7 @@ describe('chipLabelLayout', () => {
   });
 
   it('with labelWrap truncate, caps the chip at its container width and keeps the label on one line', () => {
-    const labelWrap = 'truncate';
+    const labelWrap = ChipLabelWrap.Truncate;
 
     const layout = chipLabelLayout(labelWrap);
 

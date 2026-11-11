@@ -8,6 +8,8 @@ import type { StyleProp, ViewStyle } from 'react-native';
 
 import type { FieldSpacing } from '../Field/fieldSpacing';
 
+import type { ChipLabelWrap } from './ChipLabelWrap';
+
 /** Visual variant. `solid` = filled selected pill (default); `outline` = v1 tinted-outline. */
 export type ChipVariant = 'solid' | 'outline';
 
@@ -18,9 +20,6 @@ export type ChipVariant = 'solid' | 'outline';
  * survive the package boundary for consumers compiled with `isolatedModules`.
  */
 export type ChipSingleSelectRole = 'button' | 'radio';
-
-/** How a long chip label fits: `none` (default) grows the chip, `wrap` and `truncate` cap it at its container. */
-export type ChipLabelWrap = 'none' | 'wrap' | 'truncate';
 
 export interface ChipOption<T> {
   value: T;
