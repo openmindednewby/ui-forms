@@ -1,0 +1,12 @@
+export { SearchSelect } from './SearchSelect';
+export type { SearchSelectProps } from './SearchSelect';
+export type { SearchSelectLabels } from './types';
+export { SelectSurface } from './SelectSurface';
+export { buildSearchSelectSections, findOption, highlightAfterQuery, moveHighlight } from './utils/searchSelectModel';
+export type { SearchSelectSections } from './utils/searchSelectModel';
+export { resolveSelectMotion, PHONE_MAX_WIDTH } from './utils/searchSelectMotion';
+export type { SelectMotion } from './utils/searchSelectMotion';
+export { useSearchSelectState } from './hooks/useSearchSelectState';
+export type { SearchSelectState } from './hooks/useSearchSelectState';
+export { useReducedMotion } from './hooks/useReducedMotion';
+export { useOutsidePress, isOutside } from './hooks/useOutsidePress';

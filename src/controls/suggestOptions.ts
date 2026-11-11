@@ -13,6 +13,7 @@ const RANK_VALUE_EXACT = 0;
 const RANK_VALUE_PREFIX = 1;
 const RANK_LABEL_PREFIX = 2;
 const RANK_LABEL_CONTAINS = 3;
+const RANK_DETAIL_CONTAINS = 4;
 const NO_MATCH = -1;
 
 function rankOf(option: ControlOption, needle: string): number {
@@ -22,6 +23,7 @@ function rankOf(option: ControlOption, needle: string): number {
   if (value.startsWith(needle)) return RANK_VALUE_PREFIX;
   if (label.startsWith(needle)) return RANK_LABEL_PREFIX;
   if (label.includes(needle)) return RANK_LABEL_CONTAINS;
+  if ((option.detail ?? '').toLowerCase().includes(needle)) return RANK_DETAIL_CONTAINS;
   return NO_MATCH;
 }
 
