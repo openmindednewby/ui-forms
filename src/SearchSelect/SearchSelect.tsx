@@ -8,8 +8,8 @@ import { controlStyles as s } from '../controls/controlStyles';
 import type { ControlOption } from '../controls/controlTypes';
 import { useRecentValues } from '../useRecentValues/useRecentValues';
 import { SearchSelectPanel } from './components/SearchSelectPanel';
-import { useDeferredFocus } from './hooks/useDeferredFocus';
 import { useReducedMotion } from './hooks/useReducedMotion';
+import { useRefocusOnClose } from './hooks/useRefocusOnClose';
 import { useSearchSelectState } from './hooks/useSearchSelectState';
 import type { SearchSelectLabels } from './types';
 import { findOption } from './utils/searchSelectModel';
@@ -17,6 +17,7 @@ import { resolveSelectMotion } from './utils/searchSelectMotion';
 
 const CHEVRON = '▾';
 const VALUE_GAP = 8;
+const NOTHING_ON_CLOSE = (): void => undefined;
 
 export interface SearchSelectProps {
   options: readonly ControlOption[];
@@ -41,8 +42,8 @@ export function SearchSelect(props: SearchSelectProps): React.ReactElement {
   const { width } = useWindowDimensions();
   const motion = resolveSelectMotion(width, useReducedMotion());
   const recents = useRecentValues(recentKey ?? `search-select:${testID}`);
-  const refocus = useDeferredFocus(triggerRef);
-  const state = useSearchSelectState(options, recents, onChange, refocus);
+  const state = useSearchSelectState(options, recents, onChange, NOTHING_ON_CLOSE);
+  useRefocusOnClose(state.open, triggerRef);
   const selected = findOption(options, value);
 
   return (
