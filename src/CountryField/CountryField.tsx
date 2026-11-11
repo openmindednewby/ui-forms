@@ -1,15 +1,17 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import { StyleSheet, Text } from 'react-native';
 
+import { useUi } from '@dloizides/ui-feedback';
+
 import type { ControlOption } from '../controls/controlTypes';
 import type { Country } from '../countries/country';
-import { countryFlag, countryOptions, toCountryValue } from '../countries/countryOptions';
-import { DetailPlacement } from '../SearchSelect/DetailPlacement';
+import { countryOptions, toCountryValue } from '../countries/countryOptions';
+import { CountryFlag } from '../CountryFlag/CountryFlag';
 import { SearchSelect } from '../SearchSelect/SearchSelect';
 import type { SearchSelectLabels } from '../SearchSelect/types';
 
-const FLAG_FONT = 16;
+const CODE_FONT = 12;
 const DEFAULT_OPTIONS = countryOptions();
 
 export interface CountryFieldProps {
@@ -22,19 +24,22 @@ export interface CountryFieldProps {
   countries?: readonly Country[];
 }
 
-const renderFlag = (option: ControlOption): React.ReactNode => <Text aria-hidden style={styles.flag}>{countryFlag(option.value)}</Text>;
+const renderFlag = (option: ControlOption): React.ReactNode => <CountryFlag code={option.value} />;
 
 /** A searchable country field: flag, name and grey code; stores the ISO 3166-1 alpha-2 code only. */
 export function CountryField({ value, onChange, accessibilityLabel, accessibilityHint, labels, testID, countries }: CountryFieldProps): React.ReactElement {
+  const { theme } = useUi();
+  const { textSecondary } = theme.colors;
   const options = useMemo(() => (countries === undefined ? DEFAULT_OPTIONS : countryOptions(countries)), [countries]);
+  const renderCode = useCallback((option: ControlOption): React.ReactNode => <Text style={[styles.code, { color: textSecondary }]}>{option.detail}</Text>, [textSecondary]);
   return (
     <SearchSelect
       accessibilityHint={accessibilityHint}
       accessibilityLabel={accessibilityLabel}
-      detailPlacement={DetailPlacement.End}
       labels={labels}
       options={options}
       recentKey="country"
+      renderDetail={renderCode}
       renderLeading={renderFlag}
       testID={testID}
       value={toCountryValue(value)}
@@ -44,5 +49,5 @@ export function CountryField({ value, onChange, accessibilityLabel, accessibilit
 }
 
 const styles = StyleSheet.create({
-  flag: { fontSize: FLAG_FONT },
+  code: { fontSize: CODE_FONT },
 });

@@ -1,6 +1,5 @@
 import type { ControlOption } from '../../controls/controlTypes';
 import { suggestOptions } from '../../controls/suggestOptions';
-import type { DetailPlacement } from '../DetailPlacement';
 
 const MIN_QUERY = 1;
 
@@ -9,13 +8,6 @@ export interface SearchSelectSections {
   readonly recent: readonly ControlOption[];
   readonly all: readonly ControlOption[];
   readonly flat: readonly ControlOption[];
-}
-
-/** What one option row shows. */
-export interface SearchSelectRow {
-  readonly primary: string;
-  readonly secondary: string | null;
-  readonly placement: DetailPlacement;
 }
 
 /** Filters by label, value and detail, then splits the matches into Recent and All. */
@@ -40,7 +32,7 @@ export function moveHighlight(index: number, count: number, step: number): numbe
   return (index + step + count) % count;
 }
 
-/** The two-part row for an option. */
-export function toRow(option: ControlOption, placement: DetailPlacement): SearchSelectRow {
-  return { primary: option.label, secondary: option.detail ?? null, placement };
+/** The highlight after the search text changes: the first match while there is text, nothing when empty. */
+export function highlightAfterQuery(query: string): number {
+  return query.trim() === '' ? -1 : 0;
 }

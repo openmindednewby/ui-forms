@@ -6,6 +6,7 @@ import { useUi } from '@dloizides/ui-feedback';
 
 import { controlStyles as s } from '../controls/controlStyles';
 import { useBlurVerdict } from './hooks/useBlurVerdict';
+import { useIbanCaret } from './hooks/useIbanCaret';
 import { ghostStyles as g } from './utils/ghostStyles';
 import { validateIban, type IbanVerdict } from './utils/iban';
 import { draftIban, ibanCounter } from './utils/ibanFormat';
@@ -28,12 +29,14 @@ export function IbanInput({ value, onChange, onVerdict, accessibilityLabel, acce
   const validate = useCallback(() => validateIban(value), [value]);
   const { onEdit, onLeave } = useBlurVerdict(validate);
   const counter = ibanCounter(draft);
+  const { selection, onSelectionChange, placeAfterEdit } = useIbanCaret(draft.display);
 
   const onChangeText = useCallback((text: string) => {
     onEdit();
     onVerdict?.(null);
+    placeAfterEdit(text);
     onChange(draftIban(text).electronic);
-  }, [onEdit, onVerdict, onChange]);
+  }, [onEdit, onVerdict, placeAfterEdit, onChange]);
 
   const onBlur = useCallback(() => {
     const verdict = onLeave();
@@ -55,12 +58,14 @@ export function IbanInput({ value, onChange, onVerdict, accessibilityLabel, acce
           autoCorrect={false}
           placeholder={draft.display === '' ? placeholder : undefined}
           placeholderTextColor={colors.textSecondary}
+          selection={selection}
           spellCheck={false}
           style={[g.mono, g.input, { color: colors.text }]}
           testID={testID}
           value={draft.display}
           onBlur={onBlur}
           onChangeText={onChangeText}
+          onSelectionChange={onSelectionChange}
         />
       </View>
       {counter !== null ? <Text testID={`${testID}-counter`} style={[g.counter, { color: colors.textSecondary }]}>{counter}</Text> : null}

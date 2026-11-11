@@ -1,5 +1,4 @@
-import { DetailPlacement } from '../SearchSelect/DetailPlacement';
-import { buildSearchSelectSections, toRow } from '../SearchSelect/utils/searchSelectModel';
+import { buildSearchSelectSections } from '../SearchSelect/utils/searchSelectModel';
 import { COUNTRIES } from './countriesData';
 import { countryFlag, countryOptions, toCountryValue } from './countryOptions';
 
@@ -33,9 +32,9 @@ describe('countryOptions row', () => {
   it('with a country, shows the name with the code at the end', () => {
     const germany = countryOptions().find((o) => o.value === 'DE');
 
-    const row = germany === undefined ? null : toRow(germany, DetailPlacement.End);
+    const row = germany === undefined ? null : { label: germany.label, detail: germany.detail };
 
-    expect(row).toEqual({ primary: 'Germany', secondary: 'DE', placement: DetailPlacement.End });
+    expect(row).toEqual({ label: 'Germany', detail: 'DE' });
   });
 });
 

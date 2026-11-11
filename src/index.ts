@@ -140,9 +140,11 @@ export { useKeepInView } from './useKeepInView/useKeepInView';
 export { UploadWithLinkField } from './UploadWithLinkField/UploadWithLinkField';
 export type { UploadWithLinkFieldProps, UploadWithLinkLabels } from './UploadWithLinkField/UploadWithLinkField';
 
-export { SearchSelect, DetailPlacement, SelectSurface, buildSearchSelectSections, findOption, moveHighlight, toRow, resolveSelectMotion, PHONE_MAX_WIDTH, useSearchSelectState, useReducedMotion } from './SearchSelect';
-export type { SearchSelectProps, SearchSelectLabels, SearchSelectSections, SearchSelectRow, SelectMotion, SearchSelectState } from './SearchSelect';
+export { SearchSelect, SelectSurface, buildSearchSelectSections, findOption, highlightAfterQuery, moveHighlight, resolveSelectMotion, PHONE_MAX_WIDTH, useSearchSelectState, useReducedMotion, useOutsidePress, isOutside } from './SearchSelect';
+export type { SearchSelectProps, SearchSelectLabels, SearchSelectSections, SelectMotion, SearchSelectState } from './SearchSelect';
 
+export { CountryFlag, FlagShapeKind, flagShapes, isFallbackFlag, FLAG_WIDTH, FLAG_HEIGHT } from './CountryFlag';
+export type { CountryFlagProps, FlagShape } from './CountryFlag';
 export { CountryField } from './CountryField';
 export type { CountryFieldProps } from './CountryField';
 export { COUNTRIES, countryOptions, countryFlag, toCountryValue } from './countries';

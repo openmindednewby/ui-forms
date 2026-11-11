@@ -1,6 +1,5 @@
-import { DetailPlacement } from '../DetailPlacement';
 import { SelectSurface } from '../SelectSurface';
-import { buildSearchSelectSections, findOption, moveHighlight, toRow } from './searchSelectModel';
+import { buildSearchSelectSections, findOption, highlightAfterQuery, moveHighlight } from './searchSelectModel';
 import { resolveSelectMotion } from './searchSelectMotion';
 
 const ACCOUNTS = [
@@ -65,11 +64,17 @@ describe('moveHighlight', () => {
   });
 });
 
-describe('toRow', () => {
-  it('with a detail, shows the label on top and the detail on the second line', () => {
-    const row = toRow(ACCOUNTS[0], DetailPlacement.Below);
+describe('highlightAfterQuery', () => {
+  it('with text typed, highlights the first match', () => {
+    const index = highlightAfterQuery('ger');
 
-    expect(row).toEqual({ primary: 'Operating account', secondary: 'CY17 …7600', placement: DetailPlacement.Below });
+    expect(index).toBe(0);
+  });
+
+  it('with the text cleared, highlights nothing', () => {
+    const index = highlightAfterQuery('  ');
+
+    expect(index).toBe(-1);
   });
 });
 

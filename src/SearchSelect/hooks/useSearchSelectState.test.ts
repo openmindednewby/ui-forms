@@ -17,16 +17,26 @@ function setup(recents: string[] = []) {
 }
 
 describe('useSearchSelectState', () => {
-  it('with Down then Enter, picks the first row, remembers it and closes', () => {
+  it('with Down then submit, picks the first row, remembers it and closes', () => {
     const { hook, onChange, onClosed, remember } = setup();
     act(() => hook.result.current.onKey('ArrowDown'));
 
-    act(() => hook.result.current.onKey('Enter'));
+    act(() => hook.result.current.submit());
 
     expect(onChange).toHaveBeenCalledWith('CY');
     expect(remember).toHaveBeenCalledWith('CY');
     expect(onClosed).toHaveBeenCalledTimes(1);
     expect(hook.result.current.open).toBe(false);
+  });
+
+  it('with the Enter key event and the submit both firing, picks once', () => {
+    const { hook, onChange } = setup();
+    act(() => hook.result.current.onKey('ArrowDown'));
+    act(() => hook.result.current.onKey('Enter'));
+
+    act(() => hook.result.current.submit());
+
+    expect(onChange).toHaveBeenCalledTimes(1);
   });
 
   it('with text typed and Esc, closes without storing the text', () => {
@@ -40,11 +50,28 @@ describe('useSearchSelectState', () => {
     expect(hook.result.current.query).toBe('');
   });
 
-  it('with Enter and nothing highlighted, stores nothing', () => {
+  it('with text typed, highlights the first match so submit picks it', () => {
     const { hook, onChange } = setup();
     act(() => hook.result.current.setQuery('Germ'));
 
-    act(() => hook.result.current.onKey('Enter'));
+    act(() => hook.result.current.submit());
+
+    expect(onChange).toHaveBeenCalledWith('DE');
+  });
+
+  it('with text that matches nothing, submit stores nothing', () => {
+    const { hook, onChange } = setup();
+    act(() => hook.result.current.setQuery('zzz'));
+
+    act(() => hook.result.current.submit());
+
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('with the list just opened, submit stores nothing', () => {
+    const { hook, onChange } = setup();
+
+    act(() => hook.result.current.submit());
 
     expect(onChange).not.toHaveBeenCalled();
   });
@@ -53,7 +80,7 @@ describe('useSearchSelectState', () => {
     const { hook, onChange } = setup(['DE']);
     act(() => hook.result.current.onKey('ArrowDown'));
 
-    act(() => hook.result.current.onKey('Enter'));
+    act(() => hook.result.current.submit());
 
     expect(onChange).toHaveBeenCalledWith('DE');
   });

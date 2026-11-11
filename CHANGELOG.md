@@ -4,7 +4,8 @@
 
 ### Added
 - `SearchSelect`: type to filter by name and detail, Recent then All, arrow keys + Enter + Esc, phone sheet / computer unfold, reduced motion = no slide (FINREG-INPUTS-1 "Searchable dropdowns, shared country field, formatted IBAN/BIC inputs").
-- `CountryField` + `COUNTRIES` (ISO 3166-1 alpha-2, 249): flag, name, grey code; stores the code only.
+- `CountryField` + `COUNTRIES` (ISO 3166-1 alpha-2, 249): drawn SVG flag (`CountryFlag`, needs peer `react-native-svg >=13.0.0`), name, grey code; stores the code only.
+- `SearchSelect`: `renderDetail` slot, typing highlights the first match, web outside press closes the dropdown; `IbanInput` keeps the caret through regrouping.
 - `IbanInput` / `BicInput` + pure `validateIban` / `validateBic` / `draftIban` / `draftBic`, same verdicts as `Finreg.Core.Banking` on a shared fixture list.
 
 ### Changed
