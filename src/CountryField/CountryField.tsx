@@ -22,6 +22,7 @@ export interface CountryFieldProps {
   testID: string;
   countries?: readonly Country[];
   noneLabel?: string;
+  onBlur?: () => void;
 }
 
 const NO_COUNTRY = '';
@@ -29,8 +30,8 @@ const NO_COUNTRY = '';
 const renderFlag = (option: ControlOption): React.ReactNode => (option.value === NO_COUNTRY ? null : <CountryFlag code={option.value} />);
 
 
-/** A searchable country field: flag, name and grey code; stores the ISO 3166-1 alpha-2 code, or '' for `noneLabel`. */
-export function CountryField({ value, onChange, accessibilityLabel, accessibilityHint, labels, testID, countries, noneLabel }: CountryFieldProps): React.ReactElement {
+/** A searchable country field: flag, name and grey code; stores the ISO 3166-1 alpha-2 code, or '' for `noneLabel`; `onBlur` fires when focus leaves the closed field. */
+export function CountryField({ value, onChange, accessibilityLabel, accessibilityHint, labels, testID, countries, noneLabel, onBlur }: CountryFieldProps): React.ReactElement {
   const { theme } = useUi();
   const { textSecondary } = theme.colors;
   const options = useMemo(() => countryFieldOptions(countries, noneLabel), [countries, noneLabel]);
@@ -46,6 +47,7 @@ export function CountryField({ value, onChange, accessibilityLabel, accessibilit
       renderLeading={renderFlag}
       testID={testID}
       value={toCountryValue(value)}
+      onBlur={onBlur}
       onChange={onChange}
     />
   );

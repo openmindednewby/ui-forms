@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 
 import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 
@@ -32,11 +32,12 @@ export interface SearchSelectProps {
   renderLeading?: (option: ControlOption) => React.ReactNode;
   renderDetail?: (option: ControlOption) => React.ReactNode;
   renderTrigger?: (trigger: SearchSelectTrigger) => React.ReactNode;
+  onBlur?: () => void;
 }
 
-/** A select you can type into to filter; `renderTrigger` swaps the field box for your own visual. */
+/** A select you can type into to filter; `renderTrigger` swaps the field box for your own visual; `onBlur` fires when focus leaves the closed field. */
 export function SearchSelect(props: SearchSelectProps): React.ReactElement {
-  const { options, value, onChange, accessibilityLabel, accessibilityHint, labels, testID, recentKey, renderLeading, renderDetail, renderTrigger } = props;
+  const { options, value, onChange, accessibilityLabel, accessibilityHint, labels, testID, recentKey, renderLeading, renderDetail, renderTrigger, onBlur } = props;
   const { theme } = useUi();
   const { colors } = theme;
   const triggerRef = useRef<View>(null);
@@ -48,6 +49,11 @@ export function SearchSelect(props: SearchSelectProps): React.ReactElement {
   useRefocusOnClose(state.open, triggerRef);
   const selected = findOption(options, value);
   const onPress = state.open ? state.close : state.openList;
+  const openRef = useRef(state.open);
+  openRef.current = state.open;
+  const onTriggerBlur = useCallback(() => {
+    if (!openRef.current) onBlur?.();
+  }, [onBlur]);
 
   return (
     <View ref={anchorRef} style={styles.anchor}>
@@ -59,6 +65,7 @@ export function SearchSelect(props: SearchSelectProps): React.ReactElement {
         accessibilityState={{ expanded: state.open }}
         style={renderTrigger === undefined ? [s.selectTrigger, { borderColor: colors.border, backgroundColor: colors.surfaceElevated }] : styles.customTrigger}
         testID={testID}
+        onBlur={onTriggerBlur}
         onPress={onPress}
       >
         {renderTrigger !== undefined ? renderTrigger({ open: state.open, selected, onPress, ref: triggerRef }) : (
