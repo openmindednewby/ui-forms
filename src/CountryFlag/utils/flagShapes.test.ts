@@ -7,6 +7,13 @@ import { FLAG_HEIGHT, FLAG_WIDTH, flagShapes, isFallbackFlag } from './flagShape
 
 const THREE_BANDS = 3;
 const NORDIC_WITH_INNER = 5;
+const SHARED_REAL_FLAGS = new Set([
+  'AU,HM',
+  'BL,FR,GF,GP,MF,MQ,NC,PF,PM,RE,TF,WF,YT',
+  'BV,NO,SJ',
+  'ID,MC',
+  'UM,US',
+]);
 
 describe('flagShapes', () => {
   it('with DE, draws black, red and gold bands of equal height', () => {
@@ -67,5 +74,17 @@ describe('flagShapes', () => {
     const bad = Object.entries(FLAG_SPECS).filter(([code, spec]) => !codes.has(code) || Array.from(String(spec).split(' ')[1]).some((letter) => FLAG_PALETTE[letter] === undefined));
 
     expect(bad).toEqual([]);
+  });
+
+  it('with every shipped country, no two codes draw the same flag unless they share it in real life', () => {
+    const byDrawing = new Map<string, string[]>();
+    COUNTRIES.forEach((country) => {
+      const key = JSON.stringify(flagShapes(country.code));
+      byDrawing.set(key, [...(byDrawing.get(key) ?? []), country.code]);
+    });
+
+    const twins = [...byDrawing.values()].filter((codes) => codes.length > 1).map((codes) => [...codes].sort().join(','));
+
+    expect(twins.filter((group) => !SHARED_REAL_FLAGS.has(group))).toEqual([]);
   });
 });
