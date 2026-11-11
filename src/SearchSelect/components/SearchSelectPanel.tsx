@@ -81,7 +81,7 @@ export function SearchSelectPanel({ motion, state, labels, anchorRef, renderLead
     </View>
   );
 
-  if (!isSheet) return <DropdownSurface anchorRef={anchorRef} progress={progress} translateY={translateY} onDismiss={dismiss}>{list}</DropdownSurface>;
+  if (!isSheet) return <DropdownSurface anchorRef={anchorRef} closeHint={labels.closeHint} closeLabel={labels.close} progress={progress} testID={testID} translateY={translateY} onDismiss={dismiss}>{list}</DropdownSurface>;
   return <SheetSurface closeHint={labels.closeHint} closeLabel={labels.close} testID={testID} translateY={translateY} onDismiss={dismiss}>{list}</SheetSurface>;
 }
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useRef } from 'react';
 
 import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 
@@ -8,6 +8,7 @@ import { controlStyles as s } from '../controls/controlStyles';
 import type { ControlOption } from '../controls/controlTypes';
 import { useRecentValues } from '../useRecentValues/useRecentValues';
 import { SearchSelectPanel } from './components/SearchSelectPanel';
+import { useDeferredFocus } from './hooks/useDeferredFocus';
 import { useReducedMotion } from './hooks/useReducedMotion';
 import { useSearchSelectState } from './hooks/useSearchSelectState';
 import type { SearchSelectLabels } from './types';
@@ -40,7 +41,7 @@ export function SearchSelect(props: SearchSelectProps): React.ReactElement {
   const { width } = useWindowDimensions();
   const motion = resolveSelectMotion(width, useReducedMotion());
   const recents = useRecentValues(recentKey ?? `search-select:${testID}`);
-  const refocus = useCallback(() => triggerRef.current?.focus(), []);
+  const refocus = useDeferredFocus(triggerRef);
   const state = useSearchSelectState(options, recents, onChange, refocus);
   const selected = findOption(options, value);
 

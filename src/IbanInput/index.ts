@@ -13,3 +13,5 @@ export { draftIban, draftBic, groupInFours, ibanCounter } from './utils/ibanForm
 export type { IbanDraft, BicDraft } from './utils/ibanFormat';
 export { useBlurVerdict } from './hooks/useBlurVerdict';
 export type { BlurVerdict } from './hooks/useBlurVerdict';
+export { rejectionMessage } from './utils/rejectionMessage';
+export type { IbanRejectionLabels, BicRejectionLabels } from './types';

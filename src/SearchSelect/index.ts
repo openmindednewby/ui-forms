@@ -10,3 +10,7 @@ export { useSearchSelectState } from './hooks/useSearchSelectState';
 export type { SearchSelectState } from './hooks/useSearchSelectState';
 export { useReducedMotion } from './hooks/useReducedMotion';
 export { useOutsidePress, isOutside } from './hooks/useOutsidePress';
+export { DropdownPlacement } from './DropdownPlacement';
+export { placeDropdown, dropdownFrame } from './utils/dropdownFrame';
+export type { AnchorRect, DropdownFrame } from './utils/dropdownFrame';
+export { useDeferredFocus } from './hooks/useDeferredFocus';
