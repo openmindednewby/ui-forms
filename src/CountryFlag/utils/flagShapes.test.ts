@@ -1,8 +1,9 @@
 import { COUNTRIES } from '../../countries/countriesData';
 import { FLAG_FALLBACK_FILL, FLAG_PALETTE } from '../data/flagPalette';
+import { FLAG_DRAWINGS } from '../data/flagDrawings';
 import { FLAG_SPECS } from '../data/flagSpecs';
 import { FlagShapeKind } from '../FlagShapeKind';
-import { FLAG_HEIGHT, flagShapes, isFallbackFlag } from './flagShapes';
+import { FLAG_HEIGHT, FLAG_WIDTH, flagShapes, isFallbackFlag } from './flagShapes';
 
 const THREE_BANDS = 3;
 const NORDIC_WITH_INNER = 5;
@@ -27,11 +28,31 @@ describe('flagShapes', () => {
     expect(shapes).toHaveLength(NORDIC_WITH_INNER);
   });
 
-  it('with a country that has no drawn flag, draws the generic flag', () => {
-    const shapes = flagShapes('GB');
+  it('with an unknown code, draws the generic flag', () => {
+    const shapes = flagShapes('XX');
 
     expect(shapes.map((shape) => shape.fill)).toEqual([FLAG_FALLBACK_FILL]);
-    expect(isFallbackFlag('GB')).toBe(true);
+    expect(isFallbackFlag('XX')).toBe(true);
+  });
+
+  it('with every code in countriesData, has a drawn flag', () => {
+    const generic = COUNTRIES.filter((country) => isFallbackFlag(country.code)).map((country) => country.code);
+
+    expect(generic).toEqual([]);
+  });
+
+  it('with GB, starts with the navy field of the Union Jack', () => {
+    const shapes = flagShapes('GB');
+
+    expect(shapes[0]).toMatchObject({ kind: FlagShapeKind.Rect, fill: FLAG_PALETTE.N, width: FLAG_WIDTH, height: FLAG_HEIGHT });
+  });
+
+  it('with every drawing, uses a shipped code that has no simple spec too', () => {
+    const codes = new Set(COUNTRIES.map((country) => country.code));
+
+    const bad = Object.keys(FLAG_DRAWINGS).filter((code) => !codes.has(code) || FLAG_SPECS[code] !== undefined);
+
+    expect(bad).toEqual([]);
   });
 
   it('with every shipped country, draws at least one shape', () => {

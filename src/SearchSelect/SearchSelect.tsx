@@ -54,18 +54,30 @@ export function SearchSelect(props: SearchSelectProps): React.ReactElement {
         accessibilityState={{ expanded: state.open }}
         style={[s.selectTrigger, { borderColor: colors.border, backgroundColor: colors.surfaceElevated }]}
         testID={testID}
-        onPress={state.openList}
+        onPress={state.open ? state.close : state.openList}
       >
         <View style={styles.value}>
           {selected !== null && renderLeading !== undefined ? renderLeading(selected) : null}
           <Text numberOfLines={1} style={[s.selectTriggerText, { color: selected === null ? colors.textSecondary : colors.text }]}>{selected?.label ?? labels.placeholder}</Text>
-          {selected?.detail !== undefined ? <Text style={[s.selectTriggerText, { color: colors.textSecondary }]}>{selected.detail}</Text> : null}
+          {selected !== null ? <SelectedDetail colors={colors} option={selected} renderDetail={renderDetail} /> : null}
         </View>
         <Text aria-hidden style={[s.chevron, { color: colors.textSecondary }]}>{CHEVRON}</Text>
       </Pressable>
       {state.open ? <SearchSelectPanel anchorRef={anchorRef} labels={labels} motion={motion} renderDetail={renderDetail} renderLeading={renderLeading} selectedValue={value} state={state} testID={testID} /> : null}
     </View>
   );
+}
+
+interface SelectedDetailProps {
+  option: ControlOption;
+  colors: { textSecondary: string };
+  renderDetail?: (option: ControlOption) => React.ReactNode;
+}
+
+function SelectedDetail({ option, colors, renderDetail }: SelectedDetailProps): React.ReactElement | null {
+  if (renderDetail !== undefined) return <>{renderDetail(option)}</>;
+  if (option.detail === undefined) return null;
+  return <Text style={[s.selectTriggerText, { color: colors.textSecondary }]}>{option.detail}</Text>;
 }
 
 const styles = StyleSheet.create({

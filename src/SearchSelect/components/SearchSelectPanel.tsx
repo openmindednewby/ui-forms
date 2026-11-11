@@ -41,7 +41,10 @@ export function SearchSelectPanel({ motion, state, labels, anchorRef, renderLead
     Animated.timing(progress, { toValue: 1, duration: durationMs, useNativeDriver: false }).start();
   }, [progress, durationMs]);
 
+  const leaving = useRef(false);
   const leave = useCallback((after: () => void) => {
+    if (leaving.current) return;
+    leaving.current = true;
     if (durationMs === 0) return after();
     Animated.timing(progress, { toValue: 0, duration: durationMs, useNativeDriver: false }).start(() => after());
   }, [progress, durationMs]);
