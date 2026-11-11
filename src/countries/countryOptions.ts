@@ -12,6 +12,15 @@ export function countryOptions(list: readonly Country[] = COUNTRIES): ControlOpt
   return list.map((country) => ({ label: country.name, value: country.code, detail: country.code }));
 }
 
+const DEFAULT_OPTIONS = countryOptions();
+const NO_COUNTRY = '';
+
+/** The country options, led by a "no country" choice (value '') when `noneLabel` is given. */
+export function countryFieldOptions(countries?: readonly Country[], noneLabel?: string): readonly ControlOption[] {
+  const list = countries === undefined ? DEFAULT_OPTIONS : countryOptions(countries);
+  return noneLabel === undefined ? list : [{ label: noneLabel, value: NO_COUNTRY }, ...list];
+}
+
 /** The flag emoji for a 2-letter code, or '' for anything else. */
 export function countryFlag(code: string): string {
   const upper = code.toUpperCase();

@@ -146,14 +146,14 @@ export type { AddOnRequestProps } from './AddOnRequest/AddOnRequest';
 export { FixBar, isFixBarVisible } from './FixBar/FixBar';
 export type { FixBarProps } from './FixBar/FixBar';
 
-export { SearchSelect, SelectSurface, buildSearchSelectSections, findOption, highlightAfterQuery, moveHighlight, resolveSelectMotion, PHONE_MAX_WIDTH, useSearchSelectState, useReducedMotion, useOutsidePress, isOutside, DropdownPlacement, placeDropdown, dropdownFrame, useDeferredFocus } from './SearchSelect';
-export type { SearchSelectProps, SearchSelectLabels, SearchSelectSections, SelectMotion, SearchSelectState, AnchorRect, DropdownFrame } from './SearchSelect';
+export { SearchSelect, SelectSurface, buildSearchSelectSections, findOption, highlightAfterQuery, moveHighlight, resolveSelectMotion, PHONE_MAX_WIDTH, useSearchSelectState, useReducedMotion, useOutsidePress, isOutside, DropdownPlacement, placeDropdown, dropdownFrame, fitDropdownWidth, useDeferredFocus } from './SearchSelect';
+export type { SearchSelectProps, SearchSelectLabels, SearchSelectTrigger, SearchSelectSections, SelectMotion, SearchSelectState, AnchorRect, DropdownFrame } from './SearchSelect';
 
 export { CountryFlag, FlagShapeKind, flagShapes, isFallbackFlag, FLAG_WIDTH, FLAG_HEIGHT } from './CountryFlag';
 export type { CountryFlagProps, FlagShape } from './CountryFlag';
 export { CountryField } from './CountryField';
 export type { CountryFieldProps } from './CountryField';
-export { COUNTRIES, countryOptions, countryFlag, toCountryValue } from './countries';
+export { COUNTRIES, countryOptions, countryFieldOptions, countryFlag, toCountryValue } from './countries';
 export type { Country } from './countries';
 
 export { IbanInput, BicInput, IbanRejection, BicRejection, IBAN_MAX_LENGTH, IBAN_REGISTERED_COUNTRY_COUNT, ibanLengthFor, validateIban, validateBic, draftIban, draftBic, groupInFours, ibanCounter, useBlurVerdict, rejectionMessage } from './IbanInput';

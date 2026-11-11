@@ -3,6 +3,9 @@
 ## [Unreleased]
 
 ### Added
+- `SearchSelect.renderTrigger({ open, selected, onPress, ref })`: draw your own trigger (a chip, a button) in place of the field box; the package keeps the pressable, its label, hint, expanded state, testID, the 44 px hit box and the focus return on close. A dropdown from a narrow trigger opens at least 240 px wide inside the viewport (`fitDropdownWidth`) (D-INPUTS-19 in FINREG-INPUTS-1 "Searchable dropdowns, shared country field, formatted IBAN/BIC inputs").
+- `IbanInput` / `BicInput` take `onBlur` (called after the leave verdict, so forms validate on blur); `BicInput` takes `placeholder`.
+- `CountryField.noneLabel`: an optional "no country" choice (stores `''`), flags and code column kept; `countryFieldOptions` exported.
 - `ChipOption.labelWrap` (`ChipLabelWrap.None | Wrap | Truncate`, a `const enum`, default `None` = unchanged): `wrap` and `truncate` cap a chip at its container width so a long label never runs past its card at 360 px; the internal `chipLabelLayout` helper is no longer exported (D-LD-7 in LIST-DEFAULTS-1 "Operator-set default watchlists", TEXT-FIT-1).
 - `SearchSelect`: type to filter by name and detail, Recent then All, arrow keys + Enter + Esc, phone sheet / computer unfold, reduced motion = no slide (FINREG-INPUTS-1 "Searchable dropdowns, shared country field, formatted IBAN/BIC inputs").
 - `CountryField` + `COUNTRIES` (ISO 3166-1 alpha-2, 249): drawn SVG flag (`CountryFlag`, needs peer `react-native-svg >=13.0.0`), name, grey code; stores the code only.

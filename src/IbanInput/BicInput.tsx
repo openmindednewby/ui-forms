@@ -21,11 +21,13 @@ export interface BicInputProps {
   accessibilityLabel: string;
   accessibilityHint: string;
   testID: string;
+  onBlur?: () => void;
   rejectionLabels?: BicRejectionLabels;
+  placeholder?: string;
 }
 
 /** A BIC box that upper-cases as you type, ghosts the optional branch and validates on leave. */
-export function BicInput({ value, onChange, onVerdict, accessibilityLabel, accessibilityHint, testID, rejectionLabels }: BicInputProps): React.ReactElement {
+export function BicInput({ value, onChange, onVerdict, accessibilityLabel, accessibilityHint, testID, rejectionLabels, placeholder, onBlur: onLeft }: BicInputProps): React.ReactElement {
   const { theme } = useUi();
   const { colors } = theme;
   const draft = useMemo(() => draftBic(value), [value]);
@@ -42,7 +44,8 @@ export function BicInput({ value, onChange, onVerdict, accessibilityLabel, acces
   const onBlur = useCallback(() => {
     const verdict = onLeave();
     onVerdict?.(value === '' ? null : verdict);
-  }, [onLeave, onVerdict, value]);
+    onLeft?.();
+  }, [onLeave, onVerdict, value, onLeft]);
 
   return (
     <View>
@@ -59,6 +62,8 @@ export function BicInput({ value, onChange, onVerdict, accessibilityLabel, acces
             autoCapitalize="characters"
             autoComplete="off"
             autoCorrect={false}
+            placeholder={draft.value === '' ? placeholder : undefined}
+            placeholderTextColor={colors.textSecondary}
             spellCheck={false}
             style={[g.mono, g.input, { color: colors.text }]}
             testID={testID}

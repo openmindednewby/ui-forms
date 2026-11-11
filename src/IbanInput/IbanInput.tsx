@@ -22,12 +22,13 @@ export interface IbanInputProps {
   accessibilityLabel: string;
   accessibilityHint: string;
   testID: string;
+  onBlur?: () => void;
   rejectionLabels?: IbanRejectionLabels;
   placeholder?: string;
 }
 
 /** An IBAN box that groups in fours as you type, stores no spaces and validates on leave. */
-export function IbanInput({ value, onChange, onVerdict, accessibilityLabel, accessibilityHint, testID, rejectionLabels, placeholder }: IbanInputProps): React.ReactElement {
+export function IbanInput({ value, onChange, onVerdict, accessibilityLabel, accessibilityHint, testID, rejectionLabels, placeholder, onBlur: onLeft }: IbanInputProps): React.ReactElement {
   const { theme } = useUi();
   const { colors } = theme;
   const draft = useMemo(() => draftIban(value), [value]);
@@ -47,7 +48,8 @@ export function IbanInput({ value, onChange, onVerdict, accessibilityLabel, acce
   const onBlur = useCallback(() => {
     const verdict = onLeave();
     onVerdict?.(value === '' ? null : verdict);
-  }, [onLeave, onVerdict, value]);
+    onLeft?.();
+  }, [onLeave, onVerdict, value, onLeft]);
 
   return (
     <View>

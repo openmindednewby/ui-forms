@@ -1,5 +1,8 @@
 import { DropdownPlacement } from '../DropdownPlacement';
 
+const MIN_PANEL_WIDTH = 240;
+const EDGE = 8;
+
 export interface AnchorRect {
   x: number;
   y: number;
@@ -28,4 +31,11 @@ export function dropdownFrame(anchor: AnchorRect, panelHeight: number, viewportH
   const base = { placement, left: anchor.x, width: anchor.width };
   if (placement === DropdownPlacement.Above) return { ...base, bottom: viewportHeight - anchor.y };
   return { ...base, top: anchor.y + anchor.height };
+}
+
+/** Widens a narrow anchor's list to a readable width and keeps it inside the viewport. */
+export function fitDropdownWidth(frame: DropdownFrame, viewportWidth: number): DropdownFrame {
+  const width = Math.max(frame.width, Math.min(MIN_PANEL_WIDTH, viewportWidth - EDGE - EDGE));
+  const left = Math.max(EDGE, Math.min(frame.left, viewportWidth - width - EDGE));
+  return { ...frame, width, left: frame.width >= width ? frame.left : left };
 }

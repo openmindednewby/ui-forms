@@ -3,7 +3,7 @@ import React, { useCallback, useState, type RefObject } from 'react';
 import { Animated, Modal, Pressable, StyleSheet, useWindowDimensions, type LayoutChangeEvent, type View } from 'react-native';
 
 import { useAnchorRect } from '../hooks/useAnchorRect';
-import { dropdownFrame } from '../utils/dropdownFrame';
+import { dropdownFrame, fitDropdownWidth } from '../utils/dropdownFrame';
 
 export interface DropdownSurfaceProps {
   progress: Animated.Value;
@@ -18,11 +18,11 @@ export interface DropdownSurfaceProps {
 
 /** The computer surface: a layer above the page beside the field, opening upward when there is no room below. */
 export function DropdownSurface({ progress, translateY, anchorRef, onDismiss, closeLabel, closeHint, testID, children }: DropdownSurfaceProps): React.ReactElement {
-  const { height: viewportHeight } = useWindowDimensions();
+  const { height: viewportHeight, width: viewportWidth } = useWindowDimensions();
   const anchor = useAnchorRect(anchorRef);
   const [panelHeight, setPanelHeight] = useState(0);
   const onLayout = useCallback((event: LayoutChangeEvent) => setPanelHeight(event.nativeEvent.layout.height), []);
-  const frame = anchor === null ? null : dropdownFrame(anchor, panelHeight, viewportHeight);
+  const frame = anchor === null ? null : fitDropdownWidth(dropdownFrame(anchor, panelHeight, viewportHeight), viewportWidth);
   const place = frame === null ? null : { left: frame.left, width: frame.width, top: frame.top, bottom: frame.bottom };
 
   return (

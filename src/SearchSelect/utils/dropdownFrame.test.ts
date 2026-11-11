@@ -1,5 +1,5 @@
 import { DropdownPlacement } from '../DropdownPlacement';
-import { dropdownFrame, placeDropdown } from './dropdownFrame';
+import { dropdownFrame, fitDropdownWidth, placeDropdown } from './dropdownFrame';
 
 const VIEWPORT = 800;
 const PANEL = 320;
@@ -46,5 +46,25 @@ describe('dropdownFrame', () => {
     const frame = dropdownFrame(anchor, PANEL, VIEWPORT);
 
     expect(frame).toEqual({ placement: DropdownPlacement.Below, left: 24, width: 300, top: 144 });
+  });
+});
+
+describe('fitDropdownWidth', () => {
+  const VIEWPORT_WIDTH = 1280;
+
+  it('with a narrow chip anchor near the right edge, widens to 240 and stays inside the viewport', () => {
+    const frame = { placement: DropdownPlacement.Below, left: 1200, width: 70, top: 100 };
+
+    const fitted = fitDropdownWidth(frame, VIEWPORT_WIDTH);
+
+    expect(fitted).toEqual({ placement: DropdownPlacement.Below, left: 1032, width: 240, top: 100 });
+  });
+
+  it('with an anchor wider than 240, keeps its width and left edge', () => {
+    const frame = { placement: DropdownPlacement.Below, left: 50, width: 300, top: 100 };
+
+    const fitted = fitDropdownWidth(frame, VIEWPORT_WIDTH);
+
+    expect(fitted).toEqual(frame);
   });
 });

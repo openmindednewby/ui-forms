@@ -1,6 +1,6 @@
 export { SearchSelect } from './SearchSelect';
 export type { SearchSelectProps } from './SearchSelect';
-export type { SearchSelectLabels } from './types';
+export type { SearchSelectLabels, SearchSelectTrigger } from './types';
 export { SelectSurface } from './SelectSurface';
 export { buildSearchSelectSections, findOption, highlightAfterQuery, moveHighlight } from './utils/searchSelectModel';
 export type { SearchSelectSections } from './utils/searchSelectModel';
@@ -11,6 +11,6 @@ export type { SearchSelectState } from './hooks/useSearchSelectState';
 export { useReducedMotion } from './hooks/useReducedMotion';
 export { useOutsidePress, isOutside } from './hooks/useOutsidePress';
 export { DropdownPlacement } from './DropdownPlacement';
-export { placeDropdown, dropdownFrame } from './utils/dropdownFrame';
+export { placeDropdown, dropdownFrame, fitDropdownWidth } from './utils/dropdownFrame';
 export type { AnchorRect, DropdownFrame } from './utils/dropdownFrame';
 export { useDeferredFocus } from './hooks/useDeferredFocus';
