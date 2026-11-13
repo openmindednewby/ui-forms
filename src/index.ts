@@ -30,6 +30,8 @@ export { InlineFieldRow } from './InlineFieldRow/InlineFieldRow';
 export type { InlineFieldRowProps } from './InlineFieldRow/InlineFieldRow';
 export { INLINE_FIELD_ROW_MIN_WIDTH, inlineFieldRowLayout } from './InlineFieldRow/inlineFieldRowLayout';
 export type { InlineFieldRowLayout } from './InlineFieldRow/inlineFieldRowLayout';
+export { LineItems, LINE_ITEMS_WIDE_MIN_WIDTH, canRemoveLine, isLineItemsWide, lineItemColumnFlex, lineNumberOf } from './LineItems';
+export type { LineItemCell, LineItemColumn, LineItemsLabels, LineItemsProps } from './LineItems';
 
 export { FormStack } from './FormStack/FormStack';
 export type { FormStackProps } from './FormStack/FormStack';

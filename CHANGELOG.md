@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Added
+- `LineItems`: repeating lines as one labelled card each ("Line N" + a header slot such as a Debit/Credit switch + Remove), cells through `renderCell({ item, index, columnKey, wide })`; at 1280 px and wider the column headers show once and each line is one aligned row, below that the cells stack in a `FormGrid`; Add line, `minItems` (default 1), `isLineItemsWide`, `canRemoveLine` exported (D-JL-5 "Journal line layout" in FINREG-JOURNAL-LINES-1 "Journal lines read as lines").
 - `SearchSelect.renderTrigger({ open, selected, onPress, ref })`: draw your own trigger (a chip, a button) in place of the field box; the package keeps the pressable, its label, hint, expanded state, testID, the 44 px hit box and the focus return on close. A dropdown from a narrow trigger opens at least 240 px wide inside the viewport (`fitDropdownWidth`) (D-INPUTS-19 in FINREG-INPUTS-1 "Searchable dropdowns, shared country field, formatted IBAN/BIC inputs").
 - `IbanInput` / `BicInput` take `onBlur` (called after the leave verdict, so forms validate on blur); `BicInput` takes `placeholder`.
 - `CountryField.noneLabel`: an optional "no country" choice (stores `''`), flags and code column kept; `countryFieldOptions` exported.
