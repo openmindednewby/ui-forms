@@ -53,7 +53,7 @@ export function IbanInput({ value, onChange, onVerdict, accessibilityLabel, acce
 
   return (
     <View>
-      <View style={[s.selectTrigger, { borderColor: colors.border, backgroundColor: colors.surfaceElevated }]}>
+      <View style={[s.selectTrigger, g.trigger, { borderColor: colors.border, backgroundColor: colors.surfaceElevated }]}>
         <View style={g.field}>
           <Text aria-hidden style={[g.mono, g.layer]}>
             <Text style={g.hidden}>{draft.display}</Text>
