@@ -100,7 +100,7 @@ export const FormSwitch = ({
       // RN-web's Pressable always stamps a tabIndex (0, or -1 when disabled) and only an explicit
       // one overrides it — `focusable={false}` does not. -1 keeps the row out of the tab order.
       tabIndex={-1}
-      testID={`${testID}-row`}
+      testID={testID}
     >
       <View style={styles.textColumn}>
         <Text style={[styles.label, themeStyles.label]}>{label}</Text>
@@ -127,7 +127,7 @@ export const FormSwitch = ({
           accessibilityLabel={label}
           accessibilityState={{ checked: value, disabled }}
           disabled={disabled}
-          testID={testID}
+          testID={`${testID}-switch`}
           value={value}
           onValueChange={onValueChange}
         />

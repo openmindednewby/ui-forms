@@ -30,7 +30,7 @@ describe('FormSwitch web semantics', () => {
 
   it('does not put a second role="switch" (or aria-checked) on the testID wrapper', () => {
     render(<FormSwitch value label="Recommendations" testID="sw" onValueChange={noop} />);
-    const wrapper = screen.getByTestId('sw');
+    const wrapper = screen.getByTestId('sw-switch');
     expect(wrapper.getAttribute('role')).toBeNull();
     expect(wrapper.getAttribute('aria-checked')).toBeNull();
   });
@@ -53,18 +53,18 @@ describe('FormSwitch web semantics', () => {
 
   it('never makes the wrapper focusable when disabled', () => {
     render(<FormSwitch disabled value label="Required" testID="sw" onValueChange={noop} />);
-    expect(screen.getByTestId('sw').getAttribute('tabindex')).toBeNull();
+    expect(screen.getByTestId('sw-switch').getAttribute('tabindex')).toBeNull();
   });
 
   it('leaves the input as the only tab stop when enabled', () => {
     render(<FormSwitch value label="Optional" testID="sw" onValueChange={noop} />);
-    expect(screen.getByTestId('sw').getAttribute('tabindex')).toBeNull();
+    expect(screen.getByTestId('sw-switch').getAttribute('tabindex')).toBeNull();
   });
 
   it('toggles once from a press anywhere on the 44px row (SHOWCASE-1)', () => {
     const onValueChange = jest.fn();
     render(<FormSwitch label="Optional" testID="sw" value={false} onValueChange={onValueChange} />);
-    fireEvent.click(screen.getByTestId('sw-row'));
+    fireEvent.click(screen.getByTestId('sw'));
     expect(onValueChange).toHaveBeenCalledTimes(1);
     expect(onValueChange).toHaveBeenCalledWith(true);
   });
@@ -72,7 +72,7 @@ describe('FormSwitch web semantics', () => {
   it('ignores a row press when disabled', () => {
     const onValueChange = jest.fn();
     render(<FormSwitch disabled value label="Required" testID="sw" onValueChange={onValueChange} />);
-    fireEvent.click(screen.getByTestId('sw-row'));
+    fireEvent.click(screen.getByTestId('sw'));
     expect(onValueChange).not.toHaveBeenCalled();
   });
 
@@ -94,9 +94,17 @@ describe('FormSwitch web semantics', () => {
     expect(onValueChange).toHaveBeenCalledTimes(1);
   });
 
+  it('with the consumer testID, lands on the 44px row so the pressable box carries it', () => {
+    render(<FormSwitch value label="Optional" testID="sw" onValueChange={noop} />);
+
+    const row = getComputedStyle(screen.getByTestId('sw'));
+
+    expect(parseFloat(row.minHeight)).toBeGreaterThanOrEqual(WCAG_MIN_TARGET_PX);
+  });
+
   it('never makes the row a tab stop or a second switch', () => {
     render(<FormSwitch value label="Optional" testID="sw" onValueChange={noop} />);
-    const row = screen.getByTestId('sw-row');
+    const row = screen.getByTestId('sw');
     expect(row.getAttribute('tabindex')).toBe('-1');
     expect(row.getAttribute('role')).toBeNull();
   });
