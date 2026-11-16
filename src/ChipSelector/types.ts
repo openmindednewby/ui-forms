@@ -11,7 +11,7 @@ import type { FieldSpacing } from '../Field/fieldSpacing';
 import type { ChipLabelWrap } from './ChipLabelWrap';
 
 /** Visual variant. `solid` = filled selected pill (default); `outline` = v1 tinted-outline. */
-export type ChipVariant = 'solid' | 'outline';
+export type ChipVariant = 'solid' | 'outline' | 'list';
 
 /**
  * Role of a SINGLE-select chip. `button` (default) = today's semantics; `radio` = opt-in
@@ -24,6 +24,8 @@ export type ChipSingleSelectRole = 'button' | 'radio';
 export interface ChipOption<T> {
   value: T;
   label: string;
+  /** A second line under the label; shown by the `list` variant. */
+  description?: string;
   /** Optional decorative icon rendered before the label; hidden from assistive tech. */
   icon?: React.ReactNode;
   /** Long-label behaviour for this chip; defaults to `none`. */
