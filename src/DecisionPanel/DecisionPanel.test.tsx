@@ -16,6 +16,7 @@ const labels = {
   chooseError: 'Choose a decision',
   submit: 'Submit decision',
   submitHint: 'Sends the decision',
+  submitError: 'Could not send the decision',
 };
 
 const checklist = { title: 'Checks', items: [{ id: 'doc', label: 'Document matches' }] };
@@ -113,5 +114,16 @@ describe('DecisionPanel checklist gate', () => {
     await press('dp-action-approve');
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('DecisionPanel submit failure', () => {
+  it('with onSubmit rejecting, shows the submit error', async () => {
+    const onSubmit = jest.fn().mockRejectedValue(new Error('offline'));
+    render(<DecisionPanel labels={labels} outcomes={outcomes} testID="dp" variant="sticky-bar" onSubmit={onSubmit} />);
+
+    await press('dp-action-approve');
+
+    expect(screen.getByTestId('dp-error').textContent).toBe('Could not send the decision');
   });
 });

@@ -1,8 +1,7 @@
 import React from 'react';
 
-import type { DecisionError } from '../utils/DecisionError';
 import { validateDecision } from '../utils/decisionRules';
-import type { DecisionOutcome, DecisionSubmission } from '../types';
+import type { DecisionError, DecisionOutcome, DecisionSubmission } from '../types';
 
 export interface DecisionPanelState<T extends string> {
   outcome: T | '';
@@ -40,6 +39,8 @@ export function useDecisionPanel<T extends string>(
     setPending(target);
     try {
       await onSubmit({ outcome: target, note, reasons });
+    } catch {
+      setError('submit');
     } finally {
       setPending(null);
     }

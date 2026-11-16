@@ -165,6 +165,9 @@ export { ActionBar, actionBarPosition } from './FixBar/ActionBar';
 export type { ActionBarProps } from './FixBar/ActionBar';
 
 export { GatedChecklist, isChecklistComplete } from './GatedChecklist';
-export type { ChecklistItem, GatedChecklistProps, GatedChecklistSubmit } from './GatedChecklist';
+export type { ChecklistItem, GatedChecklistProps } from './GatedChecklist';
+
+export { RadioList, radioRowIdentity } from './RadioList';
+export type { RadioListProps, RadioOption, RadioRowIdentity } from './RadioList';
 
 export * from './DecisionPanel';

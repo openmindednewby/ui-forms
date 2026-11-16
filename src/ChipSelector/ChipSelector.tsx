@@ -27,7 +27,6 @@ import { useUi } from '@dloizides/ui-feedback';
 
 import { Field } from '../Field/Field';
 
-import { ListChip } from './components/ListChip';
 import { OutlineChip } from './components/OutlineChip';
 import { SolidChip } from './components/SolidChip';
 import { CHIP_GUTTER, DEFAULT_CHIP_TESTID_PREFIX } from './constants';
@@ -53,7 +52,6 @@ const styles = StyleSheet.create({
     // and is correct under BOTH of `Field`'s spacing models, not just the one it was tuned against.
     gap: CHIP_GUTTER,
   },
-  listContainer: { flexDirection: 'column', flexWrap: 'nowrap' },
 });
 
 /*
@@ -120,7 +118,6 @@ export const ChipSelector = <T extends string | number>({
       onPress: (): void => onChange(option.value),
     };
     const key = String(option.value);
-    if (variant === 'list') return <ListChip key={key} {...chipProps} />;
     return variant === 'outline' ? <OutlineChip key={key} {...chipProps} /> : <SolidChip key={key} {...chipProps} />;
   }
 
@@ -136,7 +133,7 @@ export const ChipSelector = <T extends string | number>({
       {({ describedById, hasError }) => (
         <View
           accessibilityRole={isRadioGroup ? 'radiogroup' : undefined}
-          style={[styles.chipContainer, variant === 'list' ? styles.listContainer : null]}
+          style={styles.chipContainer}
           {...(webFieldA11y({ describedById, hasError }) as ViewProps)}
           {...radio.groupProps}
         >

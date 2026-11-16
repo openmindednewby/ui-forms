@@ -9,6 +9,7 @@ import { GatedChecklist } from '../GatedChecklist/GatedChecklist';
 import { ChecksDriveDecision } from './components/ChecksDriveDecision';
 import { ChooseThenSubmitDecision } from './components/ChooseThenSubmitDecision';
 import { StickyBarDecision } from './components/StickyBarDecision';
+import { SubmitError } from './components/SubmitError';
 import type { DecisionVariantProps } from './components/variantProps';
 import { useDecisionPanel } from './hooks/useDecisionPanel';
 import type { DecisionPanelProps, DecisionPanelVariant } from './types';
@@ -47,6 +48,7 @@ export function DecisionPanel<T extends string>(props: DecisionPanelProps<T>): R
       ) : (
         body(false)
       )}
+      {state.error === 'submit' ? <SubmitError message={labels.submitError} testID={`${testID}-error`} /> : null}
     </View>
   );
 }

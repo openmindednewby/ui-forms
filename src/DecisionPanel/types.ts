@@ -7,6 +7,8 @@ export type DecisionPanelVariant = 'sticky-bar' | 'choose-then-submit' | 'checks
 
 export type DecisionTone = 'primary' | 'neutral' | 'danger';
 
+export type DecisionError = 'choose' | 'note' | 'submit';
+
 export interface DecisionOutcome<T extends string> {
   value: T;
   label: string;
@@ -29,6 +31,7 @@ export interface DecisionPanelLabels {
   chooseError: string;
   submit: string;
   submitHint: string;
+  submitError: string;
   notePlaceholder?: string;
   reasons?: string;
   message?: string;

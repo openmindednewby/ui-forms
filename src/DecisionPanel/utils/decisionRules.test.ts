@@ -1,4 +1,3 @@
-import { DecisionError } from './DecisionError';
 import { defaultDecisionVariant, leadFirst, validateDecision } from './decisionRules';
 
 const outcomes = [
@@ -11,13 +10,13 @@ describe('validateDecision', () => {
   it('with no outcome chosen, returns the choose error', () => {
     const error = validateDecision(outcomes, '', '');
 
-    expect(error).toBe(DecisionError.Choose);
+    expect(error).toBe('choose');
   });
 
   it('with a note-required outcome and a blank note, returns the note error', () => {
     const error = validateDecision(outcomes, 'reject', '   ');
 
-    expect(error).toBe(DecisionError.Note);
+    expect(error).toBe('note');
   });
 
   it('with a note-required outcome and a note, returns null', () => {
@@ -35,7 +34,7 @@ describe('validateDecision', () => {
   it('with an unknown outcome, returns the choose error', () => {
     const error = validateDecision(outcomes, 'escalate', 'x');
 
-    expect(error).toBe(DecisionError.Choose);
+    expect(error).toBe('choose');
   });
 });
 

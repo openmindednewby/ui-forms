@@ -8,7 +8,11 @@ const items = [
   { id: 'face', label: 'Face matches' },
 ];
 
-const submit = (onPress: () => void): { label: string; hint: string; onPress: () => void } => ({ label: 'Submit', hint: 'Sends', onPress });
+const slotGate = (checked: string[]): boolean | undefined => {
+  const slot = jest.fn((_complete: boolean) => null);
+  render(<GatedChecklist checked={checked} items={items} testID="gc" title="Checks" onToggle={jest.fn()}>{slot}</GatedChecklist>);
+  return slot.mock.calls[0]?.[0];
+};
 
 describe('isChecklistComplete', () => {
   it.each([
@@ -39,30 +43,19 @@ describe('GatedChecklist', () => {
     expect(onToggle).toHaveBeenCalledWith('face');
   });
 
-  it('with items left unchecked, pressing submit does not call it', () => {
-    const onPress = jest.fn();
-    render(<GatedChecklist checked={['doc']} items={items} submit={submit(onPress)} testID="gc" title="Checks" onToggle={jest.fn()} />);
+  it('with items left unchecked, passes an incomplete gate to the slot', () => {
+    const checked = ['doc'];
 
-    fireEvent.click(screen.getByTestId('gc-submit'));
-
-    expect(onPress).not.toHaveBeenCalled();
-  });
-
-  it('with every item checked, pressing submit calls it', () => {
-    const onPress = jest.fn();
-    render(<GatedChecklist checked={['doc', 'face']} items={items} submit={submit(onPress)} testID="gc" title="Checks" onToggle={jest.fn()} />);
-
-    fireEvent.click(screen.getByTestId('gc-submit'));
-
-    expect(onPress).toHaveBeenCalledTimes(1);
-  });
-
-  it('with a children slot, passes whether the list is complete', () => {
-    const slot = jest.fn((_complete: boolean) => null);
-    render(<GatedChecklist checked={['doc']} items={items} testID="gc" title="Checks" onToggle={jest.fn()}>{slot}</GatedChecklist>);
-
-    const complete = slot.mock.calls[0]?.[0];
+    const complete = slotGate(checked);
 
     expect(complete).toBe(false);
+  });
+
+  it('with every item checked, passes a complete gate to the slot', () => {
+    const checked = ['doc', 'face'];
+
+    const complete = slotGate(checked);
+
+    expect(complete).toBe(true);
   });
 });

@@ -1,6 +1,7 @@
 export { DecisionPanel } from './DecisionPanel';
 export type {
   DecisionChecklist,
+  DecisionError,
   DecisionOutcome,
   DecisionPanelLabels,
   DecisionPanelProps,
@@ -8,5 +9,4 @@ export type {
   DecisionSubmission,
   DecisionTone,
 } from './types';
-export { DecisionError } from './utils/DecisionError';
-export { DECISION_PANEL_WIDE_MIN_WIDTH, defaultDecisionVariant, leadFirst, validateDecision } from './utils/decisionRules';
+export { defaultDecisionVariant, leadFirst, validateDecision } from './utils/decisionRules';
