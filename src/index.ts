@@ -160,3 +160,14 @@ export type { Country } from './countries';
 
 export { IbanInput, BicInput, IbanRejection, BicRejection, IBAN_MAX_LENGTH, IBAN_REGISTERED_COUNTRY_COUNT, ibanLengthFor, validateIban, validateBic, draftIban, draftBic, groupInFours, ibanCounter, useBlurVerdict, rejectionMessage } from './IbanInput';
 export type { IbanInputProps, BicInputProps, IbanVerdict, BicVerdict, IbanDraft, BicDraft, BlurVerdict, IbanRejectionLabels, BicRejectionLabels } from './IbanInput';
+
+export { ActionBar, actionBarPosition } from './FixBar/ActionBar';
+export type { ActionBarProps } from './FixBar/ActionBar';
+
+export { GatedChecklist, isChecklistComplete } from './GatedChecklist';
+export type { ChecklistItem, GatedChecklistProps } from './GatedChecklist';
+
+export { RadioList, radioRowIdentity } from './RadioList';
+export type { RadioListProps, RadioOption, RadioRowIdentity } from './RadioList';
+
+export * from './DecisionPanel';
