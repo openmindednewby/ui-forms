@@ -80,12 +80,12 @@ describe('fitDropdownWidth with a minWidth', () => {
 });
 
 describe('dropdownFrame preferring below', () => {
-  it('with too little room below, stays below and moves up to fit the viewport', () => {
+  it('with too little room below and enough above, opens above and never covers the field', () => {
     const anchor = { x: 24, y: 600, width: 300, height: 44 };
 
     const frame = dropdownFrame(anchor, PANEL, VIEWPORT, true);
 
-    expect(frame).toEqual({ placement: DropdownPlacement.Below, left: 24, width: 300, top: 472 });
+    expect(frame).toEqual({ placement: DropdownPlacement.Above, left: 24, width: 300, bottom: 200 });
   });
 });
 

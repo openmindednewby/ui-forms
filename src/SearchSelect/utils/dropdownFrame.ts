@@ -25,13 +25,19 @@ export function placeDropdown(anchor: AnchorRect, panelHeight: number, viewportH
   return anchor.y > roomBelow ? DropdownPlacement.Above : DropdownPlacement.Below;
 }
 
+function placeBelowFirst(anchor: AnchorRect, panelHeight: number, viewportHeight: number): DropdownPlacement {
+  const roomBelow = viewportHeight - (anchor.y + anchor.height);
+  const fitsOnlyAbove = roomBelow < panelHeight && anchor.y - EDGE >= panelHeight;
+  return fitsOnlyAbove ? DropdownPlacement.Above : DropdownPlacement.Below;
+}
+
 function clampTop(top: number, panelHeight: number, viewportHeight: number): number {
   return Math.max(EDGE, Math.min(top, viewportHeight - panelHeight - EDGE));
 }
 
-/** The window frame for the list next to `anchor`, kept inside the viewport; `preferBelow` always opens under the field. */
+/** The window frame for the list next to `anchor`, kept inside the viewport; `preferBelow` opens under the field unless only the room above fits the list. */
 export function dropdownFrame(anchor: AnchorRect, panelHeight: number, viewportHeight: number, preferBelow = false): DropdownFrame {
-  const placement = preferBelow ? DropdownPlacement.Below : placeDropdown(anchor, panelHeight, viewportHeight);
+  const placement = preferBelow ? placeBelowFirst(anchor, panelHeight, viewportHeight) : placeDropdown(anchor, panelHeight, viewportHeight);
   const base = { placement, left: anchor.x, width: anchor.width };
   if (placement === DropdownPlacement.Above) return { ...base, bottom: viewportHeight - clampTop(anchor.y - panelHeight, panelHeight, viewportHeight) - panelHeight };
   return { ...base, top: clampTop(anchor.y + anchor.height, panelHeight, viewportHeight) };

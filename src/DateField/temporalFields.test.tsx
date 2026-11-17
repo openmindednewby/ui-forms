@@ -205,10 +205,10 @@ describe('DateField', () => {
     expect(input.value).toBe('Mon 9 Nov 2026');
   });
 
-  it('when focused, shows the stored value in the locale typing order', () => {
+  it('when the user starts editing, shows the stored value in the locale typing order', () => {
     const { input } = renderField(DateField, { value: '2026-11-09' });
 
-    fireEvent.focus(input);
+    fireEvent.keyDown(input, { key: 'Backspace' });
 
     expect(input.value).toBe('09/11/2026');
   });

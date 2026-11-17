@@ -14,6 +14,8 @@ export interface TypedDateArgs {
   onError?: (message: string | undefined) => void;
   /** Replaces the out-of-bounds error, e.g. a range end order message. */
   rangeMessage?: string;
+  /** Keeps the locale display on focus until the user edits (`onEdit` or typing). */
+  editOnType?: boolean;
 }
 
 export interface TypedDate {
@@ -21,14 +23,16 @@ export interface TypedDate {
   onText: (text: string) => void;
   onFocus: () => void;
   onBlur: () => void;
+  /** Switches to the typed numeric form when the user starts editing. */
+  onEdit: () => void;
   /** True when the typed text is empty or a valid in-bounds date; reports the error otherwise. */
   isReady: () => boolean;
 }
 
-/** A typeable date: shows the locale display at rest, the numeric form while focused, emits only valid in-bounds dates. */
-export function useTypedDate({ value, onChange, bounds, format, onError, rangeMessage }: TypedDateArgs): TypedDate {
+/** A typeable date: shows the locale display at rest, the numeric form while editing, emits only valid in-bounds dates. */
+export function useTypedDate({ value, onChange, bounds, format, onError, rangeMessage, editOnType = false }: TypedDateArgs): TypedDate {
   const { labels, locale } = useDatePickerConfig();
-  const [focused, setFocused] = useState(false);
+  const [editing, setEditing] = useState(false);
   const [text, setText] = useState('');
 
   useEffect(() => {
@@ -46,7 +50,13 @@ export function useTypedDate({ value, onChange, bounds, format, onError, rangeMe
     return isWithinBounds(parsed, bounds.min, bounds.max) ? undefined : rangeMessage ?? labels.outOfRange;
   };
 
+  const startEdit = (): void => {
+    setEditing(true);
+    setText(value === '' ? '' : formatTyped(value, locale));
+  };
+
   const onText = (next: string): void => {
+    setEditing(true);
     setText(next);
     if (next.trim() === '') {
       onError?.(undefined);
@@ -61,22 +71,24 @@ export function useTypedDate({ value, onChange, bounds, format, onError, rangeMe
   };
 
   const isReady = (): boolean => {
-    if (!focused) return true;
+    if (!editing) return true;
     const message = verdict(text);
     onError?.(message);
     return message === undefined;
   };
 
   return {
-    display: focused ? text : value === '' ? '' : format(value, locale),
+    display: editing ? text : value === '' ? '' : format(value, locale),
     onText,
     onFocus: () => {
-      setFocused(true);
-      setText(value === '' ? '' : formatTyped(value, locale));
+      if (!editOnType) startEdit();
     },
     onBlur: () => {
-      setFocused(false);
-      if (verdict(text) !== undefined) onError?.(verdict(text));
+      setEditing(false);
+      if (editing && verdict(text) !== undefined) onError?.(verdict(text));
+    },
+    onEdit: () => {
+      if (!editing) startEdit();
     },
     isReady,
   };
