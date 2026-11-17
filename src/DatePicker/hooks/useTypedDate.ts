@@ -23,8 +23,8 @@ export interface TypedDate {
   onText: (text: string) => void;
   onFocus: () => void;
   onBlur: () => void;
-  /** Switches to the typed numeric form when the user starts editing. */
-  onEdit: () => void;
+  /** Starts editing: the text becomes `replacement` when given, else the typed numeric form; true when it applied `replacement`. */
+  onEdit: (replacement?: string) => boolean;
   /** True when the typed text is empty or a valid in-bounds date; reports the error otherwise. */
   isReady: () => boolean;
 }
@@ -87,8 +87,11 @@ export function useTypedDate({ value, onChange, bounds, format, onError, rangeMe
       setEditing(false);
       if (editing && verdict(text) !== undefined) onError?.(verdict(text));
     },
-    onEdit: () => {
-      if (!editing) startEdit();
+    onEdit: (replacement) => {
+      if (editing) return false;
+      if (replacement !== undefined) onText(replacement);
+      else startEdit();
+      return replacement !== undefined;
     },
     isReady,
   };

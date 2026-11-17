@@ -15,6 +15,7 @@ import { useReturnFocus } from '../../DatePicker/hooks/useReturnFocus';
 import { useTypedDate } from '../../DatePicker/hooks/useTypedDate';
 import { closedFieldMinWidth } from '../../DatePicker/utils/fieldWidth';
 import { formatDisplay } from '../../DatePicker/utils/formatDate';
+import { typedEditBind } from '../../DatePicker/utils/typedEdit';
 import { useThemedInput } from '../../useThemedInput/useThemedInput';
 import { webFieldA11y } from '../../webFieldA11y/webFieldA11y';
 
@@ -37,14 +38,6 @@ export const ICON_ROOM = 48;
 export const ICON_SLOT: CSSProperties = { position: 'absolute', right: 2, top: 0, bottom: 0, display: 'flex', alignItems: 'center' };
 export const anchorStyles = StyleSheet.create({ wrap: { position: 'relative', width: '100%' } });
 
-const EDIT_KEYS = new Set(['Backspace', 'Delete']);
-
-/** True for a key that edits the text: a printable character, Backspace or Delete. */
-export function isEditKey(event: KeyboardEvent<HTMLInputElement>): boolean {
-  const printable = event.key.length === 1 && !event.ctrlKey && !event.metaKey;
-  return printable || EDIT_KEYS.has(event.key);
-}
-
 /** A typeable date with a calendar button; the calendar opens as a sheet on a phone and a dropdown on desktop. */
 export function DatePickerInput({ fieldProps, context, onTypedError }: DatePickerInputProps): React.ReactElement {
   const { label, value, onChange, onSubmit, accessibilityHint, testID, required, disabled = false, min, max } = fieldProps;
@@ -55,6 +48,7 @@ export function DatePickerInput({ fieldProps, context, onTypedError }: DatePicke
   const inputRef = useRef<HTMLInputElement>(null);
   const bounds = { min, max };
   const typed = useTypedDate({ value, onChange, bounds, format: formatDisplay, onError: onTypedError, editOnType: true });
+  const edit = typedEditBind(typed);
   const { style, focusBind, hoverBind } = useThemedInput({ hasError: context.hasError, editable: !disabled });
   const focus = focusBind as unknown as FocusHandlers;
   const webA11y = webFieldA11y({ describedById: context.describedById, hasError: context.hasError, required });
@@ -67,7 +61,7 @@ export function DatePickerInput({ fieldProps, context, onTypedError }: DatePicke
     close();
   };
   const onKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
-    if (isEditKey(event)) typed.onEdit();
+    edit.onEditKey(event);
     if (event.key === 'ArrowDown' && event.altKey) {
       event.preventDefault();
       setOpen(true);
@@ -103,8 +97,8 @@ export function DatePickerInput({ fieldProps, context, onTypedError }: DatePicke
           typed.onFocus();
         }}
         onKeyDown={onKeyDown}
-        onCut={typed.onEdit}
-        onPaste={typed.onEdit}
+        onCut={edit.onCut}
+        onPaste={edit.onPaste}
       />
       <div style={ICON_SLOT}>
         <IconButton accessibilityHint={labels.openCalendarHint} accessibilityLabel={labels.openCalendar} appearance="ghost" disabled={disabled} renderIcon={(color) => <Glyph color={color} name={GlyphName.Calendar} />} testID={`${testID}-calendar`} onPress={() => setOpen((current) => !current)} />

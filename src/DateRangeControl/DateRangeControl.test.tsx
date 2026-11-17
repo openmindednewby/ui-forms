@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { DateRangeControl } from './DateRangeControl';
-import { formatShort } from '../DatePicker/utils/formatDate';
+import { formatShort, formatTyped } from '../DatePicker/utils/formatDate';
 
 const TID = 'dr';
 
@@ -97,5 +97,41 @@ describe('DateRangeControl focus', () => {
     fireEvent.focus(screen.getByTestId(`${TID}-from`));
 
     expect((screen.getByTestId(`${TID}-from`) as HTMLInputElement).value).toBe(formatShort('2026-11-01'));
+  });
+});
+
+describe('DateRangeControl editing a whole selection', () => {
+  const selectedFrom = (): HTMLInputElement => {
+    const input = screen.getByTestId<HTMLInputElement>(`${TID}-from`);
+    input.setSelectionRange(0, input.value.length);
+    return input;
+  };
+
+  it('with the whole start selected, a typed digit replaces it', () => {
+    renderRange({ from: '2026-11-01', to: '' });
+    const input = selectedFrom();
+
+    fireEvent.keyDown(input, { key: '5' });
+
+    expect(input.value).toBe('5');
+  });
+
+  it('with the whole start selected, a paste replaces it with the pasted date', () => {
+    const onChange = renderRange({ from: '2026-11-01', to: '' });
+    const input = selectedFrom();
+    const pasted = formatTyped('2026-11-02');
+
+    fireEvent.paste(input, { clipboardData: { getData: () => pasted } });
+
+    expect([input.value, onChange.mock.calls.at(-1)?.[0]]).toEqual([pasted, { from: '2026-11-02', to: '' }]);
+  });
+
+  it('with the whole start selected, Backspace empties it', () => {
+    const onChange = renderRange({ from: '2026-11-01', to: '' });
+    const input = selectedFrom();
+
+    fireEvent.keyDown(input, { key: 'Backspace' });
+
+    expect([input.value, onChange.mock.calls.at(-1)?.[0]]).toEqual(['', { from: '', to: '' }]);
   });
 });

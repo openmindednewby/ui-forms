@@ -259,3 +259,32 @@ describe('DateField', () => {
     expect(await screen.findByTestId(`${TEST_ID}-picker`)).toBeTruthy();
   });
 });
+
+describe('DateField editing a whole selection', () => {
+  it('with the whole display selected, a typed digit replaces it', () => {
+    const { input } = renderField(DateField, { value: '2026-11-09' });
+    input.setSelectionRange(0, input.value.length);
+
+    fireEvent.keyDown(input, { key: '5' });
+
+    expect(input.value).toBe('5');
+  });
+
+  it('with the whole display selected, a paste replaces it with the pasted date', () => {
+    const { input, onChange } = renderField(DateField, { value: '2026-11-09' });
+    input.setSelectionRange(0, input.value.length);
+
+    fireEvent.paste(input, { clipboardData: { getData: () => '02/11/2026' } });
+
+    expect([input.value, onChange.mock.calls.at(-1)?.[0]]).toEqual(['02/11/2026', '2026-11-02']);
+  });
+
+  it('with the whole display selected, Backspace empties the field', () => {
+    const { input, onChange } = renderField(DateField, { value: '2026-11-09' });
+    input.setSelectionRange(0, input.value.length);
+
+    fireEvent.keyDown(input, { key: 'Backspace' });
+
+    expect([input.value, onChange.mock.calls.at(-1)?.[0]]).toEqual(['', '']);
+  });
+});

@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import { IconButton } from '@dloizides/ui-buttons';
 
 import { RangeSide } from './RangeSide';
-import { anchorStyles, ICON_ROOM, ICON_SLOT, isEditKey, type FocusHandlers } from '../../DateField/components/DatePickerInput';
+import { anchorStyles, ICON_ROOM, ICON_SLOT, type FocusHandlers } from '../../DateField/components/DatePickerInput';
 import { buildNativeInputStyle } from '../../DateField/components/WebDateInput';
 import { Glyph } from '../../DatePicker/components/Glyph';
 import { GlyphName } from '../../DatePicker/components/GlyphName';
@@ -15,6 +15,7 @@ import { useDatePickerConfig } from '../../DatePicker/hooks/useDatePickerConfig'
 import { useIsPhone } from '../../DatePicker/hooks/useIsPhone';
 import { useReturnFocus } from '../../DatePicker/hooks/useReturnFocus';
 import { useTypedDate, type TypedDate } from '../../DatePicker/hooks/useTypedDate';
+import { typedEditBind } from '../../DatePicker/utils/typedEdit';
 import { formatShort } from '../../DatePicker/utils/formatDate';
 import { useThemedInput } from '../../useThemedInput/useThemedInput';
 import { webFieldA11y } from '../../webFieldA11y/webFieldA11y';
@@ -94,12 +95,12 @@ export function WebDateRange({ value, onChange, onSubmit, fromLabel, toLabel, hi
         focus.onFocus?.(event);
         typed.onFocus();
       }}
-      onCut={typed.onEdit}
+      onCut={typedEditBind(typed).onCut}
       onKeyDown={(event) => {
-        if (isEditKey(event)) typed.onEdit();
+        typedEditBind(typed).onEditKey(event);
         onKeyDown(event);
       }}
-      onPaste={typed.onEdit}
+      onPaste={typedEditBind(typed).onPaste}
     />
   );
 
