@@ -39,7 +39,8 @@ export const anchorStyles = StyleSheet.create({ wrap: { position: 'relative', wi
 
 const EDIT_KEYS = new Set(['Backspace', 'Delete']);
 
-function isEditKey(event: KeyboardEvent<HTMLInputElement>): boolean {
+/** True for a key that edits the text: a printable character, Backspace or Delete. */
+export function isEditKey(event: KeyboardEvent<HTMLInputElement>): boolean {
   const printable = event.key.length === 1 && !event.ctrlKey && !event.metaKey;
   return printable || EDIT_KEYS.has(event.key);
 }

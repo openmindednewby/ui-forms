@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { DateRangeControl } from './DateRangeControl';
+import { formatShort } from '../DatePicker/utils/formatDate';
 
 const TID = 'dr';
 
@@ -86,5 +87,15 @@ describe('DateRangeControl — accessibility hint', () => {
     const hints = [screen.getByTestId(`${TID}-from`), screen.getByTestId(`${TID}-to`)].map((el) => el.getAttribute('title'));
 
     expect(hints).toEqual(['Pick the screening window', 'Pick the screening window']);
+  });
+});
+
+describe('DateRangeControl focus', () => {
+  it('with a stored start and focus returned without an edit, keeps the locale display', () => {
+    renderRange({ from: '2026-11-01', to: '' });
+
+    fireEvent.focus(screen.getByTestId(`${TID}-from`));
+
+    expect((screen.getByTestId(`${TID}-from`) as HTMLInputElement).value).toBe(formatShort('2026-11-01'));
   });
 });

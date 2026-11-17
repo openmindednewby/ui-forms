@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import { IconButton } from '@dloizides/ui-buttons';
 
 import { RangeSide } from './RangeSide';
-import { anchorStyles, ICON_ROOM, ICON_SLOT, type FocusHandlers } from '../../DateField/components/DatePickerInput';
+import { anchorStyles, ICON_ROOM, ICON_SLOT, isEditKey, type FocusHandlers } from '../../DateField/components/DatePickerInput';
 import { buildNativeInputStyle } from '../../DateField/components/WebDateInput';
 import { Glyph } from '../../DatePicker/components/Glyph';
 import { GlyphName } from '../../DatePicker/components/GlyphName';
@@ -52,8 +52,8 @@ export function WebDateRange({ value, onChange, onSubmit, fromLabel, toLabel, hi
   const [toError, setToError] = useState<string | undefined>(undefined);
   const anchorRef = useRef<View>(null);
   const fromRef = useRef<HTMLInputElement>(null);
-  const from = useTypedDate({ value: value.from, onChange: (next) => onChange({ from: next, to: value.to }), bounds: { max: orNone(value.to) }, format: formatShort, onError: setFromError, rangeMessage: labels.rangeOrder });
-  const to = useTypedDate({ value: value.to, onChange: (next) => onChange({ from: value.from, to: next }), bounds: { min: orNone(value.from) }, format: formatShort, onError: setToError, rangeMessage: labels.rangeOrder });
+  const from = useTypedDate({ value: value.from, onChange: (next) => onChange({ from: next, to: value.to }), bounds: { max: orNone(value.to) }, format: formatShort, onError: setFromError, rangeMessage: labels.rangeOrder, editOnType: true });
+  const to = useTypedDate({ value: value.to, onChange: (next) => onChange({ from: value.from, to: next }), bounds: { min: orNone(value.from) }, format: formatShort, onError: setToError, rangeMessage: labels.rangeOrder, editOnType: true });
   const { style, focusBind, hoverBind } = useThemedInput({ hasError: context.hasError, editable: true });
   const focus = focusBind as unknown as FocusHandlers;
   const webA11y = webFieldA11y({ describedById: context.describedById, hasError: context.hasError });
@@ -94,7 +94,12 @@ export function WebDateRange({ value, onChange, onSubmit, fromLabel, toLabel, hi
         focus.onFocus?.(event);
         typed.onFocus();
       }}
-      onKeyDown={onKeyDown}
+      onCut={typed.onEdit}
+      onKeyDown={(event) => {
+        if (isEditKey(event)) typed.onEdit();
+        onKeyDown(event);
+      }}
+      onPaste={typed.onEdit}
     />
   );
 
