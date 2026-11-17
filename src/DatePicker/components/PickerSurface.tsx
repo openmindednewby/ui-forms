@@ -48,10 +48,10 @@ export function PickerSurface({ anchorRef, phone, minWidth, label, testID, onDis
     </PickerDialog>
   );
   if (phone) {
-    return <SheetSurface accessibilityLabel={label} closeHint={labels.cancelHint} closeLabel={labels.cancel} progress={progress} scale={scale} testID={testID} translateY={still} onDismiss={onDismiss}>{body}</SheetSurface>;
+    return <SheetSurface accessibilityLabel={label} closeHint={labels.cancelHint} closeLabel={labels.cancel} progress={progress} testID={testID} translateY={still} onDismiss={onDismiss}>{body}</SheetSurface>;
   }
   return (
-    <DropdownSurface accessibilityLabel={label} anchorRef={anchorRef} closeHint={labels.cancelHint} closeLabel={labels.cancel} minWidth={minWidth} progress={progress} scale={scale} testID={testID} translateY={still} onDismiss={onDismiss}>
+    <DropdownSurface accessibilityLabel={label} anchorRef={anchorRef} closeHint={labels.cancelHint} closeLabel={labels.cancel} minWidth={minWidth} preferBelow progress={progress} scale={scale} testID={testID} translateY={still} onDismiss={onDismiss}>
       {body}
     </DropdownSurface>
   );

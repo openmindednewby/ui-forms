@@ -32,7 +32,7 @@ const REGULAR = 400;
 export function DayCell({ iso, state, testID, label, hint, onPick, onKey }: DayCellProps): React.ReactElement {
   const colors = usePickerColors();
   const { inRange, isEnd, isToday, enabled, focusable } = state;
-  const cellStyle: CSSProperties = { width: DAY_CELL_PX, height: DAY_CELL_PX, background: inRange && !isEnd ? colors.tint : 'transparent' };
+  const cellStyle: CSSProperties = { width: DAY_CELL_PX, height: DAY_CELL_PX, flexShrink: 0, background: inRange && !isEnd ? colors.tint : 'transparent' };
   const textColor = isEnd ? colors.onBrand : enabled ? colors.text : colors.textSecondary;
   const buttonStyle: CSSProperties = {
     width: DAY_CELL_PX,

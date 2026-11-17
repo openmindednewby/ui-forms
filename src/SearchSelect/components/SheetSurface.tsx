@@ -23,7 +23,7 @@ export function SheetSurface({ translateY, onDismiss, closeLabel, closeHint, tes
     <Modal transparent visible animationType="none" aria-label={accessibilityLabel} onRequestClose={onDismiss}>
       <View style={styles.backdrop}>
         <Pressable accessibilityHint={closeHint} accessibilityLabel={closeLabel} accessibilityRole="button" style={StyleSheet.absoluteFill} testID={`${testID}-backdrop`} onPress={onDismiss} />
-        <Animated.View style={[{ transform: scale === undefined ? [{ translateY }] : [{ translateY }, { scale }] }, progress === undefined ? null : { opacity: progress }]}>{children}</Animated.View>
+        <Animated.View testID={`${testID}-sheet`} style={[styles.sheet, { transform: scale === undefined ? [{ translateY }] : [{ translateY }, { scale }] }, progress === undefined ? null : { opacity: progress }]}>{children}</Animated.View>
       </View>
     </Modal>
   );
@@ -31,4 +31,5 @@ export function SheetSurface({ translateY, onDismiss, closeLabel, closeHint, tes
 
 const styles = StyleSheet.create({
   backdrop: { flex: 1, justifyContent: 'flex-end' },
+  sheet: { width: '100%', alignSelf: 'stretch' },
 });

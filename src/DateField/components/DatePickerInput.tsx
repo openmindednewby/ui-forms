@@ -13,6 +13,7 @@ import { useDatePickerConfig } from '../../DatePicker/hooks/useDatePickerConfig'
 import { useIsPhone } from '../../DatePicker/hooks/useIsPhone';
 import { useReturnFocus } from '../../DatePicker/hooks/useReturnFocus';
 import { useTypedDate } from '../../DatePicker/hooks/useTypedDate';
+import { closedFieldMinWidth } from '../../DatePicker/utils/fieldWidth';
 import { formatDisplay } from '../../DatePicker/utils/formatDate';
 import { useThemedInput } from '../../useThemedInput/useThemedInput';
 import { webFieldA11y } from '../../webFieldA11y/webFieldA11y';
@@ -69,7 +70,7 @@ export function DatePickerInput({ fieldProps, context, onTypedError }: DatePicke
   };
 
   return (
-    <View ref={anchorRef} style={anchorStyles.wrap}>
+    <View ref={anchorRef} style={[anchorStyles.wrap, { minWidth: closedFieldMinWidth(typed.display, ICON_ROOM) }]} testID={`${testID}-anchor`}>
       <input
         {...(webA11y as React.InputHTMLAttributes<HTMLInputElement>)}
         {...(hoverBind as React.InputHTMLAttributes<HTMLInputElement>)}

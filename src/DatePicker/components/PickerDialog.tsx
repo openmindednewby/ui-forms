@@ -46,7 +46,7 @@ export function PickerDialog({ testID, sheet, onDismiss, children }: PickerDialo
   };
 
   const shape: CSSProperties = sheet
-    ? { borderTopLeftRadius: SHEET_RADIUS, borderTopRightRadius: SHEET_RADIUS, maxHeight: SHEET_MAX_HEIGHT, overflowY: 'auto' }
+    ? { borderTopLeftRadius: SHEET_RADIUS, borderTopRightRadius: SHEET_RADIUS, width: '100%', maxHeight: SHEET_MAX_HEIGHT, overflowY: 'auto' }
     : { borderRadius: RADIUS, boxShadow: `0 12px 32px ${colors.border}` };
   const style: CSSProperties = { boxSizing: 'border-box', padding: PAD, background: colors.surface, color: colors.text, border: `1px solid ${colors.border}`, fontFamily: 'inherit', ...shape };
 

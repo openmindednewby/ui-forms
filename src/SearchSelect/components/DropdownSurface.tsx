@@ -20,15 +20,17 @@ export interface DropdownSurfaceProps {
   scale?: Animated.AnimatedInterpolation<number>;
   /** Accessible name of the modal dialog; omitted = unnamed, as before. */
   accessibilityLabel?: string;
+  /** Always open under the field, moved up to stay inside the viewport. */
+  preferBelow?: boolean;
 }
 
 /** The computer surface: a layer above the page beside the field, opening upward when there is no room below. */
-export function DropdownSurface({ progress, translateY, anchorRef, onDismiss, closeLabel, closeHint, testID, children, minWidth, scale, accessibilityLabel }: DropdownSurfaceProps): React.ReactElement {
+export function DropdownSurface({ progress, translateY, anchorRef, onDismiss, closeLabel, closeHint, testID, children, minWidth, scale, accessibilityLabel, preferBelow = false }: DropdownSurfaceProps): React.ReactElement {
   const { height: viewportHeight, width: viewportWidth } = useWindowDimensions();
   const anchor = useAnchorRect(anchorRef);
   const [panelHeight, setPanelHeight] = useState(0);
   const onLayout = useCallback((event: LayoutChangeEvent) => setPanelHeight(event.nativeEvent.layout.height), []);
-  const frame = anchor === null ? null : fitDropdownWidth(dropdownFrame(anchor, panelHeight, viewportHeight), viewportWidth, minWidth);
+  const frame = anchor === null ? null : fitDropdownWidth(dropdownFrame(anchor, panelHeight, viewportHeight, preferBelow), viewportWidth, minWidth);
   const place = frame === null ? null : { left: frame.left, width: frame.width, top: frame.top, bottom: frame.bottom };
 
   return (

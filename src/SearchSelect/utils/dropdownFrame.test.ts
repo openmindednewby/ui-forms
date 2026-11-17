@@ -78,3 +78,23 @@ describe('fitDropdownWidth with a minWidth', () => {
     expect([actual.width, actual.left]).toEqual([690, 100]);
   });
 });
+
+describe('dropdownFrame preferring below', () => {
+  it('with too little room below, stays below and moves up to fit the viewport', () => {
+    const anchor = { x: 24, y: 600, width: 300, height: 44 };
+
+    const frame = dropdownFrame(anchor, PANEL, VIEWPORT, true);
+
+    expect(frame).toEqual({ placement: DropdownPlacement.Below, left: 24, width: 300, top: 472 });
+  });
+});
+
+describe('dropdownFrame clamping', () => {
+  it('when opening above with a panel taller than the room above, keeps the top 8 px inside the viewport', () => {
+    const anchor = { x: 0, y: 500, width: 300, height: 44 };
+
+    const frame = dropdownFrame(anchor, 600, VIEWPORT);
+
+    expect(frame).toEqual({ placement: DropdownPlacement.Above, left: 0, width: 300, bottom: 192 });
+  });
+});

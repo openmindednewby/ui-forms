@@ -31,7 +31,7 @@ const CAPTION_FONT = 15;
 const WEEKDAY_FONT = 12;
 const BOLD = 700;
 const ROW: CSSProperties = { display: 'flex' };
-const EMPTY: CSSProperties = { width: DAY_CELL_PX, height: DAY_CELL_PX };
+const EMPTY: CSSProperties = { width: DAY_CELL_PX, height: DAY_CELL_PX, flexShrink: 0 };
 const FALLBACK = { year: 1970, month: 1, day: 1 };
 
 /** One month as a WAI-ARIA grid, starting on the locale week start. */

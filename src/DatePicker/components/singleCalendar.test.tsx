@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { DateField } from '../../DateField/DateField';
 import { DatePickerProvider } from '../hooks/useDatePickerConfig';
@@ -121,7 +121,7 @@ describe('DateField calendar', () => {
 
     fireEvent.keyDown(day('2026-11-20'), { key: 'Escape' });
 
-    expect([screen.queryByTestId(PICKER), document.activeElement]).toEqual([null, screen.getByTestId(TID)]);
+    await waitFor(() => expect([screen.queryByTestId(PICKER), document.activeElement]).toEqual([null, screen.getByTestId(TID)]));
   });
 
   it('after picking a day and Set date, emits it in the wire format', async () => {
