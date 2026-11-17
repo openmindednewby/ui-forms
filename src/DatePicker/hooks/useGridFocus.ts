@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react';
 
+import { useDatePickerConfig } from './useDatePickerConfig';
 import { nextFocusDay } from '../utils/calendarKeys';
 import { clampToBounds } from '../utils/isoDate';
 
@@ -17,6 +18,7 @@ export interface GridFocus {
 
 /** Roving focus for a WAI-ARIA date grid: focuses `initial` on mount, then follows key moves. */
 export function useGridFocus(initial: string, bounds: DateBounds, testID: string, onPick: (iso: string) => void): GridFocus {
+  const { firstDay } = useDatePickerConfig();
   const [focusedDay, setFocusedDay] = useState(initial);
   const focusPending = useRef(true);
   const { min, max } = bounds;
@@ -36,13 +38,13 @@ export function useGridFocus(initial: string, bounds: DateBounds, testID: string
         onPick(iso);
         return;
       }
-      const next = nextFocusDay(iso, event.key, event.shiftKey);
+      const next = nextFocusDay(iso, event.key, event.shiftKey, firstDay);
       if (next === null) return;
       event.preventDefault();
       focusPending.current = true;
       moveTo(next);
     },
-    [moveTo, onPick],
+    [moveTo, onPick, firstDay],
   );
 
   return { focusedDay, moveTo, onDayKey };

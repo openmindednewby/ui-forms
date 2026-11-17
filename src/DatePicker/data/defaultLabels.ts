@@ -27,5 +27,7 @@ export const DEFAULT_DATE_PICKER_LABELS: DatePickerLabels = {
   quarter: 'Quarter',
   dayCount: '{{p1}} days',
   invalidDate: 'Enter a real date',
+  rangeSeparator: ' – ',
+  rangeOrder: 'The start must be on or before the end',
   outOfRange: 'This date is outside the allowed range',
 };

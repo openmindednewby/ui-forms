@@ -1,8 +1,10 @@
 import React, { useMemo, type CSSProperties } from 'react';
 
 import { MIN_TOUCH_TARGET_PX } from '@dloizides/a11y';
+import { IconButton } from '@dloizides/ui-buttons';
 
-import { IconAction } from './IconAction';
+import { Glyph } from './Glyph';
+import { GlyphName } from './GlyphName';
 import { useDatePickerConfig } from '../hooks/useDatePickerConfig';
 import { usePickerColors } from '../hooks/usePickerColors';
 import { monthNames } from '../utils/formatDate';
@@ -46,7 +48,7 @@ export function MonthHeader({ focusedDay, bounds, testID, onMove }: MonthHeaderP
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-      <IconAction glyph="previous" hint={labels.monthHint} label={labels.previousMonth} testID={`${testID}-previous`} onPress={() => onMove(addMonths(focusedDay, -1))} />
+      <IconButton accessibilityHint={labels.monthHint} accessibilityLabel={labels.previousMonth} appearance="ghost" renderIcon={(color) => <Glyph color={color} name={GlyphName.Previous} />} testID={`${testID}-previous`} onPress={() => onMove(addMonths(focusedDay, -1))} />
       <div style={{ display: 'flex', gap: GAP }}>
         <select aria-label={labels.month} data-testid={`${testID}-month`} style={selectStyle} title={labels.monthHint} value={parts.month} onChange={(event) => setMonthYear(parts.year, Number(event.target.value))}>
           {names.map((name, index) => (
@@ -63,7 +65,7 @@ export function MonthHeader({ focusedDay, bounds, testID, onMove }: MonthHeaderP
           ))}
         </select>
       </div>
-      <IconAction glyph="next" hint={labels.monthHint} label={labels.nextMonth} testID={`${testID}-next`} onPress={() => onMove(addMonths(focusedDay, 1))} />
+      <IconButton accessibilityHint={labels.monthHint} accessibilityLabel={labels.nextMonth} appearance="ghost" renderIcon={(color) => <Glyph color={color} name={GlyphName.Next} />} testID={`${testID}-next`} onPress={() => onMove(addMonths(focusedDay, 1))} />
     </div>
   );
 }

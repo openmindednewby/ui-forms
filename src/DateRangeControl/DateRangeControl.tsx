@@ -4,6 +4,7 @@ import { Platform, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { NativeDateRange } from './components/NativeDateRange';
 import { WebDateRange } from './components/WebDateRange';
+import { useDatePickerConfig } from '../DatePicker/hooks/useDatePickerConfig';
 import { Field } from '../Field/Field';
 import { GapOwnedProvider } from '../FormGrid/formGridContext';
 
@@ -33,8 +34,18 @@ export interface DateRangeControlProps {
 }
 
 /** An inclusive from/to date range: one field with a range calendar on web, two `DateField`s on native. */
-export function DateRangeControl({ value, onChange, onSubmit, fromLabel, toLabel, accessibilityHint, style, testID }: DateRangeControlProps): React.ReactElement {
+export function DateRangeControl({
+  value,
+  onChange,
+  onSubmit,
+  fromLabel,
+  toLabel,
+  accessibilityHint,
+  style,
+  testID,
+}: DateRangeControlProps): React.ReactElement {
   const hint = accessibilityHint ?? `${fromLabel} – ${toLabel}`;
+  const { labels } = useDatePickerConfig();
   const [typedError, setTypedError] = useState<string | undefined>(undefined);
 
   if (!IS_WEB) {
@@ -47,7 +58,7 @@ export function DateRangeControl({ value, onChange, onSubmit, fromLabel, toLabel
   return (
     <GapOwnedProvider value>
       <View style={style} testID={`${testID}-range`}>
-        <Field error={typedError} label={`${fromLabel} – ${toLabel}`}>
+        <Field error={typedError} label={`${fromLabel}${labels.rangeSeparator}${toLabel}`}>
           {(context) => (
             <WebDateRange context={context} fromLabel={fromLabel} hint={hint} testID={testID} toLabel={toLabel} value={value} onChange={onChange} onSubmit={onSubmit} onTypedError={setTypedError} />
           )}

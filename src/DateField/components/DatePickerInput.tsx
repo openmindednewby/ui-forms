@@ -1,11 +1,17 @@
 import React, { useCallback, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react';
 
+import { StyleSheet, View } from 'react-native';
+
+import { IconButton } from '@dloizides/ui-buttons';
+
 import { buildNativeInputStyle } from './WebDateInput';
-import { IconAction } from '../../DatePicker/components/IconAction';
+import { Glyph } from '../../DatePicker/components/Glyph';
+import { GlyphName } from '../../DatePicker/components/GlyphName';
 import { PickerSurface } from '../../DatePicker/components/PickerSurface';
 import { SingleCalendar } from '../../DatePicker/components/SingleCalendar';
 import { useDatePickerConfig } from '../../DatePicker/hooks/useDatePickerConfig';
 import { useIsPhone } from '../../DatePicker/hooks/useIsPhone';
+import { useReturnFocus } from '../../DatePicker/hooks/useReturnFocus';
 import { useTypedDate } from '../../DatePicker/hooks/useTypedDate';
 import { formatDisplay } from '../../DatePicker/utils/formatDate';
 import { useThemedInput } from '../../useThemedInput/useThemedInput';
@@ -28,15 +34,15 @@ export interface FocusHandlers {
 export const SINGLE_PICKER_WIDTH = 340;
 export const ICON_ROOM = 48;
 export const ICON_SLOT: CSSProperties = { position: 'absolute', right: 2, top: 0, bottom: 0, display: 'flex', alignItems: 'center' };
-const WRAP: CSSProperties = { position: 'relative', width: '100%' };
+export const anchorStyles = StyleSheet.create({ wrap: { position: 'relative', width: '100%' } });
 
-/** A typeable date with a calendar button; the calendar opens as a sheet on a phone and a popover on desktop. */
+/** A typeable date with a calendar button; the calendar opens as a sheet on a phone and a dropdown on desktop. */
 export function DatePickerInput({ fieldProps, context, onTypedError }: DatePickerInputProps): React.ReactElement {
   const { label, value, onChange, onSubmit, accessibilityHint, testID, required, disabled = false, min, max } = fieldProps;
   const { labels } = useDatePickerConfig();
   const phone = useIsPhone();
   const [open, setOpen] = useState(false);
-  const anchorRef = useRef<HTMLDivElement>(null);
+  const anchorRef = useRef<View>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const bounds = { min, max };
   const typed = useTypedDate({ value, onChange, bounds, format: formatDisplay, onError: onTypedError });
@@ -44,10 +50,8 @@ export function DatePickerInput({ fieldProps, context, onTypedError }: DatePicke
   const focus = focusBind as unknown as FocusHandlers;
   const webA11y = webFieldA11y({ describedById: context.describedById, hasError: context.hasError, required });
 
-  const close = useCallback(() => {
-    setOpen(false);
-    inputRef.current?.focus();
-  }, []);
+  const close = useCallback(() => setOpen(false), []);
+  useReturnFocus(open, inputRef);
   const commit = (iso: string): void => {
     onTypedError?.(undefined);
     onChange(iso);
@@ -65,7 +69,7 @@ export function DatePickerInput({ fieldProps, context, onTypedError }: DatePicke
   };
 
   return (
-    <div ref={anchorRef} style={WRAP}>
+    <View ref={anchorRef} style={anchorStyles.wrap}>
       <input
         {...(webA11y as React.InputHTMLAttributes<HTMLInputElement>)}
         {...(hoverBind as React.InputHTMLAttributes<HTMLInputElement>)}
@@ -91,13 +95,13 @@ export function DatePickerInput({ fieldProps, context, onTypedError }: DatePicke
         onKeyDown={onKeyDown}
       />
       <div style={ICON_SLOT}>
-        <IconAction popup disabled={disabled} expanded={open} glyph="calendar" hint={labels.openCalendarHint} label={labels.openCalendar} testID={`${testID}-calendar`} onPress={() => setOpen((current) => !current)} />
+        <IconButton accessibilityHint={labels.openCalendarHint} accessibilityLabel={labels.openCalendar} appearance="ghost" disabled={disabled} renderIcon={(color) => <Glyph color={color} name={GlyphName.Calendar} />} testID={`${testID}-calendar`} onPress={() => setOpen((current) => !current)} />
       </div>
       {open ? (
-        <PickerSurface anchorRef={anchorRef} label={labels.dialog} phone={phone} testID={`${testID}-picker`} width={SINGLE_PICKER_WIDTH} onDismiss={close}>
+        <PickerSurface anchorRef={anchorRef} label={labels.dialog} minWidth={SINGLE_PICKER_WIDTH} phone={phone} testID={`${testID}-picker`} onDismiss={close}>
           <SingleCalendar bounds={bounds} testID={`${testID}-picker`} value={value} onCommit={commit} />
         </PickerSurface>
       ) : null}
-    </div>
+    </View>
   );
 }

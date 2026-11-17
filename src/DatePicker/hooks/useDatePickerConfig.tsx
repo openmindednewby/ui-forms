@@ -2,6 +2,7 @@ import React, { createContext, useContext, useMemo } from 'react';
 
 import { DEFAULT_DATE_PICKER_LABELS } from '../data/defaultLabels';
 import { todayIso } from '../utils/isoDate';
+import { weekFirstDay } from '../utils/weekStart';
 
 import type { DatePickerLabels } from '../types';
 
@@ -9,12 +10,14 @@ export interface DatePickerConfig {
   labels: DatePickerLabels;
   locale?: string;
   today: string;
+  /** First day of the week from the locale, 1 = Monday ... 7 = Sunday. */
+  firstDay: number;
 }
 
 export interface DatePickerProviderProps {
   /** PRE-LOCALIZED picker labels; any omitted key keeps its English default. */
   labels?: Partial<DatePickerLabels>;
-  /** BCP 47 locale for display and typing order; omitted = the runtime locale. */
+  /** BCP 47 locale for display, typing order and week start; omitted = the runtime locale. */
   locale?: string;
   /** Fixed `YYYY-MM-DD` today, for demos and tests. */
   today?: string;
@@ -37,5 +40,6 @@ export function DatePickerProvider({ labels, locale, today, children }: DatePick
 
 export function useDatePickerConfig(): DatePickerConfig {
   const config = useContext(DatePickerContext);
-  return { labels: config.labels, locale: config.locale, today: config.today ?? todayIso() };
+  const firstDay = useMemo(() => weekFirstDay(config.locale), [config.locale]);
+  return { labels: config.labels, locale: config.locale, today: config.today ?? todayIso(), firstDay };
 }

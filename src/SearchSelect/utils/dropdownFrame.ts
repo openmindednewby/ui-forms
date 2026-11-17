@@ -33,9 +33,9 @@ export function dropdownFrame(anchor: AnchorRect, panelHeight: number, viewportH
   return { ...base, top: anchor.y + anchor.height };
 }
 
-/** Widens a narrow anchor's list to a readable width and keeps it inside the viewport. */
-export function fitDropdownWidth(frame: DropdownFrame, viewportWidth: number): DropdownFrame {
-  const width = Math.max(frame.width, Math.min(MIN_PANEL_WIDTH, viewportWidth - EDGE - EDGE));
+/** Widens a narrow anchor's list to `minWidth` (default a readable width) and keeps it inside the viewport. */
+export function fitDropdownWidth(frame: DropdownFrame, viewportWidth: number, minWidth = MIN_PANEL_WIDTH): DropdownFrame {
+  const width = Math.max(frame.width, Math.min(minWidth, viewportWidth - EDGE - EDGE));
   const left = Math.max(EDGE, Math.min(frame.left, viewportWidth - width - EDGE));
   return { ...frame, width, left: frame.width >= width ? frame.left : left };
 }

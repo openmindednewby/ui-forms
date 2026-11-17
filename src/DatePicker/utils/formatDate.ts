@@ -1,16 +1,17 @@
+import { DatePart } from './DatePart';
 import { isValidParts, parseIso, toIso } from './isoDate';
-
-type DatePart = 'day' | 'month' | 'year';
 
 const SAMPLE_UTC = Date.UTC(2027, 5, 12);
 const TWO_DIGIT_YEAR = 100;
 const CENTURY = 2000;
 const PART_COUNT = 3;
 const PAD = 2;
+const MONDAY = 1;
 const ISO_LIKE = /^\d{4}-\d{1,2}-\d{1,2}$/;
 const MONTH_INDEXES = Array.from({ length: 12 }, (_unused, index) => index);
-const MONDAY_FIRST_UTC = Array.from({ length: 7 }, (_unused, index) => Date.UTC(2024, 0, 1 + index));
+const WEEK_OFFSETS = Array.from({ length: 7 }, (_unused, index) => index);
 const UTC = 'UTC';
+const PART_OF: Readonly<Partial<Record<string, DatePart>>> = { day: DatePart.Day, month: DatePart.Month, year: DatePart.Year };
 
 function utcOf(iso: string): Date | null {
   const parts = parseIso(iso);
@@ -41,21 +42,26 @@ export function monthNames(locale?: string): string[] {
   return MONTH_INDEXES.map((month) => format.format(new Date(Date.UTC(2024, month, 1))));
 }
 
-export function weekdayNames(locale?: string): string[] {
+/** Short weekday names starting on `firstDay` (1 = Monday ... 7 = Sunday). */
+export function weekdayNames(locale?: string, firstDay = MONDAY): string[] {
   const format = new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone: UTC });
-  return MONDAY_FIRST_UTC.map((time) => format.format(new Date(time)));
+  return WEEK_OFFSETS.map((offset) => format.format(new Date(Date.UTC(2024, 0, firstDay + offset))));
 }
 
 export function typedOrder(locale?: string): DatePart[] {
   const parts = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'numeric', year: 'numeric', timeZone: UTC }).formatToParts(new Date(SAMPLE_UTC));
-  return parts.map((part) => part.type).filter((type): type is DatePart => type === 'day' || type === 'month' || type === 'year');
+  return parts.map((part) => PART_OF[part.type]).filter((part): part is DatePart => part !== undefined);
 }
 
 /** The numeric form shown while typing, in the locale's order, e.g. en-GB `02/06/2027`. */
 export function formatTyped(iso: string, locale?: string): string {
   const parts = parseIso(iso);
   if (parts === null) return iso;
-  const text: Record<DatePart, string> = { day: String(parts.day).padStart(PAD, '0'), month: String(parts.month).padStart(PAD, '0'), year: String(parts.year) };
+  const text: Record<DatePart, string> = {
+    [DatePart.Day]: String(parts.day).padStart(PAD, '0'),
+    [DatePart.Month]: String(parts.month).padStart(PAD, '0'),
+    [DatePart.Year]: String(parts.year),
+  };
   return typedOrder(locale).map((part) => text[part]).join('/');
 }
 
@@ -71,7 +77,7 @@ export function parseTyped(text: string, locale?: string): string | null {
   if (numbers.length !== PART_COUNT) return null;
   const order = typedOrder(locale);
   const read = (part: DatePart): number => numbers[order.indexOf(part)] ?? 0;
-  const rawYear = read('year');
-  const parts = { year: rawYear < TWO_DIGIT_YEAR ? CENTURY + rawYear : rawYear, month: read('month'), day: read('day') };
+  const rawYear = read(DatePart.Year);
+  const parts = { year: rawYear < TWO_DIGIT_YEAR ? CENTURY + rawYear : rawYear, month: read(DatePart.Month), day: read(DatePart.Day) };
   return isValidParts(parts) ? toIso(parts) : null;
 }

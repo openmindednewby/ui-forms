@@ -68,3 +68,13 @@ describe('fitDropdownWidth', () => {
     expect(fitted).toEqual(frame);
   });
 });
+
+describe('fitDropdownWidth with a minWidth', () => {
+  it('with a 300 px anchor and a 690 px minimum, widens to 690 inside the viewport', () => {
+    const frame = { placement: DropdownPlacement.Below, left: 100, width: 300, top: 40 };
+
+    const actual = fitDropdownWidth(frame, 1280, 690);
+
+    expect([actual.width, actual.left]).toEqual([690, 100]);
+  });
+});

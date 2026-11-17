@@ -1,24 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 
+import { useReducedMotion } from '../../SearchSelect/hooks/useReducedMotion';
 import { monthSlideStyle } from '../utils/motionStyles';
-
-const REDUCED_QUERY = '(prefers-reduced-motion: reduce)';
-
-function canQuery(): boolean {
-  return typeof window !== 'undefined' && typeof window.matchMedia === 'function';
-}
-
-export function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(() => canQuery() && window.matchMedia(REDUCED_QUERY).matches);
-  useEffect(() => {
-    if (!canQuery()) return undefined;
-    const media = window.matchMedia(REDUCED_QUERY);
-    const update = (): void => setReduced(media.matches);
-    media.addEventListener('change', update);
-    return () => media.removeEventListener('change', update);
-  }, []);
-  return reduced;
-}
 
 /** False for the first painted frame of `key`, then true, so a CSS transition runs from the start state. */
 export function useEntered(key: string, reduced: boolean): boolean {
@@ -38,7 +21,7 @@ export function useEntered(key: string, reduced: boolean): boolean {
 }
 
 export function useMonthSlide(month: string): CSSProperties {
-  const reduced = usePrefersReducedMotion();
+  const reduced = useReducedMotion();
   const previous = useRef(month);
   const direction = useRef(0);
   if (previous.current !== month) {

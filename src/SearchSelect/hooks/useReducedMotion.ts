@@ -12,10 +12,10 @@ export function useReducedMotion(): boolean {
         if (active) setReduced(value);
       })
       .catch(() => undefined);
-    const subscription = AccessibilityInfo.addEventListener('reduceMotionChanged', setReduced);
+    const subscription: { remove: () => void } | undefined = AccessibilityInfo.addEventListener('reduceMotionChanged', setReduced);
     return () => {
       active = false;
-      subscription.remove();
+      subscription?.remove();
     };
   }, []);
   return reduced;

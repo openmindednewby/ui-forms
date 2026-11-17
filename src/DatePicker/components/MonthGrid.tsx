@@ -34,13 +34,13 @@ const ROW: CSSProperties = { display: 'flex' };
 const EMPTY: CSSProperties = { width: DAY_CELL_PX, height: DAY_CELL_PX };
 const FALLBACK = { year: 1970, month: 1, day: 1 };
 
-/** One month as a WAI-ARIA grid, Monday first. */
+/** One month as a WAI-ARIA grid, starting on the locale week start. */
 export function MonthGrid({ month, selection, focusedDay, bounds, testID, onPick, onKey, showCaption = false, motion }: MonthGridProps): React.ReactElement {
-  const { labels, locale, today } = useDatePickerConfig();
+  const { labels, locale, today, firstDay } = useDatePickerConfig();
   const colors = usePickerColors();
   const parts = parseIso(month) ?? FALLBACK;
-  const weeks = useMemo(() => buildMonthGrid(parts.year, parts.month), [parts.year, parts.month]);
-  const weekdays = useMemo(() => weekdayNames(locale), [locale]);
+  const weeks = useMemo(() => buildMonthGrid(parts.year, parts.month, firstDay), [parts.year, parts.month, firstDay]);
+  const weekdays = useMemo(() => weekdayNames(locale, firstDay), [locale, firstDay]);
   const title = formatMonthYear(month, locale);
   const end = selection.to === '' ? selection.from : selection.to;
 

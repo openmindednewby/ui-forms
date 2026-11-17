@@ -2,8 +2,9 @@ import { nextFocusDay } from './calendarKeys';
 import { formatDisplay, formatTyped, parseTyped } from './formatDate';
 import { addMonths, clampToBounds, daysBetweenInclusive, isWithinBounds, parseIso } from './isoDate';
 import { buildMonthGrid } from './monthGrid';
-import { popoverPlacement } from './popoverPlacement';
+import { RangePreset } from './RangePreset';
 import { matchingPreset, pickRangeDay, presetRange } from './rangePresets';
+import { weekFirstDay } from './weekStart';
 
 describe('parseIso', () => {
   it('with 31 February, returns null', () => {
@@ -118,11 +119,11 @@ describe('nextFocusDay', () => {
 
 describe('presetRange', () => {
   it.each([
-    ['today', '2026-11-16', '2026-11-16'],
-    ['last7Days', '2026-11-10', '2026-11-16'],
-    ['thisMonth', '2026-11-01', '2026-11-16'],
-    ['quarter', '2026-10-01', '2026-11-16'],
-  ] as const)('with %s on 16 Nov 2026, returns %s to %s', (id, from, to) => {
+    [RangePreset.Today, '2026-11-16', '2026-11-16'],
+    [RangePreset.Last7Days, '2026-11-10', '2026-11-16'],
+    [RangePreset.ThisMonth, '2026-11-01', '2026-11-16'],
+    [RangePreset.Quarter, '2026-10-01', '2026-11-16'],
+  ])('with %s on 16 Nov 2026, returns %s to %s', (id, from, to) => {
     const actual = presetRange(id, '2026-11-16');
 
     expect(actual).toEqual({ from, to });
@@ -133,7 +134,7 @@ describe('matchingPreset', () => {
   it('with the last 7 days, returns last7Days', () => {
     const actual = matchingPreset({ from: '2026-11-10', to: '2026-11-16' }, '2026-11-16');
 
-    expect(actual).toBe('last7Days');
+    expect(actual).toBe(RangePreset.Last7Days);
   });
 });
 
@@ -151,10 +152,29 @@ describe('pickRangeDay', () => {
   });
 });
 
-describe('popoverPlacement', () => {
-  it('near the right edge, shifts left to stay in the viewport', () => {
-    const actual = popoverPlacement({ top: 0, left: 1000, width: 280, bottom: 40 }, 340, 1280);
+describe('weekFirstDay', () => {
+  it.each([
+    ['en-US', 7],
+    ['en-GB', 1],
+  ])('in %s, returns %s', (locale, expected) => {
+    const actual = weekFirstDay(locale);
 
-    expect(actual).toEqual({ top: 44, left: 932, width: 340 });
+    expect(actual).toBe(expected);
+  });
+});
+
+describe('buildMonthGrid with a Sunday week start', () => {
+  it('for November 2026, puts Sunday the 1st in the first column', () => {
+    const actual = buildMonthGrid(2026, 11, 7)[0];
+
+    expect(actual).toEqual(['2026-11-01', '2026-11-02', '2026-11-03', '2026-11-04', '2026-11-05', '2026-11-06', '2026-11-07']);
+  });
+});
+
+describe('nextFocusDay with a Sunday week start', () => {
+  it('with Home from Fri 20 Nov 2026, moves to Sun 15 Nov', () => {
+    const actual = nextFocusDay('2026-11-20', 'Home', false, 7);
+
+    expect(actual).toBe('2026-11-15');
   });
 });

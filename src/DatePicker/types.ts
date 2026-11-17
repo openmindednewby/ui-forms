@@ -26,6 +26,9 @@ export interface DatePickerLabels {
   /** `{{p1}}` is the number of days. */
   dayCount: string;
   invalidDate: string;
+  /** Between two dates of a range, e.g. ` – `. */
+  rangeSeparator: string;
+  rangeOrder: string;
   outOfRange: string;
 }
 

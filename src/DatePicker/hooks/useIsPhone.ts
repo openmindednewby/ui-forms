@@ -1,7 +1,7 @@
 import { useWindowDimensions } from 'react-native';
 
-export const PHONE_MAX_WIDTH = 768;
+import { isWideFormLayout } from '../../ResponsiveFormLayout/isWideFormLayout';
 
 export function useIsPhone(): boolean {
-  return useWindowDimensions().width < PHONE_MAX_WIDTH;
+  return !isWideFormLayout(useWindowDimensions().width);
 }

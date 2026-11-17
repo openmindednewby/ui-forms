@@ -1,16 +1,16 @@
-import { monthSlideStyle, openMotionStyle } from './motionStyles';
+import { monthSlideStyle, resolveOpenMotion } from './motionStyles';
 
-describe('openMotionStyle', () => {
-  it('with reduced motion, shows the end state with no transition', () => {
-    const actual = openMotionStyle(false, true, 'top');
+describe('resolveOpenMotion', () => {
+  it('with reduced motion, opens at once at full size', () => {
+    const actual = resolveOpenMotion(true);
 
-    expect(actual).toEqual({ opacity: 1, transform: 'none' });
+    expect(actual).toEqual({ durationMs: 0, fromScale: 1 });
   });
 
-  it('before entering, starts faded and scaled down with a 180 ms transition', () => {
-    const actual = openMotionStyle(false, false, 'top');
+  it('without reduced motion, grows from 0.96 over 180 ms', () => {
+    const actual = resolveOpenMotion(false);
 
-    expect([actual.opacity, actual.transform, String(actual.transition).includes('180ms')]).toEqual([0, 'scale(0.96)', true]);
+    expect(actual).toEqual({ durationMs: 180, fromScale: 0.96 });
   });
 });
 

@@ -10,6 +10,7 @@ const DAYS_IN_WEEK = 7;
 const PAD = 2;
 const YEAR_PAD = 4;
 const SUNDAY = 0;
+const MONDAY = 1;
 const MS_PER_DAY = 86_400_000;
 const MONTH_PREFIX = 'YYYY-MM'.length;
 const EPOCH = { year: 1970, month: 1, day: 1 };
@@ -57,10 +58,11 @@ export function addMonths(iso: string, months: number): string {
   return toIso({ year, month, day: Math.min(parts.day, daysInMonth(year, month)) });
 }
 
-/** Monday = 0 ... Sunday = 6. */
-export function weekdayIndex(iso: string): number {
+/** Days after the week start `firstDay` (1 = Monday ... 7 = Sunday). */
+export function weekdayIndex(iso: string, firstDay = MONDAY): number {
   const day = toUtc(iso).getUTCDay();
-  return day === SUNDAY ? DAYS_IN_WEEK - 1 : day - 1;
+  const isoDay = day === SUNDAY ? DAYS_IN_WEEK : day;
+  return (isoDay - firstDay + DAYS_IN_WEEK) % DAYS_IN_WEEK;
 }
 
 export function daysBetweenInclusive(from: string, to: string): number {

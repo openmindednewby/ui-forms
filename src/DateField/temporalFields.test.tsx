@@ -16,6 +16,9 @@ const LABEL = 'Expected close';
 const A11Y_HINT = 'Pick the expected close';
 const FIELD_HINT = 'Leave empty if unknown';
 const FIELD_ERROR = 'Must be in the future';
+const INVALID_DATE = 'Not a date';
+const OUT_OF_RANGE = 'Outside the window';
+const PICKER_LABELS = { invalidDate: INVALID_DATE, outOfRange: OUT_OF_RANGE };
 
 interface Rendered {
   input: HTMLInputElement;
@@ -28,7 +31,7 @@ function renderField(Component: ComponentType<DateFieldProps>, overrides: Partia
   const onChange = jest.fn();
   const onSubmit = jest.fn();
   const element = (value: string): React.ReactElement => (
-    <DatePickerProvider locale="en-GB" today="2026-11-16">
+    <DatePickerProvider labels={PICKER_LABELS} locale="en-GB" today="2026-11-16">
       <Component accessibilityHint={A11Y_HINT} label={LABEL} testID={TEST_ID} onChange={onChange} onSubmit={onSubmit} {...overrides} value={value} />
     </DatePickerProvider>
   );
@@ -226,7 +229,7 @@ describe('DateField', () => {
 
     fireEvent.blur(input);
 
-    expect([screen.getByRole('alert').textContent, onChange.mock.calls.length]).toEqual(['Enter a real date', 0]);
+    expect([screen.getByRole('alert').textContent, onChange.mock.calls.length]).toEqual([INVALID_DATE, 0]);
   });
 
   it('with a typed date before min, shows the range error and emits nothing', () => {
@@ -235,7 +238,7 @@ describe('DateField', () => {
 
     fireEvent.change(input, { target: { value: '2026-10-01' } });
 
-    expect([screen.getByRole('alert').textContent, onChange.mock.calls.length]).toEqual(['This date is outside the allowed range', 0]);
+    expect([screen.getByRole('alert').textContent, onChange.mock.calls.length]).toEqual([OUT_OF_RANGE, 0]);
   });
 
   it('with an impossible typed date, Enter does not run onSubmit', () => {
@@ -248,11 +251,11 @@ describe('DateField', () => {
     expect(onSubmit).not.toHaveBeenCalled();
   });
 
-  it('with Alt+ArrowDown in the field, opens the calendar', () => {
+  it('with Alt+ArrowDown in the field, opens the calendar', async () => {
     const { input } = renderField(DateField);
 
     fireEvent.keyDown(input, { key: 'ArrowDown', altKey: true });
 
-    expect(screen.getByRole('dialog')).toBeTruthy();
+    expect(await screen.findByTestId(`${TEST_ID}-picker`)).toBeTruthy();
   });
 });

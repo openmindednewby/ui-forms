@@ -12,6 +12,8 @@ export interface TypedDateArgs {
   bounds: DateBounds;
   format: (iso: string, locale?: string) => string;
   onError?: (message: string | undefined) => void;
+  /** Replaces the out-of-bounds error, e.g. a range end order message. */
+  rangeMessage?: string;
 }
 
 export interface TypedDate {
@@ -24,7 +26,7 @@ export interface TypedDate {
 }
 
 /** A typeable date: shows the locale display at rest, the numeric form while focused, emits only valid in-bounds dates. */
-export function useTypedDate({ value, onChange, bounds, format, onError }: TypedDateArgs): TypedDate {
+export function useTypedDate({ value, onChange, bounds, format, onError, rangeMessage }: TypedDateArgs): TypedDate {
   const { labels, locale } = useDatePickerConfig();
   const [focused, setFocused] = useState(false);
   const [text, setText] = useState('');
@@ -41,7 +43,7 @@ export function useTypedDate({ value, onChange, bounds, format, onError }: Typed
     if (typed.trim() === '') return undefined;
     const parsed = parseTyped(typed, locale);
     if (parsed === null) return labels.invalidDate;
-    return isWithinBounds(parsed, bounds.min, bounds.max) ? undefined : labels.outOfRange;
+    return isWithinBounds(parsed, bounds.min, bounds.max) ? undefined : rangeMessage ?? labels.outOfRange;
   };
 
   const onText = (next: string): void => {

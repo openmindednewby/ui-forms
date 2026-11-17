@@ -6,15 +6,14 @@ export const MONTH_SLIDE_PX = 16;
 const OPEN_SCALE = 0.96;
 const EASE = 'cubic-bezier(0.2, 0, 0, 1)';
 
-/** Open: scale + fade from the field; reduced motion shows the end state at once. */
-export function openMotionStyle(entered: boolean, reduced: boolean, origin: 'top' | 'bottom'): CSSProperties {
-  if (reduced) return { opacity: 1, transform: 'none' };
-  return {
-    opacity: entered ? 1 : 0,
-    transform: entered ? 'scale(1)' : `scale(${OPEN_SCALE})`,
-    transformOrigin: `${origin} left`,
-    transition: `opacity ${OPEN_MS}ms ${EASE}, transform ${OPEN_MS}ms ${EASE}`,
-  };
+export interface OpenMotion {
+  durationMs: number;
+  fromScale: number;
+}
+
+/** Open: scale + fade from the field; reduced motion opens at once. */
+export function resolveOpenMotion(reduced: boolean): OpenMotion {
+  return reduced ? { durationMs: 0, fromScale: 1 } : { durationMs: OPEN_MS, fromScale: OPEN_SCALE };
 }
 
 /** Month change: a short slide in the direction of travel; none on first show or reduced motion. */
