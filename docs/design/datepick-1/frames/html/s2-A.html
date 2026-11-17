@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>:root{--bg:#FFFFFF;--surface:#F5F7FA;--raised:#FFFFFF;--text:#0D2340;--text2:#4A5A72;--border:#7F8DA3;--divider:#D7DDE6;--primary:#123159;--onp:#FFFFFF;--error:#B42318;--scrim:rgba(13,35,64,.40);--pop:0 24px 60px -16px rgba(13,21,38,.32)}
+*{box-sizing:border-box;margin:0}
+body{font:15px/1.4 "Segoe UI",system-ui,sans-serif;color:var(--text);background:var(--bg)}
+.top{height:44px;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--divider);font-weight:600}
+body.d .top{height:56px;padding:0 32px;gap:28px}
+.top .nl{color:var(--text2);font-weight:400;font-size:14px}.top .nl.on{color:var(--text);font-weight:600}
+main{padding:8px 16px 0}
+body.d main{max-width:960px;margin:32px auto 0;padding:32px;border:1px solid var(--divider);border-radius:12px}
+.ttl{font-size:22px;font-weight:700;line-height:28px;margin-bottom:20px}
+.row{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start}.row>.fld{flex:1;min-width:0}
+body.d .row{gap:20px;margin-bottom:20px}.row.in{margin-bottom:0}
+.fld{position:relative}.tgt{position:relative}
+body.d .tgt.rng{max-width:420px}body.d .grp{max-width:520px}
+.lbl{font-size:13px;font-weight:600;line-height:20px;margin-bottom:4px}.lbl.sm{font-weight:400;color:var(--text2)}
+.req{color:var(--error)}
+.ctl{height:48px;border:1px solid var(--border);border-radius:9px;background:var(--raised);display:flex;align-items:center;padding:0 0 0 12px;gap:6px;font-variant-numeric:tabular-nums;width:100%}
+.ctl.focus{outline:2px solid var(--primary);outline-offset:1px}
+.ctl.bad{border:2px solid var(--error)}
+.ctl.dis{background:var(--surface);color:var(--text2);border-style:dashed}
+.nat{display:block;padding:0 12px;font:inherit;color:var(--text)}
+.val{flex:1;white-space:nowrap;overflow:hidden;min-width:0}
+.seg{background:var(--primary);color:var(--onp);border-radius:4px;padding:1px 3px}
+.ib{width:44px;height:44px;display:grid;place-items:center;border:0;background:none;color:var(--text);flex:none;border-radius:8px}
+.ic{margin-right:12px;flex:none}
+.hint{font-size:13px;color:var(--text2);line-height:20px;margin-top:4px}
+.err{font-size:13px;color:var(--error);line-height:18px;margin-top:4px;display:flex;gap:4px;align-items:flex-start}.err svg{flex:none;margin-top:1px}
+.pop{margin-top:8px;background:var(--raised);border:1px solid var(--divider);border-radius:12px;box-shadow:var(--pop);padding:8px}
+.pop.abs{position:absolute;top:100%;right:0;width:340px;z-index:2}
+.pop.wide{left:0;right:auto;width:auto;padding:12px}
+.mhead{display:flex;align-items:center;justify-content:space-between;height:44px}
+.mt{font-weight:700}.sp{width:44px}
+.nb{width:44px;height:44px;border:0;background:none;display:grid;place-items:center;border-radius:8px;color:var(--text)}
+.menus{display:flex;gap:2px}
+.mb{height:44px;padding:0 8px;border:0;background:none;font:inherit;font-weight:700;display:inline-flex;align-items:center;gap:4px;color:var(--text);border-radius:8px}
+.wk,.grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.wk span{font-size:12px;color:var(--text2);text-align:center;line-height:20px}
+.cell{height:44px;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.cell b{width:40px;height:40px;display:grid;place-items:center;border-radius:999px;font-weight:400}
+.cell b.today{box-shadow:inset 0 0 0 2px var(--primary);font-weight:700}
+.cell b.sel,.cell b.rs,.cell b.re{background:var(--primary);color:var(--onp);font-weight:700}
+.cell b.dis{color:var(--text2);opacity:.5;text-decoration:line-through}
+.cell.in{background:var(--divider)}
+.cell.bs{background:linear-gradient(90deg,transparent 50%,var(--divider) 50%)}
+.cell.be{background:linear-gradient(90deg,var(--divider) 50%,transparent 50%)}
+.foot{display:flex;gap:8px;align-items:center;padding-top:8px;border-top:1px solid var(--divider);margin-top:4px}
+.grow{flex:1}
+.btn{height:44px;padding:0 16px;border-radius:9px;border:1px solid var(--border);background:var(--raised);font:inherit;font-weight:600;color:var(--text);white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
+.btn.p{background:var(--primary);border-color:var(--primary);color:var(--onp)}.btn.g{border-color:transparent}
+.sum{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chips{display:flex;gap:6px;padding:4px 0}
+.chip{height:44px;padding:0 10px;border:1px solid var(--border);border-radius:999px;background:var(--raised);font:inherit;font-size:13px;color:var(--text);display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.chip.on{border:2px solid var(--primary);font-weight:700}
+body.d .chips{gap:8px;padding:0 0 8px}body.d .chip{padding:0 14px;font-size:14px}
+.rail{width:160px;display:flex;flex-direction:column;gap:4px;padding-right:12px;border-right:1px solid var(--divider)}
+.pre{height:44px;text-align:left;padding:0 10px;border:1px solid transparent;background:none;font:inherit;font-size:14px;border-radius:8px;color:var(--text);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.pre.on{border:2px solid var(--primary);font-weight:700}
+.ra{display:flex;gap:16px}.months{display:flex;gap:24px}.mon{width:322px}
+.scrim{position:fixed;inset:0;background:var(--scrim);z-index:3}
+.sheet{position:fixed;left:0;right:0;bottom:0;background:var(--raised);border-radius:16px 16px 0 0;padding:0 12px 12px;z-index:4;box-shadow:var(--pop)}
+.handle{width:36px;height:4px;border-radius:2px;background:var(--border);margin:8px auto 4px}
+.shead{padding:4px 0 8px}
+.srow{display:flex;gap:8px;align-items:center;height:52px}
+.mlab{font-weight:700;line-height:28px;padding-left:4px}.peek{color:var(--text2)}
+.segrow{display:flex;gap:8px;align-items:center;height:56px}
+.sg{flex:1;height:48px;border:1px solid var(--border);border-radius:9px;background:var(--raised);display:flex;flex-direction:column;justify-content:center;padding:0 10px;text-align:left;font:inherit;font-size:14px;font-weight:600;color:var(--text)}
+.sg small{font-size:11px;color:var(--text2);font-weight:400;line-height:14px}.sg.on{border:2px solid var(--primary)}</style></head><body class="d"><header class="top"><span>Workspace</span><span class="nl on">Deals</span><span class="nl">Tasks</span><span class="nl">Schedules</span><span class="nl">Imports</span></header><main data-anchor><h1 class="ttl">New deal</h1><div class="row"><div class="fld"><div class="lbl" data-item="label">Booked on</div><div class="ctl dis" data-disabled data-item="disabled"><span class="val">02 Nov 2026</span><svg class="ic" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="4.5" width="14" height="12.5" rx="2"/><path d="M3 8.5h14M7 2.5v4M13 2.5v4"/></svg></div><div class="hint">Set by the system.</div></div><div class="fld"><div class="lbl" data-item="label">Value date<span class="req" data-item="required"> *</span></div><div class="ctl bad"><span class="val">28 Nov 2026</span><button class="ib" data-tap aria-label="Open calendar"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="4.5" width="14" height="12.5" rx="2"/><path d="M3 8.5h14M7 2.5v4M13 2.5v4"/></svg></button></div><div class="err" data-item="error"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10" cy="10" r="8"/><path d="M10 5.5v5.5M10 14v.3"/></svg><span>On or after 01 Dec 2026.</span></div></div><div class="fld tgt"><div class="lbl" data-item="label">Expected close<span class="req" data-item="required"> *</span></div><div class="ctl focus"><span class="val"><span class="seg">20</span> Nov 2026</span><button class="ib" data-tap aria-label="Open calendar"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="4.5" width="14" height="12.5" rx="2"/><path d="M3 8.5h14M7 2.5v4M13 2.5v4"/></svg></button></div><div class="hint" data-item="hint">When you expect to sign. <span data-item="enter">Enter saves.</span></div><div class="pop abs" data-target><div class="mhead"><button class="nb" data-tap aria-label="Previous month"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5"/></svg></button><span class="mt">November 2026</span><button class="nb" data-tap aria-label="Next month"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M7.5 4.5 13 10l-5.5 5.5"/></svg></button></div><div class="wk"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span></div><div class="grid"><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"><b class="dis" data-item="minmax">1</b></span><span class="cell"><b class="dis">2</b></span><span class="cell"><b class="dis">3</b></span><span class="cell"><b class="dis">4</b></span><span class="cell" data-tap><b class="">5</b></span><span class="cell" data-tap><b class="">6</b></span><span class="cell" data-tap><b class="">7</b></span><span class="cell" data-tap><b class="">8</b></span><span class="cell" data-tap><b class="">9</b></span><span class="cell" data-tap><b class="">10</b></span><span class="cell" data-tap><b class="">11</b></span><span class="cell" data-tap><b class="">12</b></span><span class="cell" data-tap><b class="">13</b></span><span class="cell" data-tap><b class="">14</b></span><span class="cell" data-tap><b class="">15</b></span><span class="cell" data-tap><b class="today">16</b></span><span class="cell" data-tap><b class="">17</b></span><span class="cell" data-tap><b class="">18</b></span><span class="cell" data-tap><b class="">19</b></span><span class="cell" data-tap><b class="sel">20</b></span><span class="cell" data-tap><b class="">21</b></span><span class="cell" data-tap><b class="">22</b></span><span class="cell" data-tap><b class="">23</b></span><span class="cell" data-tap><b class="">24</b></span><span class="cell" data-tap><b class="">25</b></span><span class="cell" data-tap><b class="">26</b></span><span class="cell" data-tap><b class="">27</b></span><span class="cell" data-tap><b class="">28</b></span><span class="cell" data-tap><b class="">29</b></span><span class="cell" data-tap><b class="">30</b></span></div><div class="foot"><button class="btn g" data-tap>Clear</button><span class="grow"></span><button class="btn g" data-tap>Today</button></div></div></div></div></main></body></html>

@@ -1,0 +1,1627 @@
+{
+ "options": {
+  "date-field-mobile-A": {
+   "inventory": "7/7",
+   "items": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "minmax",
+     "required"
+    ]
+   }
+  },
+  "date-field-mobile-B": {
+   "inventory": "7/7",
+   "items": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "minmax",
+     "required"
+    ]
+   }
+  },
+  "date-field-mobile-C": {
+   "inventory": "7/7",
+   "items": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "minmax",
+     "required"
+    ]
+   }
+  },
+  "date-field-desktop-A": {
+   "inventory": "7/7",
+   "items": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "minmax",
+     "required"
+    ]
+   }
+  },
+  "date-field-desktop-B": {
+   "inventory": "7/7",
+   "items": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "minmax",
+     "required"
+    ]
+   }
+  },
+  "date-field-desktop-C": {
+   "inventory": "7/7",
+   "items": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "minmax",
+     "required"
+    ]
+   }
+  },
+  "date-range-mobile-A": {
+   "inventory": "7/7",
+   "items": {
+    "before": [
+     "enter",
+     "hint",
+     "label",
+     "range-from",
+     "range-to",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "minmax",
+     "range-from",
+     "range-to",
+     "required"
+    ]
+   }
+  },
+  "date-range-mobile-B": {
+   "inventory": "7/7",
+   "items": {
+    "before": [
+     "enter",
+     "hint",
+     "label",
+     "range-from",
+     "range-to",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "minmax",
+     "range-from",
+     "range-to",
+     "required"
+    ]
+   }
+  },
+  "date-range-mobile-C": {
+   "inventory": "7/7",
+   "items": {
+    "before": [
+     "enter",
+     "hint",
+     "label",
+     "range-from",
+     "range-to",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "minmax",
+     "range-from",
+     "range-to",
+     "required"
+    ]
+   }
+  },
+  "date-range-desktop-A": {
+   "inventory": "7/7",
+   "items": {
+    "before": [
+     "enter",
+     "hint",
+     "label",
+     "range-from",
+     "range-to",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "minmax",
+     "range-from",
+     "range-to",
+     "required"
+    ]
+   }
+  },
+  "date-range-desktop-B": {
+   "inventory": "7/7",
+   "items": {
+    "before": [
+     "enter",
+     "hint",
+     "label",
+     "range-from",
+     "range-to",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "minmax",
+     "range-from",
+     "range-to",
+     "required"
+    ]
+   }
+  },
+  "date-range-desktop-C": {
+   "inventory": "7/7",
+   "items": {
+    "before": [
+     "enter",
+     "hint",
+     "label",
+     "range-from",
+     "range-to",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "minmax",
+     "range-from",
+     "range-to",
+     "required"
+    ]
+   }
+  },
+  "date-motion-mobile-A": {
+   "inventory": "4/4",
+   "items": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "required"
+    ]
+   }
+  },
+  "date-motion-mobile-B": {
+   "inventory": "4/4",
+   "items": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "required"
+    ]
+   }
+  },
+  "date-motion-mobile-C": {
+   "inventory": "4/4",
+   "items": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "required"
+    ]
+   }
+  }
+ },
+ "pairMethod": "same-steps",
+ "countMethod": "visible-in-frame",
+ "rowsMethod": "auto",
+ "checks": {
+  "contrast": "pass",
+  "cvd": "pass",
+  "textFit": "pass",
+  "tapSize": "pass",
+  "formAlignment": "pass",
+  "smallSize": "n/a -- a form control at its one size, not a mark or icon rendered small"
+ },
+ "method": {
+  "contrast": "WCAG ratio of every visible text node vs its effective background; 4.5 body, 3 large; disabled text exempt",
+  "cvd": "selected day, range ends, active chip/preset/tab: fill or 2px border vs host >= 3:1 by luminance, so no state is hue alone",
+  "textFit": "no element with own text has scrollWidth > clientWidth; no sideways page scroll",
+  "tapSize": "every [data-tap] >= 44x44 CSS px",
+  "formAlignment": "every pair of visible controls on one line (auto-discovered, no hand list) shares top and height within 1px (FORM-ALIGN-1)",
+  "visibleItems": "every inventory item visible in the before frame is visible in the after frame",
+  "motionStep": "step 5 SVGs reuse the step 1 palette; contrast measured on the step 1 frames"
+ },
+ "frames": [
+  {
+   "option": "date-field-mobile-A",
+   "shot": "main",
+   "side": "before",
+   "build": "ui-forms 1.41.0 native input",
+   "file": "frames/before-single-mobile.png",
+   "pair": {
+    "route": "date-field mockup (deal form)",
+    "state": "Expected close focused, picker opened (before: the native popup is drawn by the browser outside the page, not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Galaxy S5 360x640",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "minmax",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-field-mobile-A",
+   "shot": "main",
+   "side": "after",
+   "build": "DATEPICK-1 mockup option A",
+   "file": "frames/s1-A.png",
+   "pair": {
+    "route": "date-field mockup (deal form)",
+    "state": "Expected close focused, picker opened (before: the native popup is drawn by the browser outside the page, not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Galaxy S5 360x640",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "minmax",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-field-mobile-B",
+   "shot": "main",
+   "side": "before",
+   "build": "ui-forms 1.41.0 native input",
+   "file": "frames/before-single-mobile.png",
+   "pair": {
+    "route": "date-field mockup (deal form)",
+    "state": "Expected close focused, picker opened (before: the native popup is drawn by the browser outside the page, not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Galaxy S5 360x640",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "minmax",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-field-mobile-B",
+   "shot": "main",
+   "side": "after",
+   "build": "DATEPICK-1 mockup option B",
+   "file": "frames/s1-B.png",
+   "pair": {
+    "route": "date-field mockup (deal form)",
+    "state": "Expected close focused, picker opened (before: the native popup is drawn by the browser outside the page, not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Galaxy S5 360x640",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "minmax",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-field-mobile-C",
+   "shot": "main",
+   "side": "before",
+   "build": "ui-forms 1.41.0 native input",
+   "file": "frames/before-single-mobile.png",
+   "pair": {
+    "route": "date-field mockup (deal form)",
+    "state": "Expected close focused, picker opened (before: the native popup is drawn by the browser outside the page, not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Galaxy S5 360x640",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "minmax",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-field-mobile-C",
+   "shot": "main",
+   "side": "after",
+   "build": "DATEPICK-1 mockup option C",
+   "file": "frames/s1-C.png",
+   "pair": {
+    "route": "date-field mockup (deal form)",
+    "state": "Expected close focused, picker opened (before: the native popup is drawn by the browser outside the page, not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Galaxy S5 360x640",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "minmax",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-field-desktop-A",
+   "shot": "main",
+   "side": "before",
+   "build": "ui-forms 1.41.0 native input",
+   "file": "frames/before-single-desktop.png",
+   "pair": {
+    "route": "date-field mockup (deal form)",
+    "state": "Expected close focused, picker opened (before: the native popup is drawn by the browser outside the page, not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Desktop Chrome 1280x800",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "minmax",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-field-desktop-A",
+   "shot": "main",
+   "side": "after",
+   "build": "DATEPICK-1 mockup option A",
+   "file": "frames/s2-A.png",
+   "pair": {
+    "route": "date-field mockup (deal form)",
+    "state": "Expected close focused, picker opened (before: the native popup is drawn by the browser outside the page, not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Desktop Chrome 1280x800",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "minmax",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-field-desktop-B",
+   "shot": "main",
+   "side": "before",
+   "build": "ui-forms 1.41.0 native input",
+   "file": "frames/before-single-desktop.png",
+   "pair": {
+    "route": "date-field mockup (deal form)",
+    "state": "Expected close focused, picker opened (before: the native popup is drawn by the browser outside the page, not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Desktop Chrome 1280x800",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "minmax",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-field-desktop-B",
+   "shot": "main",
+   "side": "after",
+   "build": "DATEPICK-1 mockup option B",
+   "file": "frames/s2-B.png",
+   "pair": {
+    "route": "date-field mockup (deal form)",
+    "state": "Expected close focused, picker opened (before: the native popup is drawn by the browser outside the page, not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Desktop Chrome 1280x800",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "minmax",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-field-desktop-C",
+   "shot": "main",
+   "side": "before",
+   "build": "ui-forms 1.41.0 native input",
+   "file": "frames/before-single-desktop.png",
+   "pair": {
+    "route": "date-field mockup (deal form)",
+    "state": "Expected close focused, picker opened (before: the native popup is drawn by the browser outside the page, not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Desktop Chrome 1280x800",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "minmax",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-field-desktop-C",
+   "shot": "main",
+   "side": "after",
+   "build": "DATEPICK-1 mockup option C",
+   "file": "frames/s2-C.png",
+   "pair": {
+    "route": "date-field mockup (deal form)",
+    "state": "Expected close focused, picker opened (before: the native popup is drawn by the browser outside the page, not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Desktop Chrome 1280x800",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "minmax",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-range-mobile-A",
+   "shot": "main",
+   "side": "before",
+   "build": "ui-forms 1.41.0 native input",
+   "file": "frames/before-range-mobile.png",
+   "pair": {
+    "route": "date-range mockup (deal form)",
+    "state": "Reporting period focused, picker opened on Last 7 days (before: native popups not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Galaxy S5 360x640",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "enter",
+     "hint",
+     "label",
+     "range-from",
+     "range-to",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "minmax",
+     "range-from",
+     "range-to",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-range-mobile-A",
+   "shot": "main",
+   "side": "after",
+   "build": "DATEPICK-1 mockup option A",
+   "file": "frames/s3-A.png",
+   "pair": {
+    "route": "date-range mockup (deal form)",
+    "state": "Reporting period focused, picker opened on Last 7 days (before: native popups not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Galaxy S5 360x640",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "enter",
+     "hint",
+     "label",
+     "range-from",
+     "range-to",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "minmax",
+     "range-from",
+     "range-to",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-range-mobile-B",
+   "shot": "main",
+   "side": "before",
+   "build": "ui-forms 1.41.0 native input",
+   "file": "frames/before-range-mobile.png",
+   "pair": {
+    "route": "date-range mockup (deal form)",
+    "state": "Reporting period focused, picker opened on Last 7 days (before: native popups not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Galaxy S5 360x640",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "enter",
+     "hint",
+     "label",
+     "range-from",
+     "range-to",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "minmax",
+     "range-from",
+     "range-to",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-range-mobile-B",
+   "shot": "main",
+   "side": "after",
+   "build": "DATEPICK-1 mockup option B",
+   "file": "frames/s3-B.png",
+   "pair": {
+    "route": "date-range mockup (deal form)",
+    "state": "Reporting period focused, picker opened on Last 7 days (before: native popups not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Galaxy S5 360x640",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "enter",
+     "hint",
+     "label",
+     "range-from",
+     "range-to",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "minmax",
+     "range-from",
+     "range-to",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-range-mobile-C",
+   "shot": "main",
+   "side": "before",
+   "build": "ui-forms 1.41.0 native input",
+   "file": "frames/before-range-mobile.png",
+   "pair": {
+    "route": "date-range mockup (deal form)",
+    "state": "Reporting period focused, picker opened on Last 7 days (before: native popups not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Galaxy S5 360x640",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "enter",
+     "hint",
+     "label",
+     "range-from",
+     "range-to",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "minmax",
+     "range-from",
+     "range-to",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-range-mobile-C",
+   "shot": "main",
+   "side": "after",
+   "build": "DATEPICK-1 mockup option C",
+   "file": "frames/s3-C.png",
+   "pair": {
+    "route": "date-range mockup (deal form)",
+    "state": "Reporting period focused, picker opened on Last 7 days (before: native popups not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Galaxy S5 360x640",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "enter",
+     "hint",
+     "label",
+     "range-from",
+     "range-to",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "minmax",
+     "range-from",
+     "range-to",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-range-desktop-A",
+   "shot": "main",
+   "side": "before",
+   "build": "ui-forms 1.41.0 native input",
+   "file": "frames/before-range-desktop.png",
+   "pair": {
+    "route": "date-range mockup (deal form)",
+    "state": "Reporting period focused, picker opened on Last 7 days (before: native popups not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Desktop Chrome 1280x800",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "enter",
+     "hint",
+     "label",
+     "range-from",
+     "range-to",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "minmax",
+     "range-from",
+     "range-to",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-range-desktop-A",
+   "shot": "main",
+   "side": "after",
+   "build": "DATEPICK-1 mockup option A",
+   "file": "frames/s4-A.png",
+   "pair": {
+    "route": "date-range mockup (deal form)",
+    "state": "Reporting period focused, picker opened on Last 7 days (before: native popups not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Desktop Chrome 1280x800",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "enter",
+     "hint",
+     "label",
+     "range-from",
+     "range-to",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "minmax",
+     "range-from",
+     "range-to",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-range-desktop-B",
+   "shot": "main",
+   "side": "before",
+   "build": "ui-forms 1.41.0 native input",
+   "file": "frames/before-range-desktop.png",
+   "pair": {
+    "route": "date-range mockup (deal form)",
+    "state": "Reporting period focused, picker opened on Last 7 days (before: native popups not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Desktop Chrome 1280x800",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "enter",
+     "hint",
+     "label",
+     "range-from",
+     "range-to",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "minmax",
+     "range-from",
+     "range-to",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-range-desktop-B",
+   "shot": "main",
+   "side": "after",
+   "build": "DATEPICK-1 mockup option B",
+   "file": "frames/s4-B.png",
+   "pair": {
+    "route": "date-range mockup (deal form)",
+    "state": "Reporting period focused, picker opened on Last 7 days (before: native popups not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Desktop Chrome 1280x800",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "enter",
+     "hint",
+     "label",
+     "range-from",
+     "range-to",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "minmax",
+     "range-from",
+     "range-to",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-range-desktop-C",
+   "shot": "main",
+   "side": "before",
+   "build": "ui-forms 1.41.0 native input",
+   "file": "frames/before-range-desktop.png",
+   "pair": {
+    "route": "date-range mockup (deal form)",
+    "state": "Reporting period focused, picker opened on Last 7 days (before: native popups not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Desktop Chrome 1280x800",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "enter",
+     "hint",
+     "label",
+     "range-from",
+     "range-to",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "minmax",
+     "range-from",
+     "range-to",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-range-desktop-C",
+   "shot": "main",
+   "side": "after",
+   "build": "DATEPICK-1 mockup option C",
+   "file": "frames/s4-C.png",
+   "pair": {
+    "route": "date-range mockup (deal form)",
+    "state": "Reporting period focused, picker opened on Last 7 days (before: native popups not in the capture)",
+    "fixture": "value 2026-11-20 / range 2026-11-10..16, min 2026-11-05, today 2026-11-16",
+    "viewport": "Desktop Chrome 1280x800",
+    "scrollAnchor": "[data-anchor] form top + [data-target] via aimAtTarget",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "enter",
+     "hint",
+     "label",
+     "range-from",
+     "range-to",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "minmax",
+     "range-from",
+     "range-to",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-motion-mobile-A",
+   "shot": "main",
+   "side": "before",
+   "build": "ui-forms 1.41.0 native input",
+   "file": "frames/before-single-mobile.png",
+   "pair": {
+    "route": "date-field mockup (deal form)",
+    "state": "Expected close focused, picker opened (before: the native popup is drawn by the browser outside the page, not in the capture)",
+    "fixture": "value 2026-11-20, month change Nov to Dec 2026",
+    "viewport": "Galaxy S5 360x640",
+    "scrollAnchor": "top of page",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-motion-mobile-A",
+   "shot": "main",
+   "side": "after",
+   "build": "DATEPICK-1 motion option A",
+   "file": "frames/s5-A.svg",
+   "pair": {
+    "route": "date-field mockup (deal form)",
+    "state": "Expected close focused, picker opened (before: the native popup is drawn by the browser outside the page, not in the capture)",
+    "fixture": "value 2026-11-20, month change Nov to Dec 2026",
+    "viewport": "Galaxy S5 360x640",
+    "scrollAnchor": "top of page",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-motion-mobile-B",
+   "shot": "main",
+   "side": "before",
+   "build": "ui-forms 1.41.0 native input",
+   "file": "frames/before-single-mobile.png",
+   "pair": {
+    "route": "date-field mockup (deal form)",
+    "state": "Expected close focused, picker opened (before: the native popup is drawn by the browser outside the page, not in the capture)",
+    "fixture": "value 2026-11-20, month change Nov to Dec 2026",
+    "viewport": "Galaxy S5 360x640",
+    "scrollAnchor": "top of page",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-motion-mobile-B",
+   "shot": "main",
+   "side": "after",
+   "build": "DATEPICK-1 motion option B",
+   "file": "frames/s5-B.svg",
+   "pair": {
+    "route": "date-field mockup (deal form)",
+    "state": "Expected close focused, picker opened (before: the native popup is drawn by the browser outside the page, not in the capture)",
+    "fixture": "value 2026-11-20, month change Nov to Dec 2026",
+    "viewport": "Galaxy S5 360x640",
+    "scrollAnchor": "top of page",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-motion-mobile-C",
+   "shot": "main",
+   "side": "before",
+   "build": "ui-forms 1.41.0 native input",
+   "file": "frames/before-single-mobile.png",
+   "pair": {
+    "route": "date-field mockup (deal form)",
+    "state": "Expected close focused, picker opened (before: the native popup is drawn by the browser outside the page, not in the capture)",
+    "fixture": "value 2026-11-20, month change Nov to Dec 2026",
+    "viewport": "Galaxy S5 360x640",
+    "scrollAnchor": "top of page",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "required"
+    ]
+   }
+  },
+  {
+   "option": "date-motion-mobile-C",
+   "shot": "main",
+   "side": "after",
+   "build": "DATEPICK-1 motion option C",
+   "file": "frames/s5-C.svg",
+   "pair": {
+    "route": "date-field mockup (deal form)",
+    "state": "Expected close focused, picker opened (before: the native popup is drawn by the browser outside the page, not in the capture)",
+    "fixture": "value 2026-11-20, month change Nov to Dec 2026",
+    "viewport": "Galaxy S5 360x640",
+    "scrollAnchor": "top of page",
+    "crop": "viewport"
+   },
+   "visibleItems": {
+    "before": [
+     "disabled",
+     "enter",
+     "error",
+     "hint",
+     "label",
+     "required"
+    ],
+    "after": [
+     "enter",
+     "hint",
+     "label",
+     "required"
+    ]
+   }
+  }
+ ],
+ "perFrame": {
+  "before-single-mobile.png": {
+   "minContrast": 6.57,
+   "items": [
+    "disabled",
+    "enter",
+    "error",
+    "hint",
+    "label",
+    "required"
+   ],
+   "contrast": [],
+   "tap": [],
+   "fit": [],
+   "align": [],
+   "cvd": []
+  },
+  "s1-A.png": {
+   "minContrast": 6.57,
+   "items": [
+    "disabled",
+    "enter",
+    "error",
+    "hint",
+    "label",
+    "minmax",
+    "required"
+   ],
+   "contrast": [],
+   "tap": [],
+   "fit": [],
+   "align": [],
+   "cvd": []
+  },
+  "s1-B.png": {
+   "minContrast": 6.57,
+   "items": [
+    "disabled",
+    "enter",
+    "error",
+    "hint",
+    "label",
+    "minmax",
+    "required"
+   ],
+   "contrast": [],
+   "tap": [],
+   "fit": [],
+   "align": [],
+   "cvd": []
+  },
+  "s1-C.png": {
+   "minContrast": 6.57,
+   "items": [
+    "disabled",
+    "enter",
+    "error",
+    "hint",
+    "label",
+    "minmax",
+    "required"
+   ],
+   "contrast": [],
+   "tap": [],
+   "fit": [],
+   "align": [],
+   "cvd": []
+  },
+  "before-single-desktop.png": {
+   "minContrast": 6.57,
+   "items": [
+    "disabled",
+    "enter",
+    "error",
+    "hint",
+    "label",
+    "required"
+   ],
+   "contrast": [],
+   "tap": [],
+   "fit": [],
+   "align": [],
+   "cvd": []
+  },
+  "s2-A.png": {
+   "minContrast": 6.57,
+   "items": [
+    "disabled",
+    "enter",
+    "error",
+    "hint",
+    "label",
+    "minmax",
+    "required"
+   ],
+   "contrast": [],
+   "tap": [],
+   "fit": [],
+   "align": [],
+   "cvd": []
+  },
+  "s2-B.png": {
+   "minContrast": 6.57,
+   "items": [
+    "disabled",
+    "enter",
+    "error",
+    "hint",
+    "label",
+    "minmax",
+    "required"
+   ],
+   "contrast": [],
+   "tap": [],
+   "fit": [],
+   "align": [],
+   "cvd": []
+  },
+  "s2-C.png": {
+   "minContrast": 6.57,
+   "items": [
+    "disabled",
+    "enter",
+    "error",
+    "hint",
+    "label",
+    "minmax",
+    "required"
+   ],
+   "contrast": [],
+   "tap": [],
+   "fit": [],
+   "align": [],
+   "cvd": []
+  },
+  "before-range-mobile.png": {
+   "minContrast": 6.57,
+   "items": [
+    "enter",
+    "hint",
+    "label",
+    "range-from",
+    "range-to",
+    "required"
+   ],
+   "contrast": [],
+   "tap": [],
+   "fit": [],
+   "align": [],
+   "cvd": []
+  },
+  "s3-A.png": {
+   "minContrast": 6.57,
+   "items": [
+    "enter",
+    "hint",
+    "label",
+    "minmax",
+    "range-from",
+    "range-to",
+    "required"
+   ],
+   "contrast": [],
+   "tap": [],
+   "fit": [],
+   "align": [],
+   "cvd": []
+  },
+  "s3-B.png": {
+   "minContrast": 6.57,
+   "items": [
+    "enter",
+    "hint",
+    "label",
+    "minmax",
+    "range-from",
+    "range-to",
+    "required"
+   ],
+   "contrast": [],
+   "tap": [],
+   "fit": [],
+   "align": [],
+   "cvd": []
+  },
+  "s3-C.png": {
+   "minContrast": 6.57,
+   "items": [
+    "enter",
+    "hint",
+    "label",
+    "minmax",
+    "range-from",
+    "range-to",
+    "required"
+   ],
+   "contrast": [],
+   "tap": [],
+   "fit": [],
+   "align": [],
+   "cvd": []
+  },
+  "before-range-desktop.png": {
+   "minContrast": 6.57,
+   "items": [
+    "enter",
+    "hint",
+    "label",
+    "range-from",
+    "range-to",
+    "required"
+   ],
+   "contrast": [],
+   "tap": [],
+   "fit": [],
+   "align": [],
+   "cvd": []
+  },
+  "s4-A.png": {
+   "minContrast": 6.57,
+   "items": [
+    "enter",
+    "hint",
+    "label",
+    "minmax",
+    "range-from",
+    "range-to",
+    "required"
+   ],
+   "contrast": [],
+   "tap": [],
+   "fit": [],
+   "align": [],
+   "cvd": []
+  },
+  "s4-B.png": {
+   "minContrast": 6.57,
+   "items": [
+    "enter",
+    "hint",
+    "label",
+    "minmax",
+    "range-from",
+    "range-to",
+    "required"
+   ],
+   "contrast": [],
+   "tap": [],
+   "fit": [],
+   "align": [],
+   "cvd": []
+  },
+  "s4-C.png": {
+   "minContrast": 6.57,
+   "items": [
+    "enter",
+    "hint",
+    "label",
+    "minmax",
+    "range-from",
+    "range-to",
+    "required"
+   ],
+   "contrast": [],
+   "tap": [],
+   "fit": [],
+   "align": [],
+   "cvd": []
+  }
+ },
+ "fails": {
+  "contrast": [],
+  "cvd": [],
+  "textFit": [],
+  "tapSize": [],
+  "formAlignment": [],
+  "visibleItems": []
+ }
+}
