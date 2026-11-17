@@ -13,12 +13,14 @@ export interface SheetSurfaceProps {
   progress?: Animated.Value;
   /** Optional grow scale, applied from the bottom edge. */
   scale?: Animated.AnimatedInterpolation<number>;
+  /** Accessible name of the modal dialog; omitted = unnamed, as before. */
+  accessibilityLabel?: string;
 }
 
 /** The phone surface: a bottom sheet over a backdrop that closes the list when tapped. */
-export function SheetSurface({ translateY, onDismiss, closeLabel, closeHint, testID, children, progress, scale }: SheetSurfaceProps): React.ReactElement {
+export function SheetSurface({ translateY, onDismiss, closeLabel, closeHint, testID, children, progress, scale, accessibilityLabel }: SheetSurfaceProps): React.ReactElement {
   return (
-    <Modal transparent visible animationType="none" onRequestClose={onDismiss}>
+    <Modal transparent visible animationType="none" aria-label={accessibilityLabel} onRequestClose={onDismiss}>
       <View style={styles.backdrop}>
         <Pressable accessibilityHint={closeHint} accessibilityLabel={closeLabel} accessibilityRole="button" style={StyleSheet.absoluteFill} testID={`${testID}-backdrop`} onPress={onDismiss} />
         <Animated.View style={[{ transform: scale === undefined ? [{ translateY }] : [{ translateY }, { scale }] }, progress === undefined ? null : { opacity: progress }]}>{children}</Animated.View>

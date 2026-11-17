@@ -3,7 +3,6 @@ import React, { useRef, type CSSProperties, type KeyboardEvent, type ReactNode }
 import { usePickerColors } from '../hooks/usePickerColors';
 
 export interface PickerDialogProps {
-  label: string;
   testID: string;
   sheet: boolean;
   onDismiss: () => void;
@@ -23,8 +22,8 @@ export function tabStops(container: HTMLElement): HTMLElement[] {
   );
 }
 
-/** The WAI-ARIA date dialog body: Tab and Shift+Tab wrap inside it, Escape closes it. */
-export function PickerDialog({ label, testID, sheet, onDismiss, children }: PickerDialogProps): React.ReactElement {
+/** The date dialog body inside the named modal: Tab and Shift+Tab wrap inside it, Escape closes it. */
+export function PickerDialog({ testID, sheet, onDismiss, children }: PickerDialogProps): React.ReactElement {
   const colors = usePickerColors();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -52,7 +51,7 @@ export function PickerDialog({ label, testID, sheet, onDismiss, children }: Pick
   const style: CSSProperties = { boxSizing: 'border-box', padding: PAD, background: colors.surface, color: colors.text, border: `1px solid ${colors.border}`, fontFamily: 'inherit', ...shape };
 
   return (
-    <div ref={ref} aria-label={label} aria-modal="true" data-testid={testID} data-variant={sheet ? 'sheet' : 'popover'} role="dialog" style={style} onKeyDown={onKeyDown}>
+    <div ref={ref} data-testid={testID} data-variant={sheet ? 'sheet' : 'popover'} style={style} onKeyDown={onKeyDown}>
       {children}
     </div>
   );

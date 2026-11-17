@@ -18,10 +18,12 @@ export interface DropdownSurfaceProps {
   minWidth?: number;
   /** Optional grow-from-the-field scale, applied from the top-left corner. */
   scale?: Animated.AnimatedInterpolation<number>;
+  /** Accessible name of the modal dialog; omitted = unnamed, as before. */
+  accessibilityLabel?: string;
 }
 
 /** The computer surface: a layer above the page beside the field, opening upward when there is no room below. */
-export function DropdownSurface({ progress, translateY, anchorRef, onDismiss, closeLabel, closeHint, testID, children, minWidth, scale }: DropdownSurfaceProps): React.ReactElement {
+export function DropdownSurface({ progress, translateY, anchorRef, onDismiss, closeLabel, closeHint, testID, children, minWidth, scale, accessibilityLabel }: DropdownSurfaceProps): React.ReactElement {
   const { height: viewportHeight, width: viewportWidth } = useWindowDimensions();
   const anchor = useAnchorRect(anchorRef);
   const [panelHeight, setPanelHeight] = useState(0);
@@ -30,7 +32,7 @@ export function DropdownSurface({ progress, translateY, anchorRef, onDismiss, cl
   const place = frame === null ? null : { left: frame.left, width: frame.width, top: frame.top, bottom: frame.bottom };
 
   return (
-    <Modal transparent visible animationType="none" onRequestClose={onDismiss}>
+    <Modal transparent visible animationType="none" aria-label={accessibilityLabel} onRequestClose={onDismiss}>
       <Pressable accessibilityHint={closeHint} accessibilityLabel={closeLabel} accessibilityRole="button" style={StyleSheet.absoluteFill} testID={`${testID}-backdrop`} onPress={onDismiss} />
       {frame !== null ? (
         <Animated.View style={[styles.dropdown, place, { opacity: progress, transform: scale === undefined ? [{ translateY }] : [{ translateY }, { scale }] }, scale === undefined ? null : styles.growFromField]} testID={`${testID}-dropdown-${frame.placement}`} onLayout={onLayout}>

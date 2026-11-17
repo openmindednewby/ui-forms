@@ -9,6 +9,7 @@ const TID = 'close';
 const PICKER = `${TID}-picker`;
 const DESKTOP = 1280;
 const PHONE = 360;
+const DIALOG_LABEL = 'Pick the close date';
 
 function setViewportWidth(width: number): void {
   Object.defineProperty(window, 'innerWidth', { configurable: true, value: width });
@@ -21,7 +22,7 @@ function setViewportWidth(width: number): void {
 async function openPicker(overrides: Partial<DateFieldProps> = {}): Promise<jest.Mock> {
   const onChange = jest.fn();
   render(
-    <DatePickerProvider locale="en-GB" today="2026-11-16">
+    <DatePickerProvider labels={{ dialog: DIALOG_LABEL }} locale="en-GB" today="2026-11-16">
       <DateField accessibilityHint="Pick the close" label="Expected close" testID={TID} value="2026-11-20" onChange={onChange} {...overrides} />
     </DatePickerProvider>,
   );
@@ -41,6 +42,22 @@ describe('DateField calendar', () => {
     await openPicker();
 
     expect(screen.getByTestId(PICKER).getAttribute('data-variant')).toBe('popover');
+  });
+
+  it('on open, renders one dialog named by the dialog label', async () => {
+    await openPicker();
+
+    const actual = screen.getAllByRole('dialog').map((node) => node.getAttribute('aria-label'));
+
+    expect(actual).toEqual([DIALOG_LABEL]);
+  });
+
+  it('at phone width, the sheet dialog is named by the dialog label', async () => {
+    setViewportWidth(PHONE);
+
+    await openPicker();
+
+    expect(screen.getAllByRole('dialog').map((node) => node.getAttribute('aria-label'))).toEqual([DIALOG_LABEL]);
   });
 
   it('at phone width, opens as a bottom sheet', async () => {
