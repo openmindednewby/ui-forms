@@ -19,10 +19,10 @@ function renderInput(onChange: jest.Mock = jest.fn()): void {
 }
 
 describe('DateInput', () => {
-  it('inside a Field, renders one native date input', () => {
+  it('inside a Field, renders one typeable text input', () => {
     renderInput();
 
-    expect(screen.getByTestId(TEST_ID).getAttribute('type')).toBe('date');
+    expect(screen.getByTestId(TEST_ID).getAttribute('type')).toBe('text');
   });
 
   it('inside a Field, shows only the Field label, never a second one', () => {

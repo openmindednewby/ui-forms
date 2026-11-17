@@ -1,0 +1,28 @@
+import type { CSSProperties } from 'react';
+
+export const OPEN_MS = 180;
+export const MONTH_SLIDE_MS = 200;
+export const MONTH_SLIDE_PX = 16;
+const OPEN_SCALE = 0.96;
+const EASE = 'cubic-bezier(0.2, 0, 0, 1)';
+
+/** Open: scale + fade from the field; reduced motion shows the end state at once. */
+export function openMotionStyle(entered: boolean, reduced: boolean, origin: 'top' | 'bottom'): CSSProperties {
+  if (reduced) return { opacity: 1, transform: 'none' };
+  return {
+    opacity: entered ? 1 : 0,
+    transform: entered ? 'scale(1)' : `scale(${OPEN_SCALE})`,
+    transformOrigin: `${origin} left`,
+    transition: `opacity ${OPEN_MS}ms ${EASE}, transform ${OPEN_MS}ms ${EASE}`,
+  };
+}
+
+/** Month change: a short slide in the direction of travel; none on first show or reduced motion. */
+export function monthSlideStyle(entered: boolean, reduced: boolean, direction: number): CSSProperties {
+  if (reduced || direction === 0) return {};
+  return {
+    opacity: entered ? 1 : 0,
+    transform: entered ? 'translateX(0px)' : `translateX(${direction * MONTH_SLIDE_PX}px)`,
+    transition: `opacity ${MONTH_SLIDE_MS}ms ${EASE}, transform ${MONTH_SLIDE_MS}ms ${EASE}`,
+  };
+}

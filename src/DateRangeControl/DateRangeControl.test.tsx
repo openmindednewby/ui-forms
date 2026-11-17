@@ -61,13 +61,13 @@ describe('DateRangeControl — submit', () => {
   });
 });
 
-describe('DateRangeControl — shared date input', () => {
-  it('on web, renders each side as the shared DateField native date input', () => {
-    renderRange({ from: '', to: '' });
+describe('DateRangeControl — one field', () => {
+  it('on web, renders both ends as typeable segments of one field with one calendar button', () => {
+    renderRange({ from: '2024-01-01', to: '2024-12-31' });
 
     const types = [screen.getByTestId(`${TID}-from`), screen.getByTestId(`${TID}-to`)].map((el) => el.getAttribute('type'));
 
-    expect(types).toEqual(['date', 'date']);
+    expect([types, screen.getAllByTestId(`${TID}-calendar`).length]).toEqual([['text', 'text'], 1]);
   });
 });
 

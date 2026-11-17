@@ -22,7 +22,7 @@ interface WebDateInputProps {
   webInputType: string;
 }
 
-function buildNativeInputStyle(themed: TextStyle): React.CSSProperties {
+export function buildNativeInputStyle(themed: TextStyle): React.CSSProperties {
   const { paddingHorizontal, paddingVertical, ...box } = StyleSheet.flatten(controlStyles.input);
   return {
     ...box,

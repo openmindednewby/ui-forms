@@ -1,0 +1,35 @@
+export interface DatePickerLabels {
+  dialog: string;
+  rangeDialog: string;
+  openCalendar: string;
+  openCalendarHint: string;
+  previousMonth: string;
+  nextMonth: string;
+  monthHint: string;
+  month: string;
+  year: string;
+  dayHint: string;
+  setDate: string;
+  setDateHint: string;
+  clear: string;
+  clearHint: string;
+  cancel: string;
+  cancelHint: string;
+  apply: string;
+  applyHint: string;
+  presets: string;
+  presetHint: string;
+  today: string;
+  last7Days: string;
+  thisMonth: string;
+  quarter: string;
+  /** `{{p1}}` is the number of days. */
+  dayCount: string;
+  invalidDate: string;
+  outOfRange: string;
+}
+
+export interface DateBounds {
+  min?: string;
+  max?: string;
+}

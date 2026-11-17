@@ -104,6 +104,8 @@ export type { DateRangeControlProps } from './DateRangeControl/DateRangeControl'
 export { DateField } from './DateField/DateField';
 export { DateTimeField } from './DateField/DateTimeField';
 export { DateInput } from './DateField/DateInput';
+export { DatePickerProvider, DEFAULT_DATE_PICKER_LABELS } from './DatePicker';
+export type { DatePickerLabels, DatePickerProviderProps } from './DatePicker';
 export type { DateFieldProps, DateInputProps, DateTimeFieldProps } from './DateField/types';
 
 export { AnchoredMenu } from './AnchoredMenu/AnchoredMenu';

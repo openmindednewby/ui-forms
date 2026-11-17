@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import { View, type StyleProp, type ViewStyle } from 'react-native';
+import { Platform, View, type StyleProp, type ViewStyle } from 'react-native';
 
-import { controlStyles as s } from '../controls/controlStyles';
-import { DateField } from '../DateField/DateField';
+import { NativeDateRange } from './components/NativeDateRange';
+import { WebDateRange } from './components/WebDateRange';
+import { Field } from '../Field/Field';
 import { GapOwnedProvider } from '../FormGrid/formGridContext';
 
 import type { DateRangeValue } from '../controls/controlTypes';
+
+const IS_WEB = Platform.OS === 'web';
 
 export interface DateRangeControlProps {
   value: DateRangeValue;
@@ -29,42 +32,26 @@ export interface DateRangeControlProps {
   testID: string;
 }
 
-/** An inclusive from/to date pair of two shared `DateField`s; each edit patches only its own side. */
-export function DateRangeControl({
-  value,
-  onChange,
-  onSubmit,
-  fromLabel,
-  toLabel,
-  accessibilityHint,
-  style,
-  testID,
-}: DateRangeControlProps): React.ReactElement {
+/** An inclusive from/to date range: one field with a range calendar on web, two `DateField`s on native. */
+export function DateRangeControl({ value, onChange, onSubmit, fromLabel, toLabel, accessibilityHint, style, testID }: DateRangeControlProps): React.ReactElement {
   const hint = accessibilityHint ?? `${fromLabel} – ${toLabel}`;
+  const [typedError, setTypedError] = useState<string | undefined>(undefined);
 
+  if (!IS_WEB) {
+    return (
+      <GapOwnedProvider value>
+        <NativeDateRange fromLabel={fromLabel} hint={hint} style={style} testID={testID} toLabel={toLabel} value={value} onChange={onChange} onSubmit={onSubmit} />
+      </GapOwnedProvider>
+    );
+  }
   return (
     <GapOwnedProvider value>
-      <View style={[s.dateRow, style]} testID={`${testID}-range`}>
-        <View style={s.dateCol}>
-          <DateField
-            accessibilityHint={hint}
-            label={fromLabel}
-            testID={`${testID}-from`}
-            value={value.from}
-            onChange={(from) => onChange({ from, to: value.to })}
-            onSubmit={onSubmit}
-          />
-        </View>
-        <View style={s.dateCol}>
-          <DateField
-            accessibilityHint={hint}
-            label={toLabel}
-            testID={`${testID}-to`}
-            value={value.to}
-            onChange={(to) => onChange({ from: value.from, to })}
-            onSubmit={onSubmit}
-          />
-        </View>
+      <View style={style} testID={`${testID}-range`}>
+        <Field error={typedError} label={`${fromLabel} – ${toLabel}`}>
+          {(context) => (
+            <WebDateRange context={context} fromLabel={fromLabel} hint={hint} testID={testID} toLabel={toLabel} value={value} onChange={onChange} onSubmit={onSubmit} onTypedError={setTypedError} />
+          )}
+        </Field>
       </View>
     </GapOwnedProvider>
   );
