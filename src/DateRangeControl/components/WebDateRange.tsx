@@ -74,35 +74,38 @@ export function WebDateRange({ value, onChange, onSubmit, fromLabel, toLabel, hi
     const ready = [from.isReady(), to.isReady()].every(Boolean);
     if (ready) onSubmit();
   };
-  const segment = (side: RangeSide, typed: TypedDate): React.ReactElement => (
-    <input
-      {...(webA11y as React.InputHTMLAttributes<HTMLInputElement>)}
-      ref={side === RangeSide.From ? fromRef : undefined}
-      aria-label={side === RangeSide.From ? fromLabel : toLabel}
-      autoComplete="off"
-      data-testid={`${testID}-${side}`}
-      id={side === RangeSide.From ? context.controlId : undefined}
-      style={SEGMENT}
-      title={hint}
-      type="text"
-      value={typed.display}
-      onBlur={(event) => {
-        focus.onBlur?.(event);
-        typed.onBlur();
-      }}
-      onChange={(event) => typed.onText(event.target.value)}
-      onFocus={(event) => {
-        focus.onFocus?.(event);
-        typed.onFocus();
-      }}
-      onCut={typedEditBind(typed).onCut}
-      onKeyDown={(event) => {
-        typedEditBind(typed).onEditKey(event);
-        onKeyDown(event);
-      }}
-      onPaste={typedEditBind(typed).onPaste}
-    />
-  );
+  const segment = (side: RangeSide, typed: TypedDate): React.ReactElement => {
+    const edit = typedEditBind(typed);
+    return (
+      <input
+        {...(webA11y as React.InputHTMLAttributes<HTMLInputElement>)}
+        ref={side === RangeSide.From ? fromRef : undefined}
+        aria-label={side === RangeSide.From ? fromLabel : toLabel}
+        autoComplete="off"
+        data-testid={`${testID}-${side}`}
+        id={side === RangeSide.From ? context.controlId : undefined}
+        style={SEGMENT}
+        title={hint}
+        type="text"
+        value={typed.display}
+        onBlur={(event) => {
+          focus.onBlur?.(event);
+          typed.onBlur();
+        }}
+        onChange={(event) => typed.onText(event.target.value)}
+        onFocus={(event) => {
+          focus.onFocus?.(event);
+          typed.onFocus();
+        }}
+        onCut={edit.onCut}
+        onKeyDown={(event) => {
+          edit.onEditKey(event);
+          onKeyDown(event);
+        }}
+        onPaste={edit.onPaste}
+      />
+    );
+  };
 
   return (
     <View ref={anchorRef} style={anchorStyles.wrap}>

@@ -10,19 +10,42 @@ export interface TypedEditBind {
   onCut: (event: ClipboardEvent<HTMLInputElement>) => void;
 }
 
-function coversAll(input: HTMLInputElement): boolean {
-  const { selectionStart, selectionEnd, value } = input;
-  return value !== '' && selectionStart === 0 && selectionEnd === value.length;
+interface EditedText {
+  text: string;
+  caret: number;
 }
 
 function isPrintable(event: KeyboardEvent<HTMLInputElement>): boolean {
   return event.key.length === 1 && !event.ctrlKey && !event.metaKey;
 }
 
-/** Edit handlers for a typed date input: a whole selection is replaced by the key or paste, else the typed form starts. */
+function selection(input: HTMLInputElement): [number, number] {
+  const end = input.selectionEnd ?? input.value.length;
+  return [input.selectionStart ?? end, end];
+}
+
+function editedText(input: HTMLInputElement, insert: string): EditedText {
+  const [start, end] = selection(input);
+  return { text: input.value.slice(0, start) + insert + input.value.slice(end), caret: start + insert.length };
+}
+
+function placeCaret(input: HTMLInputElement, caret: number): void {
+  requestAnimationFrame(() => input.setSelectionRange(caret, caret));
+}
+
+/** Edit handlers for a typed date input: a key, paste or cut over a selection edits the shown text there and keeps the caret, else the typed form starts. */
 export function typedEditBind(typed: TypedDate): TypedEditBind {
-  const start = (event: SyntheticEvent<HTMLInputElement>, replacement: string): void => {
-    if (typed.onEdit(coversAll(event.currentTarget) ? replacement : undefined)) event.preventDefault();
+  const start = (event: SyntheticEvent<HTMLInputElement>, insert: string): void => {
+    const input = event.currentTarget;
+    const [from, to] = selection(input);
+    if (from === to) {
+      typed.onEdit();
+      return;
+    }
+    const edit = editedText(input, insert);
+    if (!typed.onEdit(edit.text)) return;
+    event.preventDefault();
+    placeCaret(input, edit.caret);
   };
   return {
     onEditKey: (event) => {
@@ -31,7 +54,11 @@ export function typedEditBind(typed: TypedDate): TypedEditBind {
     },
     onPaste: (event) => start(event, event.clipboardData.getData('text')),
     onCut: (event) => {
-      if (!coversAll(event.currentTarget)) typed.onEdit();
+      const input = event.currentTarget;
+      const [from, to] = selection(input);
+      if (from === to) return;
+      event.clipboardData.setData('text/plain', input.value.slice(from, to));
+      start(event, '');
     },
   };
 }
