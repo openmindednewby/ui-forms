@@ -29,6 +29,8 @@ import type { ControlOption } from '../controls/controlTypes';
 import { NativeSelect } from './NativeSelect';
 import { useSelectListbox } from './useSelectListbox';
 
+const IS_WEB = Platform.OS === 'web';
+
 const CHEVRON_DOWN = '▾';
 const CHEVRON_UP = '▴';
 

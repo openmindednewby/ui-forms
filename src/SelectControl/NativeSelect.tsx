@@ -16,14 +16,16 @@ const NATIVE_SELECT_BOX: React.CSSProperties = {
 };
 
 function nativeSelectStyle(borderColor: string, backgroundColor: string, color: string): React.CSSProperties {
-  const { paddingHorizontal, paddingVertical, flexDirection: _row, alignItems: _align, justifyContent: _justify, gap: _gap, ...box } = StyleSheet.flatten(s.selectTrigger);
+  const trigger = StyleSheet.flatten(s.selectTrigger);
   const text = StyleSheet.flatten(s.selectTriggerText);
   return {
-    ...box,
     ...NATIVE_SELECT_BOX,
+    minHeight: trigger.minHeight,
+    borderWidth: trigger.borderWidth,
+    borderRadius: trigger.borderRadius,
     fontSize: text.fontSize,
-    paddingBlock: paddingVertical,
-    paddingInline: paddingHorizontal,
+    paddingBlock: trigger.paddingVertical,
+    paddingInline: trigger.paddingHorizontal,
     borderColor,
     backgroundColor,
     color,
