@@ -18,7 +18,7 @@
  */
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 
-import { Pressable, Text, View, type StyleProp, type ViewStyle } from 'react-native';
+import { Platform, Pressable, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { useUi } from '@dloizides/ui-feedback';
 
@@ -26,6 +26,7 @@ import { AnchoredMenu } from '../AnchoredMenu/AnchoredMenu';
 import { listboxDomId, optionDomId } from '../AnchoredMenu/components/OptionRow';
 import { controlStyles as s } from '../controls/controlStyles';
 import type { ControlOption } from '../controls/controlTypes';
+import { NativeSelect } from './NativeSelect';
 import { useSelectListbox } from './useSelectListbox';
 
 const CHEVRON_DOWN = '▾';
@@ -69,6 +70,8 @@ export interface SelectControlProps {
   style?: StyleProp<ViewStyle>;
   /** Trigger is `${testID}-trigger`, menu `${testID}-menu`, options `${testID}-option-${value}`. */
   testID: string;
+  /** Web only: render a real `<select>` (trigger testID unchanged); ignored off web. */
+  native?: boolean;
 }
 
 function listboxTriggerAria(testID: string, hasList: boolean, highlighted: ControlOption | undefined): Record<string, string | undefined> {
@@ -79,7 +82,11 @@ function listboxTriggerAria(testID: string, hasList: boolean, highlighted: Contr
   };
 }
 
-export function SelectControl({
+export function SelectControl(props: SelectControlProps): React.ReactElement {
+  return props.native === true && IS_WEB ? <NativeSelect {...props} /> : <MenuSelectControl {...props} />;
+}
+
+function MenuSelectControl({
   options,
   value,
   onChange,

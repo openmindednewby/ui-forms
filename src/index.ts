@@ -142,6 +142,8 @@ export type { Focusable, FocusableRefs } from './useFocusFirstInvalid/useFocusFi
 
 export { useKeepInView } from './useKeepInView/useKeepInView';
 
+export { FileInput } from './FileInput/FileInput';
+export type { FileInputProps } from './FileInput/FileInput';
 export { UploadWithLinkField } from './UploadWithLinkField/UploadWithLinkField';
 export type { UploadWithLinkFieldProps, UploadWithLinkLabels } from './UploadWithLinkField/UploadWithLinkField';
 
