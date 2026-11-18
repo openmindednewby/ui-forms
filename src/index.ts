@@ -175,3 +175,5 @@ export { RadioList, radioRowIdentity } from './RadioList';
 export type { RadioListProps, RadioOption, RadioRowIdentity } from './RadioList';
 
 export * from './DecisionPanel';
+export { FoldingFormSection } from './FoldingFormSection';
+export type { FoldingFormSectionProps } from './FoldingFormSection';
