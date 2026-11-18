@@ -25,10 +25,10 @@ function renderNative(overrides: Partial<React.ComponentProps<typeof SelectContr
 }
 
 describe('SelectControl native', () => {
-  it('with native on web, renders a real select element under the trigger testID', () => {
+  it('with native on web, renders a real select element under the plain testID', () => {
     renderNative();
 
-    const trigger = screen.getByTestId('sel-trigger');
+    const trigger = screen.getByTestId('sel');
 
     expect(trigger.tagName).toBe('SELECT');
   });
@@ -36,7 +36,7 @@ describe('SelectControl native', () => {
   it('with a changed native option, calls onChange with the option value', () => {
     const onChange = renderNative();
 
-    fireEvent.change(screen.getByTestId('sel-trigger'), { target: { value: 'closed' } });
+    fireEvent.change(screen.getByTestId('sel'), { target: { value: 'closed' } });
 
     expect(onChange).toHaveBeenCalledWith('closed');
   });
@@ -44,7 +44,7 @@ describe('SelectControl native', () => {
   it('with an accessible label and hint, puts them on the select', () => {
     renderNative({ accessibilityLabel: 'Status: Closed', value: 'closed', labelledById: 'status-label' });
 
-    const trigger = screen.getByTestId('sel-trigger');
+    const trigger = screen.getByTestId('sel');
 
     expect([trigger.getAttribute('aria-label'), trigger.getAttribute('title'), trigger.getAttribute('aria-labelledby')]).toEqual(['Status: Closed', 'Filters the list by status', 'status-label']);
   });
@@ -52,7 +52,7 @@ describe('SelectControl native', () => {
   it('with a value matching no option, shows the placeholder as the selected option', () => {
     renderNative({ value: '', placeholder: 'Any status' });
 
-    const trigger = screen.getByTestId('sel-trigger') as HTMLSelectElement;
+    const trigger = screen.getByTestId('sel') as HTMLSelectElement;
 
     expect(trigger.selectedOptions[0]?.textContent).toBe('Any status');
   });

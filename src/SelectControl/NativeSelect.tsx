@@ -56,7 +56,7 @@ export function NativeSelect({
       <select
         aria-label={accessibilityLabel}
         aria-labelledby={labelledById}
-        data-testid={`${testID}-trigger`}
+        data-testid={testID}
         style={nativeSelectStyle(colors.border, colors.surfaceElevated, textColor)}
         title={accessibilityHint}
         value={value}

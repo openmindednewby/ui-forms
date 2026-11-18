@@ -72,7 +72,7 @@ export interface SelectControlProps {
   style?: StyleProp<ViewStyle>;
   /** Trigger is `${testID}-trigger`, menu `${testID}-menu`, options `${testID}-option-${value}`. */
   testID: string;
-  /** Web only: render a real `<select>` (trigger testID unchanged); ignored off web. */
+  /** Web only: render a real `<select>` (the select carries the plain `testID`); ignored off web. */
   native?: boolean;
 }
 
