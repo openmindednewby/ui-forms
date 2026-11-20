@@ -50,6 +50,10 @@ export type { FormActionsProps } from './FormActions/FormActions';
 
 export { FormField } from './FormField/FormField';
 export type { FormFieldProps } from './FormField/FormField';
+export { rowsForText } from './FormField/textRows';
+export { useAutoGrowRows } from './FormField/useAutoGrowRows';
+export type { AutoGrowRows } from './FormField/useAutoGrowRows';
+export { SEGMENT_BESIDE_FIELD, SEGMENT_BESIDE_TEXT_INPUT } from './segmentBesideField/segmentBesideField';
 
 export { ThemedTextInput } from './ThemedTextInput/ThemedTextInput';
 export type { ThemedTextInputProps } from './ThemedTextInput/ThemedTextInput';

@@ -16,6 +16,7 @@ import { type TextInput, type TextInputProps, type ViewStyle } from 'react-nativ
 import { Field } from '../Field/Field';
 import { RecentInputField } from './RecentInputField';
 import { ThemedTextInput } from '../ThemedTextInput/ThemedTextInput';
+import { useAutoGrowRows } from './useAutoGrowRows';
 
 /**
  * The private `styles.input` that used to live here — padding 10/12, radius 8, border 1 — was a
@@ -55,9 +56,13 @@ export interface FormFieldProps extends Omit<TextInputProps, 'style'> {
   recentMax?: number;
   /** Reaches the input, for focusing it without scrolling the page. Not forwarded when `recentKey` is set. */
   inputRef?: React.Ref<TextInput>;
+  /** Grows a multi-line box to fit its text, so nothing scrolls inside it; never fewer rows than this. */
+  autoGrowMinRows?: number;
 }
 
-export const FormField = ({
+type PlainFormFieldProps = Omit<FormFieldProps, 'autoGrowMinRows'>;
+
+const PlainFormField = ({
   label,
   labelHidden = false,
   required = false,
@@ -67,7 +72,7 @@ export const FormField = ({
   recentMax,
   inputRef,
   ...textInputProps
-}: FormFieldProps): React.ReactElement => (
+}: PlainFormFieldProps): React.ReactElement => (
   <Field
     containerStyle={containerStyle}
     error={error}
@@ -100,5 +105,27 @@ export const FormField = ({
     }}
   </Field>
 );
+
+const AutoGrowFormField = ({
+  minRows,
+  ...fieldProps
+}: PlainFormFieldProps & { minRows: number }): React.ReactElement => {
+  const grow = useAutoGrowRows(fieldProps.value ?? '', minRows);
+  return (
+    <PlainFormField
+      {...fieldProps}
+      multiline
+      numberOfLines={grow.numberOfLines}
+      onLayout={grow.onLayout}
+    />
+  );
+};
+
+export const FormField = ({ autoGrowMinRows, ...fieldProps }: FormFieldProps): React.ReactElement =>
+  autoGrowMinRows === undefined ? (
+    <PlainFormField {...fieldProps} />
+  ) : (
+    <AutoGrowFormField {...fieldProps} minRows={autoGrowMinRows} />
+  );
 
 export default FormField;
