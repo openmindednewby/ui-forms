@@ -30,7 +30,10 @@ const ACTIVATION_KEYS = ['Enter', ' ', 'Spacebar'];
 const HINT_FONT_SIZE = 12;
 const BOX_SIZE = 20;
 const BOX_RADIUS = 5;
-const CHECK_FONT_SIZE = 14;
+const TICK_WIDTH = 6;
+const TICK_HEIGHT = 10;
+const TICK_STROKE = 2;
+const TICK_LIFT = -2;
 const DISABLED_OPACITY = 0.5;
 const FOCUS_RING_WIDTH = 2;
 const FOCUS_RING_GAP = 2;
@@ -70,10 +73,13 @@ const styles = StyleSheet.create({
     borderWidth: FOCUS_RING_WIDTH,
     borderRadius: BOX_RADIUS - FOCUS_RING_INSET,
   },
-  check: {
-    fontSize: CHECK_FONT_SIZE,
-    fontWeight: '700',
-    lineHeight: CHECK_FONT_SIZE,
+  tick: {
+    width: TICK_WIDTH,
+    height: TICK_HEIGHT,
+    marginTop: TICK_LIFT,
+    borderRightWidth: TICK_STROKE,
+    borderBottomWidth: TICK_STROKE,
+    transform: [{ rotate: '45deg' }],
   },
   textColumn: {
     flex: 1,
@@ -180,9 +186,7 @@ export const FormCheckbox = ({
           <View pointerEvents="none" style={[styles.focusRing, themeStyles.ring]} testID={`${testID}-focus-ring`} />
         ) : null}
         {value ? (
-          <Text style={[styles.check, { color: colors.surface }]} accessibilityElementsHidden>
-            ✓
-          </Text>
+          <View accessibilityElementsHidden pointerEvents="none" style={[styles.tick, { borderColor: colors.surface }]} testID={`${testID}-tick`} />
         ) : null}
       </View>
       <View style={styles.textColumn}>
