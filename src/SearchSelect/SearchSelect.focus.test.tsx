@@ -10,6 +10,7 @@ jest.mock('react-native', () => ({
 }));
 
 const PHONE_WIDTH = 360;
+const DESKTOP_WIDTH = 1280;
 const VIEWPORT_HEIGHT = 800;
 const PAST_SHEET_MOTION_MS = 400;
 const TID = 'country';
@@ -55,6 +56,32 @@ describe('SearchSelect on the phone sheet', () => {
 
     act(() => {
       fireEvent.keyDown(search, { key });
+      jest.advanceTimersByTime(PAST_SHEET_MOTION_MS);
+    });
+
+    expect(screen.queryByTestId(`${TID}-panel`)).toBeNull();
+    expect(document.activeElement).toBe(trigger);
+  });
+});
+
+describe('SearchSelect on the desktop dropdown', () => {
+  beforeEach(() => {
+    window.localStorage.clear();
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => jest.useRealTimers());
+
+  it('with Escape pressed in the search box, closes the list and returns focus to the trigger', () => {
+    const trigger = openAt(DESKTOP_WIDTH);
+    act(() => {
+      jest.runOnlyPendingTimers();
+    });
+    const search = screen.getByTestId(`${TID}-search`);
+
+    act(() => {
+      fireEvent.keyDown(search, { key: 'Escape' });
+      fireEvent.keyUp(search, { key: 'Escape' });
       jest.advanceTimersByTime(PAST_SHEET_MOTION_MS);
     });
 
