@@ -180,5 +180,5 @@ export type { RadioListProps, RadioOption, RadioRowIdentity } from './RadioList'
 
 export * from './DecisionPanel';
 
-export { PasswordField, PasswordRules, PasswordRulesDisplay, RevealToggle, RuleTone, ruleTone, changedRules, ruleAnnouncement } from './PasswordField';
-export type { PasswordFieldProps, PasswordRulesProps, RevealToggleProps, PasswordFieldLabels, PasswordRuleState } from './PasswordField';
+export { PasswordField, PasswordRules, PasswordRulesDisplay, RevealToggle, RuleTone, ruleTone, changedRules, ruleAnnouncement, ruleColorsFrom } from './PasswordField';
+export type { PasswordFieldProps, PasswordRulesProps, RevealToggleProps, PasswordFieldLabels, PasswordRuleState, PasswordFieldColors, RuleColors } from './PasswordField';

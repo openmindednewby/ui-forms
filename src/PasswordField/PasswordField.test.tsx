@@ -7,6 +7,7 @@ import { PasswordRulesDisplay } from './PasswordRulesDisplay';
 import { changedRules, ruleAnnouncement } from './ruleAnnouncement';
 import { RuleTone, ruleTone } from './RuleTone';
 import type { PasswordFieldLabels, PasswordRuleState } from './types';
+import { ruleColorsFrom } from './useRuleColors';
 
 const LABELS: PasswordFieldLabels = { show: 'Show password', hide: 'Hide password', met: 'met', unmet: 'not met' };
 
@@ -45,6 +46,16 @@ describe('ruleTone', () => {
     const tone = ruleTone(true, true);
 
     expect(tone).toBe(RuleTone.Met);
+  });
+});
+
+describe('ruleColorsFrom', () => {
+  it('with a caller palette, maps met to success, unmet to textSecondary and refused to error', () => {
+    const palette = { success: 'var(--ok)', error: 'var(--bad)', text: 'var(--ink)', textSecondary: 'var(--muted)', border: 'var(--line)', background: 'var(--bg)' };
+
+    const colors = ruleColorsFrom(palette);
+
+    expect([colors.mark.met, colors.mark.unmet, colors.mark.refused, colors.text.met]).toEqual(['var(--ok)', 'var(--muted)', 'var(--bad)', 'var(--ink)']);
   });
 });
 

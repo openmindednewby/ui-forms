@@ -7,4 +7,6 @@ export { RevealToggle } from './RevealToggle';
 export type { RevealToggleProps } from './RevealToggle';
 export { RuleTone, ruleTone } from './RuleTone';
 export { changedRules, ruleAnnouncement } from './ruleAnnouncement';
-export type { PasswordFieldLabels, PasswordRuleState } from './types';
+export type { PasswordFieldColors, PasswordFieldLabels, PasswordRuleState } from './types';
+export { ruleColorsFrom } from './useRuleColors';
+export type { RuleColors } from './useRuleColors';

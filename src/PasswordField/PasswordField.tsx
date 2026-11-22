@@ -7,7 +7,7 @@ import { ThemedTextInput, type ThemedTextInputProps } from '../ThemedTextInput/T
 import { PasswordRules } from './PasswordRules';
 import { PasswordRulesDisplay } from './PasswordRulesDisplay';
 import { RevealToggle } from './RevealToggle';
-import type { PasswordFieldLabels, PasswordRuleState } from './types';
+import type { PasswordFieldColors, PasswordFieldLabels, PasswordRuleState } from './types';
 import { usePasswordRuleAnnouncement } from './usePasswordRuleAnnouncement';
 import { useRuleColors } from './useRuleColors';
 
@@ -36,6 +36,7 @@ export interface PasswordFieldProps {
   rulesDisplay?: PasswordRulesDisplay;
   flagUnmet?: boolean;
   error?: string;
+  colors?: PasswordFieldColors;
   inputProps?: Omit<ThemedTextInputProps, 'value' | 'onChangeText' | 'secureTextEntry' | 'testID'>;
 }
 
@@ -73,13 +74,13 @@ function useCaretKeepingToggle(inputRef: React.RefObject<TextInput | null>, init
 }
 
 export const PasswordField = React.forwardRef<TextInput, PasswordFieldProps>(function PasswordField(
-  { label, value, onChangeText, labels, testID, rules = NO_RULES, rulesDisplay = PasswordRulesDisplay.MeterGrid, flagUnmet = false, error, inputProps },
+  { label, value, onChangeText, labels, testID, rules = NO_RULES, rulesDisplay = PasswordRulesDisplay.MeterGrid, flagUnmet = false, error, colors: colorOverride, inputProps },
   ref,
 ): React.ReactElement {
   const inputRef = useRef<TextInput>(null);
   useImperativeHandle(ref, () => inputRef.current as TextInput);
   const toggle = useCaretKeepingToggle(inputRef, value.length);
-  const colors = useRuleColors();
+  const colors = useRuleColors(colorOverride);
   const announcement = usePasswordRuleAnnouncement(rules, labels);
   const rulesId = `${testID}-rules`;
   const hasRules = rules.length > 0;

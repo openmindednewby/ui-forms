@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { useUi } from '@dloizides/ui-feedback';
 
 import { RuleTone } from './RuleTone';
+import type { PasswordFieldColors } from './types';
 
 export interface RuleColors {
   mark: Record<RuleTone, string>;
@@ -11,16 +12,26 @@ export interface RuleColors {
   onMark: string;
 }
 
-export function useRuleColors(): RuleColors {
+export function ruleColorsFrom(palette: PasswordFieldColors): RuleColors {
+  return {
+    mark: { [RuleTone.Met]: palette.success, [RuleTone.Unmet]: palette.textSecondary, [RuleTone.Refused]: palette.error },
+    text: { [RuleTone.Met]: palette.text, [RuleTone.Unmet]: palette.textSecondary, [RuleTone.Refused]: palette.error },
+    track: palette.border,
+    onMark: palette.background,
+  };
+}
+
+export function useRuleColors(override?: PasswordFieldColors): RuleColors {
   const { theme } = useUi();
   return useMemo(() => {
-    const success = theme.semantic.success['500'];
-    const error = theme.semantic.error['500'];
-    return {
-      mark: { [RuleTone.Met]: success, [RuleTone.Unmet]: theme.colors.textSecondary, [RuleTone.Refused]: error },
-      text: { [RuleTone.Met]: theme.colors.text, [RuleTone.Unmet]: theme.colors.textSecondary, [RuleTone.Refused]: error },
-      track: theme.colors.border,
-      onMark: theme.colors.background,
-    };
-  }, [theme]);
+    if (override !== undefined) return ruleColorsFrom(override);
+    return ruleColorsFrom({
+      success: theme.semantic.success['500'],
+      error: theme.semantic.error['500'],
+      text: theme.colors.text,
+      textSecondary: theme.colors.textSecondary,
+      border: theme.colors.border,
+      background: theme.colors.background,
+    });
+  }, [theme, override]);
 }
