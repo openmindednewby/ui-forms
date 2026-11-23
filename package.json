@@ -76,6 +76,7 @@
     "version": "npm run build"
   },
   "peerDependencies": {
+    "@dloizides/api-client-base": ">=1.2.0",
     "@dloizides/ui-buttons": ">=1.20.1",
     "@dloizides/ui-feedback": ">=1.1.0",
     "react": ">=18.0.0",
@@ -83,6 +84,7 @@
     "react-native-svg": ">=13.0.0"
   },
   "devDependencies": {
+    "@dloizides/api-client-base": "^1.2.0",
     "@dloizides/ui-buttons": "^1.20.1",
     "@dloizides/ui-feedback": "^1.1.0",
     "@testing-library/dom": "^10.4.0",

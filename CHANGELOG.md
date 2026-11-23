@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added
+- `useServerFieldErrors({ fields, refs?, formatCode? })` (FORM-VALID-1 D4): `apply(error)` parses a 400/422 with `@dloizides/api-client-base` `parseFieldErrors`, puts the first message under each known field (exact path, then lower-cased last segment), sends the rest to `formError`, focuses the first invalid field; `errorFor`, `clear`, `reset`. `formatCode(code, error)` is injected so the app's `FM` stays in the app; a null result shows the server reason.
+- Peer `@dloizides/api-client-base >=1.2.0`.
+
+## [Unreleased]
+
 ### Changed
 - `FormSwitch`: the consumer `testID` now lands on the whole label + switch row (the pressable, at least 44 px tall) instead of RN-web's 40x20 switch wrapper, so a probe or e2e tap on `testID` hits the full target; the native switch is `${testID}-switch`, the old `${testID}-row` id is gone (D-FUNDS-18 in FINREG-FUNDS-1 "Tenant funds, deal gate, blocking roles").
 
