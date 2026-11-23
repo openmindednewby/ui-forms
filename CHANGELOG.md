@@ -1,8 +1,9 @@
 # Changelog
 
-## [Unreleased]
+## [1.46.0] - 2026-11-23
 
 ### Added
+- `PasswordField` (FORM-VALID-1 D7, D-FV-3, D-FV-4): password input with a reveal eye and four rule layouts (`PasswordRulesDisplay`), rule changes announced, optional token-shaped `colors` prop over the theme; uses `@dloizides/ui-icons ^1.4.0`.
 - `useServerFieldErrors({ fields, refs?, formatCode? })` (FORM-VALID-1 D4): `apply(error)` parses a 400/422 with `@dloizides/api-client-base` `parseFieldErrors`, puts the first message under each known field (exact path, then lower-cased last segment), sends the rest to `formError`, focuses the first invalid field; `errorFor`, `clear`, `reset`. `formatCode(code, error)` is injected so the app's `FM` stays in the app; a null result shows the server reason.
 - Peer `@dloizides/api-client-base >=1.2.0`.
 
