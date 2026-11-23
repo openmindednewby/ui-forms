@@ -6,6 +6,7 @@ import { CHIP_HIT_SLOP } from '../constants';
 import type { ChipProps } from '../types';
 
 import { chipLabelLayout } from '../utils/chipLabelLayout';
+import { chipFill, chipSizeLook } from '../utils/chipLook';
 
 import { ChipContent } from './ChipContent';
 import { chipStyles } from './chipStyles';
@@ -17,10 +18,13 @@ export function OutlineChip<T extends string | number>(props: ChipProps<T>): Rea
   const active = selected || hovered;
 
   const borderColor = active ? colors.primary : colors.border;
-  const backgroundColor = selected ? colors.tint : colors.muted;
-  // Selected AND hovered both lift the ink to the primary colour (v1's indigo / indigo-dark);
-  // the theme surface only guarantees the 500 step, so both use it — border + fill carry the state.
-  const textColor = active ? colors.primary : colors.textMuted;
+  const fill = chipFill({
+    selected,
+    selectedFill: props.selectedFill,
+    ink: colors.textStrong,
+    rest: { backgroundColor: selected ? colors.tint : colors.muted, textColor: active ? colors.primary : colors.textMuted },
+  });
+  const sized = chipSizeLook(props.size);
   const layout = chipLabelLayout(option.labelWrap);
 
   return (
@@ -34,19 +38,21 @@ export function OutlineChip<T extends string | number>(props: ChipProps<T>): Rea
       aria-pressed={props.ariaPressed}
       disabled={disabled}
       hitSlop={CHIP_HIT_SLOP}
-      style={layout.boxStyle}
+      style={[sized.hitBox, layout.boxStyle]}
       tabIndex={props.tabIndex}
       testID={testID}
       onHoverIn={() => setHovered(true)}
       onHoverOut={() => setHovered(false)}
       onPress={onPress}
     >
-      <View style={[chipStyles.chipOutline, { borderColor, backgroundColor }, layout.boxStyle]}>
+      <View style={[chipStyles.chipOutline, sized.visual, { borderColor, backgroundColor: fill.backgroundColor }, layout.boxStyle]}>
         <ChipContent
+          checkColor={fill.checkColor}
+          checkTestID={`${testID}-check`}
           icon={option.icon}
           label={option.label}
           numberOfLines={layout.numberOfLines}
-          textStyle={[chipStyles.chipText, chipStyles.chipTextOutline, { color: textColor }, layout.textStyle]}
+          textStyle={[chipStyles.chipText, chipStyles.chipTextOutline, sized.text, { color: fill.textColor }, layout.textStyle]}
         />
       </View>
     </Pressable>

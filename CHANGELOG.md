@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.48.0] - 2026-11-23
+
+### Added
+- `ChipSelector` `size="compact"`: a 28 px pill (padding 4/10, label 12/600, line height 18) drawn inside a transparent hit box of at least 44x44, on web as well as native (`hitSlop` is native-only on RN-web). Default size unchanged.
+- `ChipSelector` `selectedFill`: background colour of a selected chip, passed by the app from its tokens; a selected chip then shows a leading check mark (decorative, `aria-hidden`, testID `<chip testID>-check`) and theme text ink. Works on both variants; `aria-checked` / `aria-pressed` unchanged. Unset keeps the current look.
+- `ChipSize` type export.
+
 ## [1.47.0] - 2026-11-23
 
 ### Added

@@ -9,6 +9,7 @@ import type { StyleProp, ViewStyle } from 'react-native';
 import type { FieldSpacing } from '../Field/fieldSpacing';
 
 import type { ChipLabelWrap } from './ChipLabelWrap';
+import type { ChipSize } from './ChipSize';
 
 /** Visual variant. `solid` = filled selected pill (default); `outline` = v1 tinted-outline. */
 export type ChipVariant = 'solid' | 'outline';
@@ -76,6 +77,10 @@ export interface ChipSelectorProps<T> {
    * stays a toggle button with `aria-pressed`.
    */
   singleSelectRole?: ChipSingleSelectRole;
+  /** `compact` = a 28 px pill (padding 4/10, label 12/600) inside a 44 px hit box; defaults to `default`. */
+  size?: ChipSize;
+  /** Background of a selected chip, from the app's tokens; when set, a selected chip also shows a leading check. */
+  selectedFill?: string;
 }
 
 /** Resolved, theme-derived colours for the two variants. */
@@ -133,5 +138,7 @@ export interface ChipProps<T> {
   tabIndex?: 0 | -1;
   /** Receives the chip's host node so the radio keyboard hook can move focus to it. */
   hostRef?: (node: unknown) => void;
+  size: ChipSize;
+  selectedFill?: string;
   onPress: () => void;
 }

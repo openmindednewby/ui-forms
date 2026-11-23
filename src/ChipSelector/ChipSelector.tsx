@@ -76,6 +76,8 @@ export const ChipSelector = <T extends string | number>({
   chipTestIDPrefix = DEFAULT_CHIP_TESTID_PREFIX,
   optionAccessibilityHint,
   singleSelectRole = 'button',
+  size = 'default',
+  selectedFill,
 }: ChipSelectorProps<T>): React.ReactElement => {
   const isRadioGroup = !multiple && singleSelectRole === 'radio';
   const { theme } = useUi();
@@ -105,6 +107,8 @@ export const ChipSelector = <T extends string | number>({
       disabled,
       option,
       selected,
+      size,
+      selectedFill,
       ...chipIdentity(option, selected, {
         prefix: chipTestIDPrefix,
         hint: optionAccessibilityHint,

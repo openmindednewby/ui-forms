@@ -73,6 +73,7 @@ export type { RecentValues } from './useRecentValues/useRecentValues';
 export { ChipSelector } from './ChipSelector/ChipSelector';
 export type { ChipSelectorProps, ChipOption, ChipVariant, ChipSingleSelectRole } from './ChipSelector/types';
 export { ChipLabelWrap } from './ChipSelector/ChipLabelWrap';
+export type { ChipSize } from './ChipSelector/ChipSize';
 
 export { FormSwitch } from './FormSwitch/FormSwitch';
 export type { FormSwitchProps } from './FormSwitch/FormSwitch';
