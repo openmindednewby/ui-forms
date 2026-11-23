@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.49.0] - 2026-11-24
+
+### Added
+- `FormSwitch` `variant="box"`: the label in the `control` voice over a bordered 44 px field box (theme `border` / `surface`) holding a pre-localized `stateLabel` and the switch, so a switch sits in a form row beside text fields. The whole box toggles; one switch element, box out of the tab order. Default `row` unchanged.
+- `FormSwitch` `activeTrackColor`: track colour of an ON switch, passed by the app from its tokens. Unset keeps the platform default.
+- `FormSwitchVariant` type export.
+
 ## [1.48.0] - 2026-11-23
 
 ### Added

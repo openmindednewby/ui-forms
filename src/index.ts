@@ -77,6 +77,7 @@ export type { ChipSize } from './ChipSelector/ChipSize';
 
 export { FormSwitch } from './FormSwitch/FormSwitch';
 export type { FormSwitchProps } from './FormSwitch/FormSwitch';
+export type { FormSwitchVariant } from './FormSwitch/FormSwitchVariant';
 
 export { FormCheckbox } from './FormCheckbox/FormCheckbox';
 export type { FormCheckboxProps } from './FormCheckbox/FormCheckbox';

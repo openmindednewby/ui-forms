@@ -7,7 +7,6 @@ import {
   StyleSheet,
   View,
   Text,
-  Switch,
   Pressable,
   type TextStyle,
   type ViewStyle,
@@ -15,6 +14,10 @@ import {
 
 import { MIN_TOUCH_TARGET_PX } from "@dloizides/a11y";
 import { useUi } from "@dloizides/ui-feedback";
+
+import { FormSwitchBox } from "./FormSwitchBox";
+import type { FormSwitchVariant } from "./FormSwitchVariant";
+import { SwitchSlot } from "./SwitchSlot";
 
 const DESCRIPTION_FONT_SIZE = 12;
 
@@ -27,12 +30,6 @@ const styles = StyleSheet.create({
     // The ROW is the hit box (SHOWCASE-1): RN-web renders Switch as a 40x20 box and ignores
     // `hitSlop`, so a pointer target smaller than the floor cannot be widened any other way.
     minHeight: MIN_TOUCH_TARGET_PX,
-  },
-  switchSlot: {
-    minWidth: MIN_TOUCH_TARGET_PX,
-    minHeight: MIN_TOUCH_TARGET_PX,
-    alignItems: "center",
-    justifyContent: "center",
   },
   textColumn: {
     flex: 1,
@@ -60,18 +57,27 @@ export interface FormSwitchProps {
   containerStyle?: ViewStyle;
   testID?: string;
   accessibilityHint?: string;
+  /** `row` (default) or `box`, the field-box look that sits in a form row beside text fields. */
+  variant?: FormSwitchVariant;
+  /** Pre-localized state text shown inside the `box` variant (e.g. "On"); ignored by `row`. */
+  stateLabel?: string;
+  /** Track colour of an ON switch, from the app's tokens; unset keeps the platform default. */
+  activeTrackColor?: string;
 }
 
-export const FormSwitch = ({
+type FormSwitchRowProps = Omit<FormSwitchProps, "variant" | "stateLabel" | "testID"> & { testID: string };
+
+const FormSwitchRow = ({
   label,
   value,
   onValueChange,
   disabled = false,
   description,
   containerStyle,
-  testID = "form-switch",
+  testID,
   accessibilityHint,
-}: FormSwitchProps): React.ReactElement => {
+  activeTrackColor,
+}: FormSwitchRowProps): React.ReactElement => {
   const { theme } = useUi();
   const toggle = React.useCallback((): void => {
     if (!disabled) onValueChange(!value);
@@ -110,30 +116,30 @@ export const FormSwitch = ({
           </Text>
         ) : null}
       </View>
-      {/*
-        Exactly ONE element exposes the switch (A11Y-ARIA-CHECKED-1). On web, react-native-web's
-        Switch renders a wrapper <div> around a native <input type="checkbox" role="switch"> that
-        already carries `checked` / `disabled` — the state assistive tech reads (HTML-AAM maps
-        `checked` to the checked state, so no `aria-checked` is needed or allowed on it).
-        Passing `accessibilityRole="switch"` here put a SECOND `role="switch"` on the wrapper,
-        which RNW then made a `tabindex="0"` stop even when disabled; literal `aria-checked` /
-        `aria-disabled` would land on that role-less wrapper too. So neither is passed: the
-        wrapper is plain and unfocusable, and native keeps its `switch` role from RN's Switch
-        default (`accessibilityRole ?? 'switch'`) plus `accessibilityState` below.
-      */}
-      <View pointerEvents="none" style={styles.switchSlot} testID={`${testID}-hitbox`}>
-        <Switch
-          accessibilityHint={accessibilityHint ?? label}
-          accessibilityLabel={label}
-          accessibilityState={{ checked: value, disabled }}
-          disabled={disabled}
-          testID={`${testID}-switch`}
-          value={value}
-          onValueChange={onValueChange}
-        />
-      </View>
+      <SwitchSlot
+        accessibilityHint={accessibilityHint}
+        activeTrackColor={activeTrackColor}
+        disabled={disabled}
+        label={label}
+        testID={testID}
+        value={value}
+        onValueChange={onValueChange}
+      />
     </Pressable>
   );
 };
+
+export const FormSwitch = ({
+  variant = "row",
+  stateLabel,
+  testID = "form-switch",
+  disabled = false,
+  ...props
+}: FormSwitchProps): React.ReactElement =>
+  variant === "box" ? (
+    <FormSwitchBox {...props} disabled={disabled} stateLabel={stateLabel} testID={testID} />
+  ) : (
+    <FormSwitchRow {...props} disabled={disabled} testID={testID} />
+  );
 
 export default FormSwitch;
