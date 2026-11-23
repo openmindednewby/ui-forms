@@ -14,7 +14,7 @@ import { useIsPhone } from '../../DatePicker/hooks/useIsPhone';
 import { useReturnFocus } from '../../DatePicker/hooks/useReturnFocus';
 import { useTypedDate } from '../../DatePicker/hooks/useTypedDate';
 import { closedFieldMinWidth } from '../../DatePicker/utils/fieldWidth';
-import { formatDisplay } from '../../DatePicker/utils/formatDate';
+import { displayFormatter } from '../../DatePicker/utils/DateDisplay';
 import { typedEditBind } from '../../DatePicker/utils/typedEdit';
 import { useThemedInput } from '../../useThemedInput/useThemedInput';
 import { webFieldA11y } from '../../webFieldA11y/webFieldA11y';
@@ -41,13 +41,13 @@ export const anchorStyles = StyleSheet.create({ wrap: { position: 'relative', wi
 /** A typeable date with a calendar button; the calendar opens as a sheet on a phone and a dropdown on desktop. */
 export function DatePickerInput({ fieldProps, context, onTypedError }: DatePickerInputProps): React.ReactElement {
   const { label, value, onChange, onSubmit, accessibilityHint, testID, required, disabled = false, min, max } = fieldProps;
-  const { labels } = useDatePickerConfig();
+  const { labels, display } = useDatePickerConfig();
   const phone = useIsPhone();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<View>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const bounds = { min, max };
-  const typed = useTypedDate({ value, onChange, bounds, format: formatDisplay, onError: onTypedError, editOnType: true });
+  const typed = useTypedDate({ value, onChange, bounds, format: displayFormatter(display), onError: onTypedError, editOnType: true });
   const edit = typedEditBind(typed);
   const { style, focusBind, hoverBind } = useThemedInput({ hasError: context.hasError, editable: !disabled });
   const focus = focusBind as unknown as FocusHandlers;
