@@ -30,4 +30,14 @@ describe('SelectField', () => {
 
     expect(name).toBe('Status: ');
   });
+
+  it('with the caption label variant, renders the label at 12 px uppercase', () => {
+    render(
+      <SelectField accessibilityHint="Pick" label="Status" labelVariant="caption" options={OPTIONS} testID="status" value="paid" onChange={jest.fn()} />,
+    );
+
+    const label = screen.getByText('Status');
+
+    expect(getComputedStyle(label)).toMatchObject({ fontSize: '12px', textTransform: 'uppercase' });
+  });
 });

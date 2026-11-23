@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.47.0] - 2026-11-23
+
+### Added
+- `labelVariant="caption"` (12 px, 600, uppercase, muted ink) on `Field`, `SelectField` and `FormField`.
+- `MultiSelectField`: a labelled select holding several values as removable chips inside the select box.
+
 ## [1.46.0] - 2026-11-23
 
 ### Added

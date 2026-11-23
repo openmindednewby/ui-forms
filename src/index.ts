@@ -95,6 +95,8 @@ export { nextHighlight } from './controls/nextHighlight';
 
 export { SelectField } from './SelectField/SelectField';
 export type { SelectFieldProps } from './SelectField/SelectField';
+export { MultiSelectField } from './MultiSelectField/MultiSelectField';
+export type { MultiSelectFieldProps, MultiSelectChipLabels } from './MultiSelectField/MultiSelectField';
 
 export {
   TypeaheadControl,

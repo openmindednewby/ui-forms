@@ -33,4 +33,12 @@ describe('resolveLabelVariantStyle', () => {
     // A "variant" that resolved to the same style would be decorative API.
     expect(metrics(resolveLabelVariantStyle('control'))).not.toEqual(metrics(resolveLabelVariantStyle('field')));
   });
+
+  it('with the caption variant, resolves to 12/600 uppercase', () => {
+    const variant = 'caption';
+
+    const style = metrics(resolveLabelVariantStyle(variant));
+
+    expect(style).toMatchObject({ fontSize: 12, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 0.4 });
+  });
 });

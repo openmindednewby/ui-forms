@@ -4,6 +4,7 @@ import { Field } from '../Field/Field';
 import { SelectControl } from '../SelectControl/SelectControl';
 
 import type { ControlOption } from '../controls/controlTypes';
+import type { FieldLabelVariant } from '../Field/labelVariants';
 
 export interface SelectFieldProps {
   label: string;
@@ -12,6 +13,7 @@ export interface SelectFieldProps {
   options: readonly ControlOption[];
   onChange: (value: string) => void;
   testID: string;
+  labelVariant?: FieldLabelVariant;
 }
 
 export const SelectField = ({
@@ -21,10 +23,11 @@ export const SelectField = ({
   options,
   onChange,
   testID,
+  labelVariant,
 }: SelectFieldProps): React.ReactElement => {
   const selected = options.find((option) => option.value === value)?.label ?? '';
   return (
-    <Field label={label}>
+    <Field label={label} labelVariant={labelVariant}>
       {({ labelId }) => (
         <SelectControl
           accessibilityHint={accessibilityHint}

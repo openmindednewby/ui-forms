@@ -10,8 +10,8 @@
  *                the metrics `@dloizides/ui-tables` forked into its private `FieldShell` because
  *                `Field` hard-coded the `field` voice and offered no way out.
  *
- * A THIRD voice is drift, not a variant. Pick the voice from the SURFACE, not the component: every
- * label on one surface uses one voice, and voices are never mixed within a single row.
+ * Pick the voice from the SURFACE, not the component: every label on one surface uses one voice,
+ * and voices are never mixed within a single row.
  *
  * Why a plain string union and not a `const enum`: this type crosses the package boundary into
  * consumers' `.d.ts`, and a cross-boundary `const enum` breaks `isolatedModules` / Babel-only
@@ -20,7 +20,7 @@
 import { StyleSheet, type TextStyle } from 'react-native';
 
 /** Which of the two contract voices a field label speaks. */
-export type FieldLabelVariant = 'field' | 'control';
+export type FieldLabelVariant = 'field' | 'control' | 'caption';
 
 /** The historical `Field` label metrics. Changing these moves pixels in every consumer. */
 const FIELD_FONT_SIZE = 13;
@@ -30,6 +30,9 @@ const FIELD_FONT_WEIGHT = '600';
 const CONTROL_FONT_SIZE = 11;
 const CONTROL_FONT_WEIGHT = '700';
 const CONTROL_LETTER_SPACING = 0.4;
+
+const CAPTION_FONT_SIZE = 12;
+const CAPTION_FONT_WEIGHT = '600';
 
 export const labelVariantStyles = StyleSheet.create({
   field: {
@@ -42,6 +45,12 @@ export const labelVariantStyles = StyleSheet.create({
     letterSpacing: CONTROL_LETTER_SPACING,
     textTransform: 'uppercase',
   },
+  caption: {
+    fontSize: CAPTION_FONT_SIZE,
+    fontWeight: CAPTION_FONT_WEIGHT,
+    letterSpacing: CONTROL_LETTER_SPACING,
+    textTransform: 'uppercase',
+  },
 });
 
 /**
@@ -49,5 +58,5 @@ export const labelVariantStyles = StyleSheet.create({
  * historical default — so a bad value degrades to "unchanged" rather than to "unstyled".
  */
 export function resolveLabelVariantStyle(variant?: FieldLabelVariant): TextStyle {
-  return variant === 'control' ? labelVariantStyles.control : labelVariantStyles.field;
+  return labelVariantStyles[variant ?? 'field'] ?? labelVariantStyles.field;
 }

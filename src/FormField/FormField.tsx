@@ -14,6 +14,7 @@ import React from 'react';
 import { type TextInput, type TextInputProps, type ViewStyle } from 'react-native';
 
 import { Field } from '../Field/Field';
+import type { FieldLabelVariant } from '../Field/labelVariants';
 import { RecentInputField } from './RecentInputField';
 import { ThemedTextInput } from '../ThemedTextInput/ThemedTextInput';
 import { useAutoGrowRows } from './useAutoGrowRows';
@@ -58,6 +59,7 @@ export interface FormFieldProps extends Omit<TextInputProps, 'style'> {
   inputRef?: React.Ref<TextInput>;
   /** Grows a multi-line box to fit its text, so nothing scrolls inside it; never fewer rows than this. */
   autoGrowMinRows?: number;
+  labelVariant?: FieldLabelVariant;
 }
 
 type PlainFormFieldProps = Omit<FormFieldProps, 'autoGrowMinRows'>;
@@ -71,6 +73,7 @@ const PlainFormField = ({
   recentKey,
   recentMax,
   inputRef,
+  labelVariant,
   ...textInputProps
 }: PlainFormFieldProps): React.ReactElement => (
   <Field
@@ -80,6 +83,7 @@ const PlainFormField = ({
     // label is hidden. The accessible name is kept on the input below, so hiding
     // the label never strips the name.
     label={labelHidden ? undefined : label}
+    labelVariant={labelVariant}
     required={required}
   >
     {({ describedById, hasError, controlId }) => {
