@@ -26,7 +26,7 @@ export function useRuleColors(override?: PasswordFieldColors): RuleColors {
   return useMemo(() => {
     if (override !== undefined) return ruleColorsFrom(override);
     return ruleColorsFrom({
-      success: theme.semantic.success['500'],
+      success: theme.semantic.success?.['500'] ?? theme.colors.text,
       error: theme.semantic.error['500'],
       text: theme.colors.text,
       textSecondary: theme.colors.textSecondary,
