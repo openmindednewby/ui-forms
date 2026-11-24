@@ -1,3 +1,4 @@
+import { resolveOnBrand } from '@dloizides/design-tokens';
 import type { ViewStyle } from 'react-native';
 
 export interface CheckboxColorTokens {
@@ -14,3 +15,6 @@ export const checkboxBoxColors = (
   checked
     ? { backgroundColor: brand, borderColor: brand }
     : { backgroundColor: 'transparent', borderColor: colors.textSecondary };
+
+/** Tick ink on the checked fill: the higher-contrast on-brand ink, so the tick shows in light and dark. */
+export const checkboxTickColor = (brand: string): string => resolveOnBrand(brand);

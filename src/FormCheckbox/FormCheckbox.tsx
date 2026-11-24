@@ -13,7 +13,7 @@ import { useUi } from '@dloizides/ui-feedback';
 
 import { useFieldIds } from '../Field/Field';
 
-import { checkboxBoxColors } from './checkboxColors';
+import { checkboxBoxColors, checkboxTickColor } from './checkboxColors';
 
 /**
  * Web-only keydown prop react-native-web's `Pressable` forwards but RN's types omit. A
@@ -53,6 +53,11 @@ const styles = StyleSheet.create({
   /** With no hint the row is a single line, so centre it vertically inside the floor. */
   centered: {
     alignItems: 'center',
+  },
+  boxOnly: {
+    minWidth: MIN_TOUCH_TARGET_PX,
+    justifyContent: 'center',
+    marginBottom: 0,
   },
   box: {
     width: BOX_SIZE,
@@ -108,6 +113,7 @@ export interface FormCheckboxProps {
   testID?: string;
   accessibilityLabel?: string;
   accessibilityHint?: string;
+  labelHidden?: boolean;
 }
 
 export const FormCheckbox = ({
@@ -122,6 +128,7 @@ export const FormCheckbox = ({
   testID = 'form-checkbox',
   accessibilityLabel,
   accessibilityHint,
+  labelHidden = false,
 }: FormCheckboxProps): React.ReactElement => {
   const { theme } = useUi();
   const { colors, palette } = theme;
@@ -136,9 +143,10 @@ export const FormCheckbox = ({
     const boxOn: ViewStyle = checkboxBoxColors(colors, brand, true);
     const boxOff: ViewStyle = checkboxBoxColors(colors, brand, false);
     const ring: ViewStyle = { borderColor: brand };
+    const tick: ViewStyle = { borderColor: checkboxTickColor(brand) };
     const labelStyle: TextStyle = { color: colors.text };
     const hintStyle: TextStyle = { color: colors.textSecondary };
-    return { boxOn, boxOff, ring, label: labelStyle, hint: hintStyle };
+    return { boxOn, boxOff, ring, tick, label: labelStyle, hint: hintStyle };
   }, [brand, colors]);
 
   const toggle = (): void => {
@@ -174,6 +182,7 @@ export const FormCheckbox = ({
       style={[
         styles.container,
         hasHint ? null : styles.centered,
+        labelHidden ? styles.boxOnly : null,
         containerStyle,
         disabled ? { opacity: DISABLED_OPACITY } : null,
         Platform.OS === 'web' ? WEB_NO_DEFAULT_OUTLINE : null,
@@ -186,13 +195,15 @@ export const FormCheckbox = ({
           <View pointerEvents="none" style={[styles.focusRing, themeStyles.ring]} testID={`${testID}-focus-ring`} />
         ) : null}
         {value ? (
-          <View accessibilityElementsHidden pointerEvents="none" style={[styles.tick, { borderColor: colors.surface }]} testID={`${testID}-tick`} />
+          <View accessibilityElementsHidden pointerEvents="none" style={[styles.tick, themeStyles.tick]} testID={`${testID}-tick`} />
         ) : null}
       </View>
-      <View style={styles.textColumn}>
-        <Text style={[styles.label, themeStyles.label]}>{label}</Text>
-        {hasHint ? <Text nativeID={hintId} style={[styles.hint, themeStyles.hint]}>{hintText}</Text> : null}
-      </View>
+      {labelHidden ? null : (
+        <View style={styles.textColumn}>
+          <Text style={[styles.label, themeStyles.label]}>{label}</Text>
+          {hasHint ? <Text nativeID={hintId} style={[styles.hint, themeStyles.hint]}>{hintText}</Text> : null}
+        </View>
+      )}
     </Pressable>
   );
 };

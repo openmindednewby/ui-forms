@@ -37,3 +37,24 @@ describe('FormCheckbox tick', () => {
     expect(parseFloat(getComputedStyle(screen.getByTestId('cb-tick-tick')).height)).toBeLessThanOrEqual(BOX_INNER_PX);
   });
 });
+
+describe('FormCheckbox labelHidden', () => {
+  it('with labelHidden, draws no label text but keeps the label as the accessible name', () => {
+    render(<FormCheckbox labelHidden testID="cb-hidden" label="Select row Ada" value />);
+
+    const box = screen.getByTestId('cb-hidden');
+
+    expect(screen.queryByText('Select row Ada')).toBeNull();
+    expect(box.getAttribute('aria-label')).toBe('Select row Ada');
+    expect(box.getAttribute('aria-checked')).toBe('true');
+  });
+
+  it('with labelHidden, toggles on press like the labelled checkbox', () => {
+    const onValueChange = jest.fn();
+    render(<FormCheckbox labelHidden testID="cb-hidden-press" label="Select row Ada" value={false} onValueChange={onValueChange} />);
+
+    fireEvent.click(screen.getByTestId('cb-hidden-press'));
+
+    expect(onValueChange).toHaveBeenCalledWith(true);
+  });
+});
