@@ -6,7 +6,7 @@ import { CHIP_HIT_SLOP, TRANSPARENT_COLOR } from '../constants';
 import type { ChipProps } from '../types';
 
 import { chipLabelLayout } from '../utils/chipLabelLayout';
-import { chipFill, chipSizeLook, restBorderColor } from '../utils/chipLook';
+import { chipBoxFill, chipFill, chipSizeLook, restBorderColor } from '../utils/chipLook';
 
 import { ChipContent } from './ChipContent';
 import { chipStyles } from './chipStyles';
@@ -18,6 +18,7 @@ export function SolidChip<T extends string | number>(props: ChipProps<T>): React
     selected,
     selectedFill: props.selectedFill,
     ink: colors.textStrong,
+    onDarkInk: colors.onPrimary,
     rest: { backgroundColor: selected ? colors.primary : TRANSPARENT_COLOR, textColor: selected ? colors.onPrimary : colors.textStrong },
   });
   const sized = chipSizeLook(props.size);
@@ -35,7 +36,7 @@ export function SolidChip<T extends string | number>(props: ChipProps<T>): React
       aria-pressed={props.ariaPressed}
       disabled={disabled}
       hitSlop={CHIP_HIT_SLOP}
-      style={[sized.hitBox, layout.boxStyle]}
+      style={[sized.hitBox, chipBoxFill(props.size, fill.backgroundColor), layout.boxStyle]}
       testID={testID}
       onPress={onPress}
       {...rovingTabStop}

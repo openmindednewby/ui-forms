@@ -6,7 +6,7 @@ import { CHIP_HIT_SLOP } from '../constants';
 import type { ChipProps } from '../types';
 
 import { chipLabelLayout } from '../utils/chipLabelLayout';
-import { chipFill, chipSizeLook, restBorderColor } from '../utils/chipLook';
+import { chipBoxFill, chipFill, chipSizeLook, restBorderColor } from '../utils/chipLook';
 
 import { ChipContent } from './ChipContent';
 import { chipStyles } from './chipStyles';
@@ -22,6 +22,7 @@ export function OutlineChip<T extends string | number>(props: ChipProps<T>): Rea
     selected,
     selectedFill: props.selectedFill,
     ink: colors.textStrong,
+    onDarkInk: colors.onPrimary,
     rest: { backgroundColor: selected ? colors.tint : colors.muted, textColor: active ? colors.primary : colors.textMuted },
   });
   const sized = chipSizeLook(props.size);
@@ -38,7 +39,7 @@ export function OutlineChip<T extends string | number>(props: ChipProps<T>): Rea
       aria-pressed={props.ariaPressed}
       disabled={disabled}
       hitSlop={CHIP_HIT_SLOP}
-      style={[sized.hitBox, layout.boxStyle]}
+      style={[sized.hitBox, chipBoxFill(props.size, fill.backgroundColor), layout.boxStyle]}
       tabIndex={props.tabIndex}
       testID={testID}
       onHoverIn={() => setHovered(true)}
