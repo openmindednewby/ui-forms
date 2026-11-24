@@ -72,8 +72,8 @@ export interface SelectControlProps {
   style?: StyleProp<ViewStyle>;
   /** Trigger is `${testID}-trigger`, menu `${testID}-menu`, options `${testID}-option-${value}`. */
   testID: string;
-  /** Web only: render a real `<select>` (the select carries the plain `testID`); ignored off web. */
-  native?: boolean;
+  /** Web only: render a real `<select>` (plain `testID`); `'fit'` sizes it to its longest option instead of the full width. */
+  native?: boolean | 'fit';
 }
 
 function listboxTriggerAria(testID: string, hasList: boolean, highlighted: ControlOption | undefined): Record<string, string | undefined> {
@@ -85,7 +85,7 @@ function listboxTriggerAria(testID: string, hasList: boolean, highlighted: Contr
 }
 
 export function SelectControl(props: SelectControlProps): React.ReactElement {
-  return props.native === true && IS_WEB ? <NativeSelect {...props} /> : <MenuSelectControl {...props} />;
+  return (props.native === true || props.native === 'fit') && IS_WEB ? <NativeSelect {...props} /> : <MenuSelectControl {...props} />;
 }
 
 function MenuSelectControl({

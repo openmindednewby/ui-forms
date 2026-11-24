@@ -34,6 +34,7 @@ import { useRadioKeyboard } from './hooks/useRadioKeyboard';
 import type { ChipColors, ChipOption, ChipSelectorProps } from './types';
 import { buildChipColors } from './utils/chipColors';
 import { chipIdentity } from './utils/chipIdentity';
+import { chipRowGap } from './utils/chipLook';
 
 const styles = StyleSheet.create({
   chipContainer: {
@@ -139,7 +140,7 @@ export const ChipSelector = <T extends string | number>({
       {({ describedById, hasError }) => (
         <View
           accessibilityRole={isRadioGroup ? 'radiogroup' : undefined}
-          style={styles.chipContainer}
+          style={[styles.chipContainer, chipRowGap(size)]}
           {...(webFieldA11y({ describedById, hasError }) as ViewProps)}
           {...radio.groupProps}
         >

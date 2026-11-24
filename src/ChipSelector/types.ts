@@ -78,7 +78,7 @@ export interface ChipSelectorProps<T> {
    * stays a toggle button with `aria-pressed`.
    */
   singleSelectRole?: ChipSingleSelectRole;
-  /** `compact` = a 28 px pill (padding 4/10, label 12/600) inside a 44 px hit box; defaults to `default`. */
+  /** `compact` = a 28 px pill (padding 4/10, label 12/600) in a 44 px hit box; `dense` = `compact` with no row gap; defaults to `default`. */
   size?: ChipSize;
   /** Background of a selected chip, from the app's tokens; when set, a selected chip also shows a leading check. */
   selectedFill?: string;

@@ -15,11 +15,22 @@ const NATIVE_SELECT_BOX: React.CSSProperties = {
   width: '100%',
 };
 
-function nativeSelectStyle(borderColor: string, backgroundColor: string, color: string): React.CSSProperties {
+const FIT_SELECT_BOX: React.CSSProperties = { width: 'auto', maxWidth: 'none' };
+
+const fitStyles = StyleSheet.create({
+  anchor: { alignSelf: 'flex-start', flexShrink: 0 },
+});
+
+/** The `<select>` box: full width, or sized to its longest option when `fit`. */
+export function nativeSelectBox(fit: boolean): React.CSSProperties {
+  return fit ? { ...NATIVE_SELECT_BOX, ...FIT_SELECT_BOX } : NATIVE_SELECT_BOX;
+}
+
+function nativeSelectStyle(fit: boolean, borderColor: string, backgroundColor: string, color: string): React.CSSProperties {
   const trigger = StyleSheet.flatten(s.selectTrigger);
   const text = StyleSheet.flatten(s.selectTriggerText);
   return {
-    ...NATIVE_SELECT_BOX,
+    ...nativeSelectBox(fit),
     minHeight: trigger.minHeight,
     borderWidth: trigger.borderWidth,
     borderRadius: trigger.borderRadius,
@@ -43,21 +54,23 @@ export function NativeSelect({
   labelledById,
   style,
   testID,
+  native,
 }: SelectControlProps): React.ReactElement {
   const { theme } = useUi();
   const { colors } = theme;
   const hasMatch = options.some((o) => o.value === value);
   const textColor = hasMatch ? colors.text : colors.textSecondary;
+  const fit = native === 'fit';
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>): void => onChange(event.target.value);
 
   return (
-    <View style={[s.anchor, style]}>
+    <View style={[s.anchor, fit ? fitStyles.anchor : undefined, style]}>
       <select
         aria-label={accessibilityLabel}
         aria-labelledby={labelledById}
         data-testid={testID}
-        style={nativeSelectStyle(colors.border, colors.surfaceElevated, textColor)}
+        style={nativeSelectStyle(fit, colors.border, colors.surfaceElevated, textColor)}
         title={accessibilityHint}
         value={value}
         onChange={handleChange}

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.51.0] - 2026-11-24
+
+### Added
+- `ChipSelector` `size="dense"`: the `compact` 28 px pill in its 44 px hit box with no row gap, so wrapped rows stack at a 44 px pitch instead of 52 (MODC-1 S-23). Column gap and tap target unchanged; `compact` and `default` unchanged.
+- `SelectControl` `native="fit"`: the web `<select>` sizes to its longest option instead of 100% width, so a narrow column no longer cuts the selected label (MODC-1 S-7). `native` / `native={true}` unchanged.
+
 ## [1.50.0] - 2026-11-24
 
 ### Added
