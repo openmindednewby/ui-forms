@@ -1,7 +1,9 @@
 import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 
 import { chipSizeStyles } from '../components/chipSizeStyles';
+import type { ChipOutlineTone } from '../ChipOutlineTone';
 import type { ChipSize } from '../ChipSize';
+import type { ChipColors } from '../types';
 
 export interface ChipFill {
   backgroundColor: string;
@@ -36,4 +38,9 @@ export function chipSizeLook(size: ChipSize): ChipSizeLook {
     return { hitBox: undefined, visual: undefined, text: undefined };
 
   return { hitBox: chipSizeStyles.compactHitBox, visual: chipSizeStyles.compactVisual, text: chipSizeStyles.compactText };
+}
+
+/** The outline of an unselected chip for the given tone. */
+export function restBorderColor(colors: Pick<ChipColors, 'border' | 'borderStrong'>, tone: ChipOutlineTone): string {
+  return tone === 'strong' ? colors.borderStrong : colors.border;
 }

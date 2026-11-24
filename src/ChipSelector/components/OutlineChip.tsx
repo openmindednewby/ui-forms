@@ -6,7 +6,7 @@ import { CHIP_HIT_SLOP } from '../constants';
 import type { ChipProps } from '../types';
 
 import { chipLabelLayout } from '../utils/chipLabelLayout';
-import { chipFill, chipSizeLook } from '../utils/chipLook';
+import { chipFill, chipSizeLook, restBorderColor } from '../utils/chipLook';
 
 import { ChipContent } from './ChipContent';
 import { chipStyles } from './chipStyles';
@@ -17,7 +17,7 @@ export function OutlineChip<T extends string | number>(props: ChipProps<T>): Rea
   const [hovered, setHovered] = React.useState(false);
   const active = selected || hovered;
 
-  const borderColor = active ? colors.primary : colors.border;
+  const borderColor = active ? colors.primary : restBorderColor(colors, props.outlineTone);
   const fill = chipFill({
     selected,
     selectedFill: props.selectedFill,

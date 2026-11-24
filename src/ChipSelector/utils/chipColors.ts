@@ -57,6 +57,7 @@ export function buildChipColors(
   const primary = palette.primary[500];
   return {
     border: colors.border,
+    borderStrong: colors.textSecondary,
     textStrong: colors.text,
     textMuted: colors.textSecondary,
     primary,

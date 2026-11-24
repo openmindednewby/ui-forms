@@ -9,6 +9,7 @@ import type { StyleProp, ViewStyle } from 'react-native';
 import type { FieldSpacing } from '../Field/fieldSpacing';
 
 import type { ChipLabelWrap } from './ChipLabelWrap';
+import type { ChipOutlineTone } from './ChipOutlineTone';
 import type { ChipSize } from './ChipSize';
 
 /** Visual variant. `solid` = filled selected pill (default); `outline` = v1 tinted-outline. */
@@ -81,11 +82,14 @@ export interface ChipSelectorProps<T> {
   size?: ChipSize;
   /** Background of a selected chip, from the app's tokens; when set, a selected chip also shows a leading check. */
   selectedFill?: string;
+  /** `strong` = unselected chips get the darker theme `textSecondary` outline; defaults to `default`. */
+  outlineTone?: ChipOutlineTone;
 }
 
 /** Resolved, theme-derived colours for the two variants. */
 export interface ChipColors {
   border: string;
+  borderStrong: string;
   /** Strong ink for the solid variant's rest text (unchanged from the original). */
   textStrong: string;
   /** Muted ink for the outline variant's rest text (v1 ink-soft). */
@@ -140,5 +144,6 @@ export interface ChipProps<T> {
   hostRef?: (node: unknown) => void;
   size: ChipSize;
   selectedFill?: string;
+  outlineTone: ChipOutlineTone;
   onPress: () => void;
 }

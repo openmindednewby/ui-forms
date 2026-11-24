@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.50.0] - 2026-11-24
+
+### Added
+- `ChipSelector` `outlineTone="strong"`: unselected chips draw their outline in the theme `textSecondary` ink instead of `border`, a darker edge (INVOICE-FU-26 D-FU26-1). Works on both variants; selected and hover looks unchanged. Default `default` keeps the current look.
+- `ChipOutlineTone` type export.
+
 ## [1.49.0] - 2026-11-24
 
 ### Added

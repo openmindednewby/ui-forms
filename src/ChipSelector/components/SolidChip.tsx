@@ -6,7 +6,7 @@ import { CHIP_HIT_SLOP, TRANSPARENT_COLOR } from '../constants';
 import type { ChipProps } from '../types';
 
 import { chipLabelLayout } from '../utils/chipLabelLayout';
-import { chipFill, chipSizeLook } from '../utils/chipLook';
+import { chipFill, chipSizeLook, restBorderColor } from '../utils/chipLook';
 
 import { ChipContent } from './ChipContent';
 import { chipStyles } from './chipStyles';
@@ -40,7 +40,7 @@ export function SolidChip<T extends string | number>(props: ChipProps<T>): React
       onPress={onPress}
       {...rovingTabStop}
     >
-      <View style={[chipStyles.chip, sized.visual, { borderColor: colors.border, backgroundColor: fill.backgroundColor }, layout.boxStyle]}>
+      <View style={[chipStyles.chip, sized.visual, { borderColor: selected ? colors.border : restBorderColor(colors, props.outlineTone), backgroundColor: fill.backgroundColor }, layout.boxStyle]}>
         <ChipContent
           checkColor={fill.checkColor}
           checkTestID={`${testID}-check`}
