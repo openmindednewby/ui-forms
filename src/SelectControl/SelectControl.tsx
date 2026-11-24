@@ -27,6 +27,8 @@ import { listboxDomId, optionDomId } from '../AnchoredMenu/components/OptionRow'
 import { controlStyles as s } from '../controls/controlStyles';
 import type { ControlOption } from '../controls/controlTypes';
 import { NativeSelect } from './NativeSelect';
+import { SelectChevron } from './SelectChevron';
+import { useSelectLookMetrics, type SelectLookMetrics } from './selectLook';
 import { useSelectListbox } from './useSelectListbox';
 
 const IS_WEB = Platform.OS === 'web';
@@ -76,6 +78,10 @@ export interface SelectControlProps {
   native?: boolean | 'fit';
 }
 
+function lookTriggerBox(m: SelectLookMetrics | undefined): ViewStyle | undefined {
+  return m === undefined ? undefined : { minHeight: m.height, height: m.height, paddingHorizontal: m.paddingHorizontal, paddingVertical: m.paddingVertical, borderRadius: m.borderRadius };
+}
+
 function listboxTriggerAria(testID: string, hasList: boolean, highlighted: ControlOption | undefined): Record<string, string | undefined> {
   return {
     role: 'combobox',
@@ -121,6 +127,7 @@ function MenuSelectControl({
     },
     [onChange],
   );
+  const metrics = useSelectLookMetrics();
   const listbox = useSelectListbox({ options, isOpen, open, toggle, select });
   const isListbox = menuAnchor !== undefined;
   const captureKeys: Record<string, unknown> = isListbox ? { onKeyDownCapture: listbox.onKeyDown } : {};
@@ -139,13 +146,15 @@ function MenuSelectControl({
         aria-labelledby={labelledById}
         onBlur={isListbox ? close : undefined}
         onPress={toggle}
-        style={[s.selectTrigger, { borderColor: colors.border, backgroundColor: colors.surfaceElevated }]}
+        style={[s.selectTrigger, lookTriggerBox(metrics), { borderColor: metrics?.borderColor ?? colors.border, backgroundColor: colors.surfaceElevated }]}
         testID={`${testID}-trigger`}
       >
-        <Text numberOfLines={1} style={[s.selectTriggerText, { color: value === '' ? colors.textSecondary : colors.text }]}>
+        <Text numberOfLines={1} style={[s.selectTriggerText, metrics === undefined ? undefined : { fontSize: metrics.fontSize }, { color: value === '' ? colors.textSecondary : colors.text }]}>
           {selectedLabel}
         </Text>
-        <Text aria-hidden style={[s.chevron, { color: colors.textSecondary }]}>{isOpen ? CHEVRON_UP : CHEVRON_DOWN}</Text>
+        {metrics === undefined
+          ? <Text aria-hidden style={[s.chevron, { color: colors.textSecondary }]}>{isOpen ? CHEVRON_UP : CHEVRON_DOWN}</Text>
+          : <SelectChevron color={colors.textSecondary} open={isOpen} />}
       </Pressable>
       {isOpen ? (
         <AnchoredMenu
