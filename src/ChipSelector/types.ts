@@ -4,7 +4,7 @@
  */
 import type React from 'react';
 
-import type { StyleProp, ViewStyle } from 'react-native';
+import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 
 import type { FieldSpacing } from '../Field/fieldSpacing';
 
@@ -35,6 +35,8 @@ export interface ChipOption<T> {
 export interface ChipSelectorProps<T> {
   /** Optional — with no label, no label row is rendered (no phantom gap above the chips). */
   label?: string;
+  /** Style for the label text, applied after the field label voice (e.g. a smaller label in a dense card). */
+  labelStyle?: StyleProp<TextStyle>;
   options: Array<ChipOption<T>>;
   value: T | T[];
   onChange: (value: T) => void;

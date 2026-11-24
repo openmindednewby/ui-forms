@@ -80,6 +80,7 @@ export const ChipSelector = <T extends string | number>({
   size = 'default',
   selectedFill,
   outlineTone = 'default',
+  labelStyle,
 }: ChipSelectorProps<T>): React.ReactElement => {
   const isRadioGroup = !multiple && singleSelectRole === 'radio';
   const { theme } = useUi();
@@ -133,6 +134,7 @@ export const ChipSelector = <T extends string | number>({
       containerStyle={containerStyle}
       error={error}
       label={label}
+      labelStyle={labelStyle}
       required={required}
       spacing={spacing}
       testID={testID}
