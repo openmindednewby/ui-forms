@@ -79,7 +79,22 @@ export interface SelectControlProps {
 }
 
 function lookTriggerBox(m: SelectLookMetrics | undefined): ViewStyle | undefined {
-  return m === undefined ? undefined : { minHeight: m.height, height: m.height, paddingHorizontal: m.paddingHorizontal, paddingVertical: m.paddingVertical, borderRadius: m.borderRadius };
+  if (m === undefined) return undefined;
+  const hug: ViewStyle | undefined = m.hug ? { justifyContent: 'flex-start', alignSelf: 'flex-start', gap: m.gap } : undefined;
+  return { minHeight: m.height, height: m.height, paddingHorizontal: m.paddingHorizontal, paddingVertical: m.paddingVertical, borderRadius: m.borderRadius, ...hug };
+}
+
+interface TriggerInk { border: string; background: string; text: string; chevron: string }
+
+/** The trigger's colours: a look's configured border, fill and ink win over the theme. */
+function triggerInk(m: SelectLookMetrics | undefined, colors: { border: string; surfaceElevated: string; text: string; textSecondary: string }, isEmpty: boolean): TriggerInk {
+  const themeText = isEmpty ? colors.textSecondary : colors.text;
+  return {
+    border: m?.borderColor ?? colors.border,
+    background: m?.backgroundColor ?? colors.surfaceElevated,
+    text: m?.textColor ?? themeText,
+    chevron: m?.textColor ?? colors.textSecondary,
+  };
 }
 
 function listboxTriggerAria(testID: string, hasList: boolean, highlighted: ControlOption | undefined): Record<string, string | undefined> {
@@ -128,6 +143,7 @@ function MenuSelectControl({
     [onChange],
   );
   const metrics = useSelectLookMetrics();
+  const ink = triggerInk(metrics, colors, value === '');
   const listbox = useSelectListbox({ options, isOpen, open, toggle, select });
   const isListbox = menuAnchor !== undefined;
   const captureKeys: Record<string, unknown> = isListbox ? { onKeyDownCapture: listbox.onKeyDown } : {};
@@ -146,15 +162,15 @@ function MenuSelectControl({
         aria-labelledby={labelledById}
         onBlur={isListbox ? close : undefined}
         onPress={toggle}
-        style={[s.selectTrigger, lookTriggerBox(metrics), { borderColor: metrics?.borderColor ?? colors.border, backgroundColor: colors.surfaceElevated }]}
+        style={[s.selectTrigger, lookTriggerBox(metrics), { borderColor: ink.border, backgroundColor: ink.background }]}
         testID={`${testID}-trigger`}
       >
-        <Text numberOfLines={1} style={[s.selectTriggerText, metrics === undefined ? undefined : { fontSize: metrics.fontSize }, { color: value === '' ? colors.textSecondary : colors.text }]}>
+        <Text numberOfLines={1} style={[s.selectTriggerText, metrics === undefined ? undefined : { fontSize: metrics.fontSize }, { color: ink.text }]}>
           {selectedLabel}
         </Text>
         {metrics === undefined
-          ? <Text aria-hidden style={[s.chevron, { color: colors.textSecondary }]}>{isOpen ? CHEVRON_UP : CHEVRON_DOWN}</Text>
-          : <SelectChevron color={colors.textSecondary} open={isOpen} />}
+          ? <Text aria-hidden style={[s.chevron, { color: ink.chevron }]}>{isOpen ? CHEVRON_UP : CHEVRON_DOWN}</Text>
+          : <SelectChevron color={ink.chevron} open={isOpen} />}
       </Pressable>
       {isOpen ? (
         <AnchoredMenu
