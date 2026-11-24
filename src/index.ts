@@ -82,6 +82,8 @@ export type { FormSwitchVariant } from './FormSwitch/FormSwitchVariant';
 
 export { FormCheckbox } from './FormCheckbox/FormCheckbox';
 export type { FormCheckboxProps } from './FormCheckbox/FormCheckbox';
+export { CheckboxLookProvider } from './FormCheckbox/checkboxLook';
+export type { CheckboxLook } from './FormCheckbox/checkboxLook';
 
 // ---------------------------------------------------------------------------
 // Dense CONTROLS — promoted out of @dloizides/ui-tables' private filter bar (F2).

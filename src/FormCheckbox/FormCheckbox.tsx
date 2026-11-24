@@ -14,6 +14,7 @@ import { useUi } from '@dloizides/ui-feedback';
 import { useFieldIds } from '../Field/Field';
 
 import { checkboxBoxColors, checkboxTickColor } from './checkboxColors';
+import { useCheckboxLookBox } from './checkboxLook';
 
 /**
  * Web-only keydown prop react-native-web's `Pressable` forwards but RN's types omit. A
@@ -130,6 +131,7 @@ export const FormCheckbox = ({
   accessibilityHint,
   labelHidden = false,
 }: FormCheckboxProps): React.ReactElement => {
+  const lookBox = useCheckboxLookBox();
   const { theme } = useUi();
   const { colors, palette } = theme;
   const brand = palette.primary['500'];
@@ -190,7 +192,7 @@ export const FormCheckbox = ({
       testID={testID}
       {...keyboardProps}
     >
-      <View style={[styles.box, value ? themeStyles.boxOn : themeStyles.boxOff]} testID={`${testID}-box`}>
+      <View style={[styles.box, lookBox, value ? themeStyles.boxOn : themeStyles.boxOff]} testID={`${testID}-box`}>
         {focused ? (
           <View pointerEvents="none" style={[styles.focusRing, themeStyles.ring]} testID={`${testID}-focus-ring`} />
         ) : null}
