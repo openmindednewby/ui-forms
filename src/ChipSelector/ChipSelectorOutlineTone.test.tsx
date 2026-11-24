@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 
 import { ChipSelector } from './ChipSelector';
-import { restBorderColor } from './utils/chipLook';
+import { outlineRest, restBorderColor } from './utils/chipLook';
 
 const OPTIONS = [
   { value: 'a', label: 'Alpha' },
@@ -63,5 +63,36 @@ describe('ChipSelector outlineTone', () => {
     const strongEdge = borderOf('a');
 
     expect(strongEdge).toBe(defaultEdge);
+  });
+
+  it('with outlineTone surface on the outline variant, paints the unselected chip on a different fill than the default', () => {
+    const { unmount } = render(<ChipSelector options={OPTIONS} value="a" variant="outline" onChange={noop} />);
+    const defaultFill = getComputedStyle(screen.getByTestId('chip-selector-chip-b').firstElementChild as HTMLElement).backgroundColor;
+    unmount();
+    render(<ChipSelector options={OPTIONS} outlineTone="surface" value="a" variant="outline" onChange={noop} />);
+
+    const surfaceFill = getComputedStyle(screen.getByTestId('chip-selector-chip-b').firstElementChild as HTMLElement).backgroundColor;
+
+    expect(surfaceFill).not.toBe(defaultFill);
+  });
+});
+
+describe('outlineRest', () => {
+  const REST = { muted: 'rgb(1, 1, 1)', surface: 'rgb(2, 2, 2)', tint: 'rgb(3, 3, 3)', textMuted: 'rgb(4, 4, 4)', textStrong: 'rgb(5, 5, 5)', primary: 'rgb(6, 6, 6)' };
+
+  it('with the surface tone at rest, returns the surface fill and strong ink', () => {
+    const look = { tone: 'surface' as const, selected: false, active: false };
+
+    const rest = outlineRest(REST, look);
+
+    expect(rest).toEqual({ backgroundColor: 'rgb(2, 2, 2)', textColor: 'rgb(5, 5, 5)' });
+  });
+
+  it('with the default tone at rest, returns the muted fill and muted ink', () => {
+    const look = { tone: 'default' as const, selected: false, active: false };
+
+    const rest = outlineRest(REST, look);
+
+    expect(rest).toEqual({ backgroundColor: 'rgb(1, 1, 1)', textColor: 'rgb(4, 4, 4)' });
   });
 });

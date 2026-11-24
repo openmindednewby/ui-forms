@@ -86,3 +86,12 @@ export function chipBoxFill(size: ChipSize, backgroundColor: string): ViewStyle 
 export function restBorderColor(colors: Pick<ChipColors, 'border' | 'borderStrong'>, tone: ChipOutlineTone): string {
   return tone === 'strong' ? colors.borderStrong : colors.border;
 }
+
+/** The rest fill and ink of an outline chip: `surface` tone sits on the surface with strong ink; others use the muted fill and muted ink. */
+export function outlineRest(colors: Pick<ChipColors, 'muted' | 'surface' | 'tint' | 'textMuted' | 'textStrong' | 'primary'>, look: { tone: ChipOutlineTone; selected: boolean; active: boolean }): { backgroundColor: string; textColor: string } {
+  if (look.selected) return { backgroundColor: colors.tint, textColor: colors.primary };
+  const surface = look.tone === 'surface';
+  const backgroundColor = surface ? colors.surface : colors.muted;
+  if (look.active) return { backgroundColor, textColor: colors.primary };
+  return { backgroundColor, textColor: surface ? colors.textStrong : colors.textMuted };
+}

@@ -47,6 +47,7 @@ interface ThemeColorsInput {
   text: string;
   textSecondary: string;
   background: string;
+  surface?: string;
 }
 
 /** Resolve the colours both chip variants read, from the active theme's colours + palette. */
@@ -63,6 +64,7 @@ export function buildChipColors(
     primary,
     onPrimary: onBrandInk(palette),
     muted: colors.background,
+    surface: colors.surface ?? colors.background,
     tint: withAlpha(primary, OUTLINE_TINT_ALPHA),
   };
 }

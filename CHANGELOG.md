@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.53.0
+
+- `ChipSelector` `outlineTone="surface"`: an unselected outline chip sits on the theme `surface` fill with strong ink (was the page `background` fill with muted ink), so it reads on a white card (MODC-1 D-MC-749 F1). `default` and `strong` unchanged.
+
 ## [1.51.0] - 2026-11-24
 
 ### Added

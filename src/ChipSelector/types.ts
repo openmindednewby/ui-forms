@@ -105,6 +105,7 @@ export interface ChipColors {
    */
   onPrimary: string;
   muted: string;
+  surface: string;
   tint: string;
 }
 
