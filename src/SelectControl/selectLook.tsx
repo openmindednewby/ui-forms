@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useMemo } from 'react';
 
-import { useWindowDimensions } from 'react-native';
+import { useWindowDimensions, type TextStyle } from 'react-native';
 
 import { PHONE_MAX_WIDTH } from '../SearchSelect/utils/searchSelectMotion';
 
@@ -87,6 +87,15 @@ export function useSelectLookMetrics(): SelectLookMetrics | undefined {
   const config = useContext(SelectLookContext);
   const { width } = useWindowDimensions();
   return selectLookMetrics(config, width);
+}
+
+/**
+ * The text-input box of a look, so an input beside the look's selects shares their height, padding, font and radius.
+ * @param m the look metrics; `undefined` (the `default` look) returns no override
+ */
+export function lookInputBox(m: SelectLookMetrics | undefined): TextStyle | undefined {
+  if (m === undefined) return undefined;
+  return { minHeight: m.height, height: m.height, paddingHorizontal: m.paddingHorizontal, paddingVertical: m.paddingVertical, fontSize: m.fontSize, borderRadius: m.borderRadius };
 }
 
 /**

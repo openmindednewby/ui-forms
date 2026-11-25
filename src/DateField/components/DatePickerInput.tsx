@@ -8,6 +8,7 @@ import { buildNativeInputStyle } from './WebDateInput';
 import { Glyph } from '../../DatePicker/components/Glyph';
 import { GlyphName } from '../../DatePicker/components/GlyphName';
 import { PickerSurface } from '../../DatePicker/components/PickerSurface';
+import { lookInputBox, useSelectLookMetrics } from '../../SelectControl/selectLook';
 import { SingleCalendar } from '../../DatePicker/components/SingleCalendar';
 import { useDatePickerConfig } from '../../DatePicker/hooks/useDatePickerConfig';
 import { useIsPhone } from '../../DatePicker/hooks/useIsPhone';
@@ -50,6 +51,7 @@ export function DatePickerInput({ fieldProps, context, onTypedError }: DatePicke
   const typed = useTypedDate({ value, onChange, bounds, format: displayFormatter(display), onError: onTypedError, editOnType: true });
   const edit = typedEditBind(typed);
   const { style, focusBind, hoverBind } = useThemedInput({ hasError: context.hasError, editable: !disabled });
+  const look = lookInputBox(useSelectLookMetrics());
   const focus = focusBind as unknown as FocusHandlers;
   const webA11y = webFieldA11y({ describedById: context.describedById, hasError: context.hasError, required });
 
@@ -83,7 +85,7 @@ export function DatePickerInput({ fieldProps, context, onTypedError }: DatePicke
         data-testid={testID}
         disabled={disabled}
         id={context.controlId}
-        style={{ ...buildNativeInputStyle(style), paddingInlineEnd: ICON_ROOM }}
+        style={{ ...buildNativeInputStyle(style, look), paddingInlineEnd: ICON_ROOM }}
         title={accessibilityHint}
         type="text"
         value={typed.display}

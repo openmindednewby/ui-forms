@@ -3,6 +3,7 @@ import React from 'react';
 import { StyleSheet, type TextStyle } from 'react-native';
 
 import { controlStyles } from '../../controls/controlStyles';
+import { lookInputBox, useSelectLookMetrics } from '../../SelectControl/selectLook';
 import { useThemedInput } from '../../useThemedInput/useThemedInput';
 import { webFieldA11y } from '../../webFieldA11y/webFieldA11y';
 
@@ -22,8 +23,8 @@ interface WebDateInputProps {
   webInputType: string;
 }
 
-export function buildNativeInputStyle(themed: TextStyle): React.CSSProperties {
-  const { paddingHorizontal, paddingVertical, ...box } = StyleSheet.flatten(controlStyles.input);
+export function buildNativeInputStyle(themed: TextStyle, look?: TextStyle): React.CSSProperties {
+  const { paddingHorizontal, paddingVertical, ...box } = StyleSheet.flatten([controlStyles.input, look]);
   return {
     ...box,
     ...themed,
@@ -37,6 +38,7 @@ export function buildNativeInputStyle(themed: TextStyle): React.CSSProperties {
 export function WebDateInput({ fieldProps, context, webInputType }: WebDateInputProps): React.ReactElement {
   const { label, value, onChange, onSubmit, accessibilityHint, testID, required, disabled = false, min, max } = fieldProps;
   const { style, focusBind, hoverBind } = useThemedInput({ hasError: context.hasError, editable: !disabled });
+  const look = lookInputBox(useSelectLookMetrics());
   const webA11y = webFieldA11y({
     describedById: context.describedById,
     hasError: context.hasError,
@@ -62,7 +64,7 @@ export function WebDateInput({ fieldProps, context, webInputType }: WebDateInput
       id={context.controlId}
       max={max}
       min={min}
-      style={buildNativeInputStyle(style)}
+      style={buildNativeInputStyle(style, look)}
       title={accessibilityHint}
       type={webInputType}
       value={value}

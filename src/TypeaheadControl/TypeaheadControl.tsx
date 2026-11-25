@@ -18,6 +18,7 @@ import { TextInput, Text, View, type StyleProp, type ViewStyle } from 'react-nat
 import { useUi } from '@dloizides/ui-feedback';
 
 import { AnchoredMenu } from '../AnchoredMenu/AnchoredMenu';
+import { lookInputBox, useSelectLookMetrics } from '../SelectControl/selectLook';
 import { listboxDomId, optionDomId } from '../AnchoredMenu/components/OptionRow';
 import { useKeepAnchorInRoom } from '../AnchoredMenu/menuPortal';
 import { controlStyles as s } from '../controls/controlStyles';
@@ -83,6 +84,7 @@ function TypeaheadControlImpl(props: (TypeaheadControlProps | TypeaheadSearchPro
   const options = 'options' in props ? props.options : undefined;
   const maxSuggestions = ('search' in props ? props.search.maxResults : props.maxSuggestions) ?? DEFAULT_TYPEAHEAD_MAX_SUGGESTIONS;
   const { theme } = useUi();
+  const look = useSelectLookMetrics();
   const { colors, palette } = theme;
   const anchorRef = useRef<View>(null);
   const state = useTypeaheadState({ options, search, value, minChars, maxSuggestions, onChange, onSubmit });
@@ -114,7 +116,7 @@ function TypeaheadControlImpl(props: (TypeaheadControlProps | TypeaheadSearchPro
         onBlur={handleBlur}
         onKeyPress={state.handleKeyPress}
         onSubmitEditing={state.handleSubmit}
-        style={[s.input, { borderColor: hasError ? fieldErrorInk(theme) : colors.border, backgroundColor: colors.surface, color: colors.text }]}
+        style={[s.input, { borderColor: hasError ? fieldErrorInk(theme) : colors.border, backgroundColor: colors.surface, color: colors.text }, lookInputBox(look)]}
         testID={search?.inputTestID ?? `${testID}-input`}
       />
       {showMenu ? (
