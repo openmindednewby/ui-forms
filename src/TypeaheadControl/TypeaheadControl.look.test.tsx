@@ -1,3 +1,5 @@
+import '@testing-library/jest-dom';
+
 import { useWindowDimensions } from 'react-native';
 
 import { render, renderHook } from '@testing-library/react';
