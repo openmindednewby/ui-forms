@@ -1,3 +1,5 @@
+import { MIN_TOUCH_TARGET_PX } from '@dloizides/a11y';
+
 import { lookInputBox, selectLookMetrics } from '../../SelectControl/selectLook';
 import { buildNativeInputStyle } from './WebDateInput';
 
@@ -12,9 +14,9 @@ describe('buildNativeInputStyle', () => {
     expect(style).toMatchObject({ height: 38, minHeight: 38, paddingBlock: 0, fontSize: 13, borderRadius: 8 });
   });
 
-  it('without a look, keeps the 44 px kit floor', () => {
+  it('without a look, keeps the kit touch-target floor', () => {
     const style = buildNativeInputStyle({});
 
-    expect(style.minHeight).toBe(44);
+    expect(style.minHeight).toBe(MIN_TOUCH_TARGET_PX);
   });
 });

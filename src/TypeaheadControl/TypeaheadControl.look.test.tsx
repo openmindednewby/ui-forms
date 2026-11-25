@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useWindowDimensions } from 'react-native';
 
 import { render, renderHook } from '@testing-library/react';
