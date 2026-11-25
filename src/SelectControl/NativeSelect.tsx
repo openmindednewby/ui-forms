@@ -5,6 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import { useUi } from '@dloizides/ui-feedback';
 
 import { controlStyles as s } from '../controls/controlStyles';
+import { controlBorderOf } from './controlBorder';
 
 import type { SelectControlProps } from './SelectControl';
 import { chevronDataUri, useSelectLookMetrics, type SelectLookMetrics } from './selectLook';
@@ -98,8 +99,8 @@ export function NativeSelect({
   const fit = native === 'fit';
   const metrics = useSelectLookMetrics();
   const selectStyle = metrics === undefined
-    ? nativeSelectStyle(fit, colors.border, colors.surfaceElevated, textColor)
-    : lookSelectStyle(fit, metrics, { border: colors.border, background: colors.surfaceElevated, text: textColor, chevron: colors.textSecondary });
+    ? nativeSelectStyle(fit, controlBorderOf(theme), colors.surfaceElevated, textColor)
+    : lookSelectStyle(fit, metrics, { border: controlBorderOf(theme), background: colors.surfaceElevated, text: textColor, chevron: colors.textSecondary });
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>): void => onChange(event.target.value);
 

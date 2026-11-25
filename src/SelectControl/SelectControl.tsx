@@ -26,6 +26,7 @@ import { AnchoredMenu } from '../AnchoredMenu/AnchoredMenu';
 import { listboxDomId, optionDomId } from '../AnchoredMenu/components/OptionRow';
 import { controlStyles as s } from '../controls/controlStyles';
 import type { ControlOption } from '../controls/controlTypes';
+import { controlBorderOf } from './controlBorder';
 import { NativeSelect } from './NativeSelect';
 import { SelectChevron } from './SelectChevron';
 import { useSelectLookMetrics, type SelectLookMetrics } from './selectLook';
@@ -87,10 +88,10 @@ function lookTriggerBox(m: SelectLookMetrics | undefined): ViewStyle | undefined
 interface TriggerInk { border: string; background: string; text: string; chevron: string }
 
 /** The trigger's colours: a look's configured border, fill and ink win over the theme. */
-function triggerInk(m: SelectLookMetrics | undefined, colors: { border: string; surfaceElevated: string; text: string; textSecondary: string }, isEmpty: boolean): TriggerInk {
+function triggerInk(m: SelectLookMetrics | undefined, colors: { controlBorder: string; surfaceElevated: string; text: string; textSecondary: string }, isEmpty: boolean): TriggerInk {
   const themeText = isEmpty ? colors.textSecondary : colors.text;
   return {
-    border: m?.borderColor ?? colors.border,
+    border: m?.borderColor ?? colors.controlBorder,
     background: m?.backgroundColor ?? colors.surfaceElevated,
     text: m?.textColor ?? themeText,
     chevron: m?.textColor ?? colors.textSecondary,
@@ -143,7 +144,7 @@ function MenuSelectControl({
     [onChange],
   );
   const metrics = useSelectLookMetrics();
-  const ink = triggerInk(metrics, colors, value === '');
+  const ink = triggerInk(metrics, { ...colors, controlBorder: controlBorderOf(theme) }, value === '');
   const listbox = useSelectListbox({ options, isOpen, open, toggle, select });
   const isListbox = menuAnchor !== undefined;
   const captureKeys: Record<string, unknown> = isListbox ? { onKeyDownCapture: listbox.onKeyDown } : {};
