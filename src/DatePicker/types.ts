@@ -3,6 +3,8 @@ export interface DatePickerLabels {
   rangeDialog: string;
   openCalendar: string;
   openCalendarHint: string;
+  /** PRE-LOCALIZED empty-field placeholder; empty = the locale's pattern, en-GB `dd/mm/yyyy`. */
+  datePlaceholder: string;
   previousMonth: string;
   nextMonth: string;
   monthHint: string;

@@ -5,6 +5,7 @@ export const DEFAULT_DATE_PICKER_LABELS: DatePickerLabels = {
   rangeDialog: 'Choose a date range',
   openCalendar: 'Open calendar',
   openCalendarHint: 'Opens a calendar to pick the date',
+  datePlaceholder: '',
   previousMonth: 'Previous month',
   nextMonth: 'Next month',
   monthHint: 'Shows another month',

@@ -16,6 +16,7 @@ import { useReturnFocus } from '../../DatePicker/hooks/useReturnFocus';
 import { useTypedDate } from '../../DatePicker/hooks/useTypedDate';
 import { closedFieldMinWidth } from '../../DatePicker/utils/fieldWidth';
 import { displayFormatter } from '../../DatePicker/utils/DateDisplay';
+import { datePattern } from '../../DatePicker/utils/datePattern';
 import { typedEditBind } from '../../DatePicker/utils/typedEdit';
 import { useThemedInput } from '../../useThemedInput/useThemedInput';
 import { webFieldA11y } from '../../webFieldA11y/webFieldA11y';
@@ -42,7 +43,7 @@ export const anchorStyles = StyleSheet.create({ wrap: { position: 'relative', wi
 /** A typeable date with a calendar button; the calendar opens as a sheet on a phone and a dropdown on desktop. */
 export function DatePickerInput({ fieldProps, context, onTypedError }: DatePickerInputProps): React.ReactElement {
   const { label, value, onChange, onSubmit, accessibilityHint, testID, required, disabled = false, min, max } = fieldProps;
-  const { labels, display } = useDatePickerConfig();
+  const { labels, display, locale } = useDatePickerConfig();
   const phone = useIsPhone();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<View>(null);
@@ -85,6 +86,7 @@ export function DatePickerInput({ fieldProps, context, onTypedError }: DatePicke
         data-testid={testID}
         disabled={disabled}
         id={context.controlId}
+        placeholder={labels.datePlaceholder !== '' ? labels.datePlaceholder : datePattern(locale)}
         style={{ ...buildNativeInputStyle(style, look), paddingInlineEnd: ICON_ROOM }}
         title={accessibilityHint}
         type="text"
