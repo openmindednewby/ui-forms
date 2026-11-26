@@ -5,6 +5,7 @@ import { StyleSheet, Switch, View } from 'react-native';
 import { MIN_TOUCH_TARGET_PX } from '@dloizides/a11y';
 
 import { useSwitchFocusRing } from './useSwitchFocusRing';
+import { useSwitchInputTarget } from './useSwitchInputTarget';
 
 const BOX_SLOT_PAD_H = 10;
 
@@ -46,6 +47,7 @@ export const SwitchSlot = ({
   inBox = false,
 }: SwitchSlotProps): React.ReactElement => {
   const ring = useSwitchFocusRing();
+  const inputTarget = useSwitchInputTarget();
   return (
   <View
     pointerEvents="none"
@@ -58,6 +60,7 @@ export const SwitchSlot = ({
       accessibilityHint={accessibilityHint ?? label}
       accessibilityLabel={label}
       accessibilityState={{ checked: value, disabled }}
+      ref={inputTarget}
       disabled={disabled}
       testID={`${testID}-switch`}
       trackColor={activeTrackColor === undefined ? undefined : { true: activeTrackColor }}

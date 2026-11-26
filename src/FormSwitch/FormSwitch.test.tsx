@@ -85,6 +85,25 @@ describe('FormSwitch web semantics', () => {
     expect(parseFloat(slot.minHeight)).toBeGreaterThanOrEqual(WCAG_MIN_TARGET_PX);
   });
 
+  it('with the native switch input, gives it a box of at least 44x44 centred on the 40x20 switch', () => {
+    render(<FormSwitch value label="Optional" testID="sw" onValueChange={noop} />);
+
+    const input = theSwitch().style;
+
+    expect(parseFloat(input.width)).toBeGreaterThanOrEqual(WCAG_MIN_TARGET_PX);
+    expect(parseFloat(input.height)).toBeGreaterThanOrEqual(WCAG_MIN_TARGET_PX);
+    expect(input.transform).toBe('translate(-50%, -50%)');
+  });
+
+  it('with the native switch input enlarged, leaves the visible switch at its 40x20 size', () => {
+    render(<FormSwitch value label="Optional" testID="sw" onValueChange={noop} />);
+
+    const visible = getComputedStyle(screen.getByTestId('sw-switch'));
+
+    expect(visible.width).toBe('40px');
+    expect(visible.height).toBe('20px');
+  });
+
   it('with a press on the switch slot, toggles once through the row', () => {
     const onValueChange = jest.fn();
     render(<FormSwitch label="Optional" testID="sw" value={false} onValueChange={onValueChange} />);
