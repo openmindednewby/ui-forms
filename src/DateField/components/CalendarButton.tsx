@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useRef, type RefObject } from 'react';
 
-import { Pressable, type Insets, type PressableStateCallbackType, type StyleProp, type ViewStyle } from 'react-native';
+import { Pressable, View, type Insets, type PressableStateCallbackType, type StyleProp, type ViewStyle } from 'react-native';
 
 import { MIN_TOUCH_TARGET_PX } from '@dloizides/a11y';
 import { ACTIVE_OPACITY, DISABLED_OPACITY, useFocusRing } from '@dloizides/ui-buttons';
@@ -29,6 +29,26 @@ export function calendarButtonHitSlop(boxHeight: number | undefined): Insets {
   return { top: vertical, bottom: vertical, left: 0, right: 0 };
 }
 
+interface TitleTarget {
+  setAttribute: (name: string, value: string) => void;
+  removeAttribute: (name: string) => void;
+}
+
+function asTitleTarget(node: unknown): TitleTarget | null {
+  const candidate = node as Partial<TitleTarget> | null;
+  return candidate !== null && typeof candidate.setAttribute === 'function' ? (candidate as TitleTarget) : null;
+}
+
+/** Shows the hint as the web hover title on the button's host node, as `IconButton` does. */
+export function useHostTitle(hostRef: RefObject<View | null>, title: string): void {
+  useEffect(() => {
+    const node = asTitleTarget(hostRef.current);
+    if (node === null || title === '') return undefined;
+    node.setAttribute('title', title);
+    return () => node.removeAttribute('title');
+  }, [hostRef, title]);
+}
+
 function opacityFor(disabled: boolean, pressed: boolean): number {
   if (disabled) return DISABLED_OPACITY;
   return pressed ? ACTIVE_OPACITY : FULL_OPACITY;
@@ -47,9 +67,12 @@ export interface CalendarButtonProps {
 export function CalendarButton({ label, hint, testID, disabled, boxHeight, onPress }: CalendarButtonProps): React.ReactElement {
   const { theme } = useUi();
   const ring = useFocusRing(BUTTON_RADIUS);
+  const hostRef = useRef<View>(null);
+  useHostTitle(hostRef, hint);
   const style = ({ pressed }: PressableStateCallbackType): StyleProp<ViewStyle> => [CALENDAR_BUTTON_BOX, ring.ringStyle, { opacity: opacityFor(disabled, pressed) }];
   return (
     <Pressable
+      ref={hostRef}
       accessibilityHint={hint}
       accessibilityLabel={label}
       accessibilityRole="button"

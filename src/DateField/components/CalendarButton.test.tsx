@@ -6,10 +6,11 @@ import { ICON_SLOT } from './DatePickerInput';
 
 const FIELD_LOOK_HEIGHT = 38;
 const TEST_ID = 'from-calendar';
+const HINT = 'Opens the calendar';
 
 function renderButton(disabled: boolean): jest.Mock {
   const onPress = jest.fn();
-  render(<CalendarButton disabled={disabled} hint="Opens the calendar" label="Open calendar" testID={TEST_ID} onPress={onPress} />);
+  render(<CalendarButton disabled={disabled} hint={HINT} label="Open calendar" testID={TEST_ID} onPress={onPress} />);
   return onPress;
 }
 
@@ -46,6 +47,14 @@ describe('CalendarButton', () => {
     fireEvent.click(screen.getByTestId(TEST_ID));
 
     expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
+  it('when rendered, shows the hint as the hover title like IconButton did', () => {
+    renderButton(false);
+
+    const title = screen.getByTestId(TEST_ID).getAttribute('title');
+
+    expect(title).toBe(HINT);
   });
 
   it('when disabled and pressed, does not call onPress', () => {
