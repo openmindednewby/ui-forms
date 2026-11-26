@@ -22,16 +22,22 @@ interface FillInput {
   selectedFill: string | undefined;
   ink: string;
   onDarkInk?: string;
+  lightInk?: string;
   rest: { backgroundColor: string; textColor: string };
 }
 
 /** The chip's fill: the variant's own colours, or `selectedFill` plus a check mark when selected. */
-export function chipFill({ selected, selectedFill, ink, onDarkInk, rest }: FillInput): ChipFill {
+export function chipFill({ selected, selectedFill, ink, onDarkInk, lightInk, rest }: FillInput): ChipFill {
   if (!selected || selectedFill === undefined)
     return { ...rest, checkColor: undefined };
 
-  const fillInk = onDarkInk !== undefined && isDarkColor(selectedFill) ? onDarkInk : ink;
+  const fillInk = isDarkColor(selectedFill) ? darkFillInk(onDarkInk, lightInk, ink) : ink;
   return { backgroundColor: selectedFill, textColor: fillInk, checkColor: fillInk };
+}
+
+function darkFillInk(onDarkInk: string | undefined, lightInk: string | undefined, ink: string): string {
+  if (onDarkInk === undefined) return ink;
+  return isDarkColor(onDarkInk) && lightInk !== undefined ? lightInk : onDarkInk;
 }
 
 const HEX_RGB = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i;

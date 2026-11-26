@@ -23,6 +23,7 @@ export function OutlineChip<T extends string | number>(props: ChipProps<T>): Rea
     selectedFill: props.selectedFill,
     ink: colors.textStrong,
     onDarkInk: colors.onPrimary,
+    lightInk: colors.surface,
     rest: outlineRest(colors, { tone: props.outlineTone, selected, active }),
   });
   const sized = chipSizeLook(props.size);

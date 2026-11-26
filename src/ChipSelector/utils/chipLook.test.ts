@@ -1,7 +1,7 @@
 import { chipSizeStyles } from '../components/chipSizeStyles';
 import { isCompactSize } from '../ChipSize';
 
-import { chipRowGap, chipSizeLook } from './chipLook';
+import { chipFill, chipRowGap, chipSizeLook } from './chipLook';
 
 describe('chipRowGap', () => {
   it('with a dense size, sets the row gap to zero', () => {
@@ -38,5 +38,23 @@ describe('isCompactSize', () => {
     const flags = sizes.map(isCompactSize);
 
     expect(flags).toEqual([false, true, true]);
+  });
+});
+
+describe('chipFill', () => {
+  it('with a dark selected fill and a dark on-primary ink, uses the light ink', () => {
+    const input = { selected: true, selectedFill: '#0e5a7e', ink: '#111111', onDarkInk: '#0b1220', lightInk: '#ffffff', rest: { backgroundColor: '#ffffff', textColor: '#111111' } };
+
+    const fill = chipFill(input);
+
+    expect(fill.textColor).toBe('#ffffff');
+  });
+
+  it('with a dark selected fill and a light on-primary ink, keeps the on-primary ink', () => {
+    const input = { selected: true, selectedFill: '#0e5a7e', ink: '#111111', onDarkInk: '#fafafa', lightInk: '#ffffff', rest: { backgroundColor: '#ffffff', textColor: '#111111' } };
+
+    const fill = chipFill(input);
+
+    expect(fill.textColor).toBe('#fafafa');
   });
 });

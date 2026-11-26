@@ -19,6 +19,7 @@ export function SolidChip<T extends string | number>(props: ChipProps<T>): React
     selectedFill: props.selectedFill,
     ink: colors.textStrong,
     onDarkInk: colors.onPrimary,
+    lightInk: colors.surface,
     rest: { backgroundColor: selected ? colors.primary : TRANSPARENT_COLOR, textColor: selected ? colors.onPrimary : colors.textStrong },
   });
   const sized = chipSizeLook(props.size);
