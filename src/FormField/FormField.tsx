@@ -14,6 +14,7 @@ import React from 'react';
 import { type TextInput, type TextInputProps, type ViewStyle } from 'react-native';
 
 import { Field } from '../Field/Field';
+import { FieldIcon, ICON_ROOM } from './FieldIcon';
 import type { FieldLabelVariant } from '../Field/labelVariants';
 import { RecentInputField } from './RecentInputField';
 import { ThemedTextInput } from '../ThemedTextInput/ThemedTextInput';
@@ -60,9 +61,13 @@ export interface FormFieldProps extends Omit<TextInputProps, 'style'> {
   /** Grows a multi-line box to fit its text, so nothing scrolls inside it; never fewer rows than this. */
   autoGrowMinRows?: number;
   labelVariant?: FieldLabelVariant;
+  /** A decorative icon drawn inside the start of the input (a search glyph); not used with `recentKey`. */
+  icon?: React.ReactNode;
 }
 
 type PlainFormFieldProps = Omit<FormFieldProps, 'autoGrowMinRows'>;
+
+const iconRoom = { paddingLeft: ICON_ROOM };
 
 const PlainFormField = ({
   label,
@@ -74,6 +79,7 @@ const PlainFormField = ({
   recentMax,
   inputRef,
   labelVariant,
+  icon,
   ...textInputProps
 }: PlainFormFieldProps): React.ReactElement => (
   <Field
@@ -103,8 +109,12 @@ const PlainFormField = ({
       // (no extra state/refs/effects/storage — the default path pays nothing).
       return recentKey !== undefined && recentKey !== '' ? (
         <RecentInputField label={label} recentKey={recentKey} recentMax={recentMax} {...inputProps} />
-      ) : (
+      ) : icon === undefined ? (
         <ThemedTextInput ref={inputRef} {...inputProps} />
+      ) : (
+        <FieldIcon icon={icon}>
+          <ThemedTextInput ref={inputRef} style={iconRoom} {...inputProps} />
+        </FieldIcon>
       );
     }}
   </Field>
