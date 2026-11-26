@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.68.0
+
+- `FieldLookProvider` (opt-in): `size="compact"` draws single-line text inputs in the 38 px `field` select-look box (44 px on a phone or a touch screen, so the tap height never drops under 44); `labelVariant` sets the default label voice of every `Field` and `AlignToControl` below it, e.g. `caption` (uppercase small label). A prop on the field still wins. Outside a provider nothing changes (MODC-1 r7, FORM-ALIGN-1).
+
 ## 1.67.0
 
 - `FormCheckbox`: the label column may shrink to 0 and wraps an unbroken label, so "Unlimited" is never clipped at a card edge (MODC-1 S11-D, TEXT-FIT-1).

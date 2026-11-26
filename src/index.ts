@@ -96,6 +96,8 @@ export type { CheckboxLook } from './FormCheckbox/checkboxLook';
 
 export { SelectControl } from './SelectControl/SelectControl';
 export type { SelectControlProps, SelectMenuAnchor } from './SelectControl/SelectControl';
+export { FieldLookProvider, fieldSizeBox, isTouchScreen, useFieldLook, useFieldSizeBox } from './FieldLook';
+export type { FieldLookConfig, FieldSize } from './FieldLook';
 export { SelectLookProvider, lookInputBox, selectLookMetrics, useSelectLookMetrics } from './SelectControl/selectLook';
 export type { SelectLook, SelectLookConfig, SelectLookMetrics } from './SelectControl/selectLook';
 export { nextHighlight } from './controls/nextHighlight';

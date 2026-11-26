@@ -27,6 +27,7 @@ import { attachControlId } from './attachControlId';
 import { FieldLabel } from './FieldLabel';
 import { DEFAULT_OPTIONAL_LABEL, resolveFieldMarker } from './fieldMarkers';
 import { fieldSpacingStyleSet, resolveFieldSpacing, type FieldSpacing } from './fieldSpacing';
+import { useFieldLook } from '../FieldLook/fieldLook';
 import { resolveLabelVariantStyle, type FieldLabelVariant } from './labelVariants';
 import { useIsGapOwned } from '../FormGrid/formGridContext';
 import { fieldErrorInk } from '../fieldErrorInk/fieldErrorInk';
@@ -208,6 +209,7 @@ export const Field = ({
   testID,
 }: FieldProps): React.ReactElement => {
   const { theme } = useUi();
+  const lookLabelVariant = useFieldLook().labelVariant;
   const gapOwned = useIsGapOwned();
   const spacingStyles = fieldSpacingStyleSet(resolveFieldSpacing(spacing, gapOwned));
   const { colors } = theme;
@@ -253,7 +255,7 @@ export const Field = ({
           optionalLabel={optionalLabel}
           optionalMarkStyle={[styles.optionalMark, themeStyles.optionalMark]}
           requiredMarkStyle={themeStyles.requiredMark}
-          style={[spacingStyles.label, resolveLabelVariantStyle(labelVariant), themeStyles.label, labelStyle]}
+          style={[spacingStyles.label, resolveLabelVariantStyle(labelVariant ?? lookLabelVariant), themeStyles.label, labelStyle]}
         />
       ) : null}
       {control}

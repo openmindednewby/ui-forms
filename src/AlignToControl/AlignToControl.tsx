@@ -3,6 +3,7 @@ import React from 'react';
 import { StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { fieldSpacingStyleSet, resolveFieldSpacing, type FieldSpacing } from '../Field/fieldSpacing';
+import { useFieldLook } from '../FieldLook/fieldLook';
 import { resolveLabelVariantStyle, type FieldLabelVariant } from '../Field/labelVariants';
 import { useIsGapOwned } from '../FormGrid/formGridContext';
 
@@ -31,6 +32,7 @@ export const AlignToControl = ({
   testID,
 }: AlignToControlProps): React.ReactElement => {
   const spacingStyles = fieldSpacingStyleSet(resolveFieldSpacing(spacing, useIsGapOwned()));
+  const lookLabelVariant = useFieldLook().labelVariant;
   const labelLineTestID = testID !== undefined ? `${testID}-label-line` : undefined;
 
   return (
@@ -39,7 +41,7 @@ export const AlignToControl = ({
         accessibilityElementsHidden
         aria-hidden
         importantForAccessibility="no"
-        style={[spacingStyles.label, resolveLabelVariantStyle(labelVariant), styles.labelLine]}
+        style={[spacingStyles.label, resolveLabelVariantStyle(labelVariant ?? lookLabelVariant), styles.labelLine]}
         testID={labelLineTestID}
       >
         {LABEL_LINE_PLACEHOLDER}

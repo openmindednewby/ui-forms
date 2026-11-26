@@ -29,6 +29,7 @@ import React from 'react';
 import { StyleSheet, TextInput, type TextInputProps } from 'react-native';
 
 import { controlStyles } from '../controls/controlStyles';
+import { useFieldSizeBox } from '../FieldLook/fieldLook';
 import { useThemedInput } from '../useThemedInput/useThemedInput';
 import { webFieldA11y } from '../webFieldA11y/webFieldA11y';
 
@@ -96,7 +97,10 @@ export const ThemedTextInput = React.forwardRef<TextInput, ThemedTextInputProps>
   // Base box FIRST so the caller's `style` still overrides it; `themedStyle` stays last because
   // the theme's colours are not the caller's to override (unchanged from previous versions).
   const boxStyle = unstyledBox ? null : controlStyles.input;
-  const multilineStyle = rest.multiline === true && !unstyledBox ? boxStyles.multiline : null;
+  const isMultiline = rest.multiline === true;
+  const multilineStyle = isMultiline && !unstyledBox ? boxStyles.multiline : null;
+  const sizeBox = useFieldSizeBox();
+  const compactStyle = isMultiline || unstyledBox ? null : sizeBox;
 
   return (
     <TextInput
@@ -107,7 +111,7 @@ export const ThemedTextInput = React.forwardRef<TextInput, ThemedTextInputProps>
       {...hoverBind}
       onFocus={focusBind.onFocus}
       onBlur={focusBind.onBlur}
-      style={[boxStyle, multilineStyle, style, themedStyle]}
+      style={[boxStyle, multilineStyle, compactStyle, style, themedStyle]}
     />
   );
 });
