@@ -5,6 +5,8 @@ import { Platform, Pressable, StyleSheet, Text } from 'react-native';
 import { MIN_TOUCH_TARGET_PX } from '@dloizides/a11y';
 import { useUi } from '@dloizides/ui-feedback';
 
+import { WebFileField } from './WebFileField';
+
 const IS_WEB = Platform.OS === 'web';
 const INPUT_FONT = 14;
 
@@ -30,6 +32,7 @@ export interface FileInputProps {
   nativeLabel?: string;
   /** Off web there is no file input: the caller opens its own picker here. */
   onNativePick?: () => void;
+  placeholder?: string;
   /** testID of the web `<input type="file">` (Playwright `setInputFiles`) or the native button. */
   testID: string;
 }
@@ -46,6 +49,7 @@ export function FileInput({
   describedById,
   nativeLabel,
   onNativePick,
+  placeholder,
   testID,
 }: FileInputProps): React.ReactElement {
   const { theme } = useUi();
@@ -72,6 +76,11 @@ export function FileInput({
     const files = Array.from(event.target.files ?? []);
     if (files.length > 0) onFiles(files);
   };
+
+  if (placeholder !== undefined) {
+    const inputProps = { accept, 'aria-describedby': describedById, 'aria-label': accessibilityLabel, 'data-testid': testID, disabled, id, multiple, title: accessibilityHint };
+    return <WebFileField inputProps={inputProps} placeholder={placeholder} onFiles={onFiles} />;
+  }
 
   return (
     <input

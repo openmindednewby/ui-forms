@@ -60,3 +60,22 @@ describe('FileInput', () => {
     expect(input.disabled).toBe(true);
   });
 });
+
+describe('FileInput styled web field', () => {
+  it('with a placeholder and nothing chosen, shows the placeholder', () => {
+    renderInput({ placeholder: 'Choose a file (CSV, XML, ZIP)' });
+
+    const shown = screen.getByTestId('doc-upload-name').textContent;
+
+    expect(shown).toBe('Choose a file (CSV, XML, ZIP)');
+  });
+
+  it('with a placeholder and a chosen file, shows its name and calls onFiles', () => {
+    const onFiles = renderInput({ placeholder: 'Choose a file' });
+    const file = new File(['a'], 'list.csv', { type: 'text/csv' });
+
+    fireEvent.change(screen.getByTestId('doc-upload'), { target: { files: [file] } });
+
+    expect([screen.getByTestId('doc-upload-name').textContent, onFiles.mock.calls[0][0]]).toEqual(['list.csv', [file]]);
+  });
+});
