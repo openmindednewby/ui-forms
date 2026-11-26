@@ -14,7 +14,7 @@ import { useUi } from '@dloizides/ui-feedback';
 import { useFieldIds } from '../Field/Field';
 
 import { checkboxBoxColors, checkboxTickColor } from './checkboxColors';
-import { useCheckboxLookBox } from './checkboxLook';
+import { CHECKBOX_TEXT_COLUMN, useCheckboxLookBox } from './checkboxLook';
 
 /**
  * Web-only keydown prop react-native-web's `Pressable` forwards but RN's types omit. A
@@ -87,9 +87,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: TICK_STROKE,
     transform: [{ rotate: '45deg' }],
   },
-  textColumn: {
-    flex: 1,
-  },
+  textColumn: CHECKBOX_TEXT_COLUMN,
   label: {
     fontWeight: '600',
   },

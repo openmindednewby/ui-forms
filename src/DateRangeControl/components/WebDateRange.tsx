@@ -15,6 +15,7 @@ import { useDatePickerConfig } from '../../DatePicker/hooks/useDatePickerConfig'
 import { useIsPhone } from '../../DatePicker/hooks/useIsPhone';
 import { useReturnFocus } from '../../DatePicker/hooks/useReturnFocus';
 import { useTypedDate, type TypedDate } from '../../DatePicker/hooks/useTypedDate';
+import { datePattern } from '../../DatePicker/utils/datePattern';
 import { typedEditBind } from '../../DatePicker/utils/typedEdit';
 import { formatShort } from '../../DatePicker/utils/formatDate';
 import { useThemedInput } from '../../useThemedInput/useThemedInput';
@@ -46,7 +47,8 @@ function orNone(value: string): string | undefined {
 
 /** One field holding both range ends, each typeable with its own error, plus a calendar with presets. */
 export function WebDateRange({ value, onChange, onSubmit, fromLabel, toLabel, hint, testID, context, onTypedError }: WebDateRangeProps): React.ReactElement {
-  const { labels } = useDatePickerConfig();
+  const { labels, locale } = useDatePickerConfig();
+  const placeholder = labels.datePlaceholder !== '' ? labels.datePlaceholder : datePattern(locale);
   const phone = useIsPhone();
   const [open, setOpen] = useState(false);
   const [fromError, setFromError] = useState<string | undefined>(undefined);
@@ -84,6 +86,7 @@ export function WebDateRange({ value, onChange, onSubmit, fromLabel, toLabel, hi
         autoComplete="off"
         data-testid={`${testID}-${side}`}
         id={side === RangeSide.From ? context.controlId : undefined}
+        placeholder={placeholder}
         style={SEGMENT}
         title={hint}
         type="text"

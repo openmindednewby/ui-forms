@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { formatTyped } from '../../DatePicker/utils/formatDate';
+import { DEFAULT_DATE_LOCALE } from '../../DatePicker/data/defaultLocale';
 import { DateRangeControl } from '../DateRangeControl';
 
 const TID = 'wdr';
@@ -30,7 +31,7 @@ describe('WebDateRange', () => {
   it('with the whole end selected, a paste replaces it with the pasted date', () => {
     const onChange = renderRange();
     const input = selectedTo();
-    const pasted = formatTyped('2026-11-25');
+    const pasted = formatTyped('2026-11-25', DEFAULT_DATE_LOCALE);
 
     fireEvent.paste(input, { clipboardData: { getData: () => pasted } });
 
@@ -44,5 +45,15 @@ describe('WebDateRange', () => {
     fireEvent.keyDown(selectedTo(), { key: 'Enter', keyCode: 13, charCode: 13 });
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('WebDateRange placeholder', () => {
+  it('with no provider locale, shows dd/mm/yyyy on both ends whatever the browser locale', () => {
+    render(<DateRangeControl fromLabel="From" testID="wdr-empty" toLabel="To" value={{ from: '', to: '' }} onChange={jest.fn()} />);
+
+    const placeholders = [screen.getByTestId<HTMLInputElement>('wdr-empty-from').placeholder, screen.getByTestId<HTMLInputElement>('wdr-empty-to').placeholder];
+
+    expect(placeholders).toEqual(['dd/mm/yyyy', 'dd/mm/yyyy']);
   });
 });

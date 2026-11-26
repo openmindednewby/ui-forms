@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 
 import { DateRangeControl } from './DateRangeControl';
 import { formatShort, formatTyped } from '../DatePicker/utils/formatDate';
+import { DEFAULT_DATE_LOCALE } from '../DatePicker/data/defaultLocale';
 
 const TID = 'dr';
 
@@ -96,7 +97,7 @@ describe('DateRangeControl focus', () => {
 
     fireEvent.focus(screen.getByTestId(`${TID}-from`));
 
-    expect((screen.getByTestId(`${TID}-from`) as HTMLInputElement).value).toBe(formatShort('2026-11-01'));
+    expect((screen.getByTestId(`${TID}-from`) as HTMLInputElement).value).toBe(formatShort('2026-11-01', DEFAULT_DATE_LOCALE));
   });
 });
 
@@ -119,7 +120,7 @@ describe('DateRangeControl editing a whole selection', () => {
   it('with the whole start selected, a paste replaces it with the pasted date', () => {
     const onChange = renderRange({ from: '2026-11-01', to: '' });
     const input = selectedFrom();
-    const pasted = formatTyped('2026-11-02');
+    const pasted = formatTyped('2026-11-02', DEFAULT_DATE_LOCALE);
 
     fireEvent.paste(input, { clipboardData: { getData: () => pasted } });
 

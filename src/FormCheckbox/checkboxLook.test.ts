@@ -1,4 +1,4 @@
-import { checkboxLookBox } from './checkboxLook';
+import { checkboxLookBox, CHECKBOX_TEXT_COLUMN } from './checkboxLook';
 
 describe('checkboxLookBox', () => {
   it('with the compact look, returns a 16 px box with a 1.5 px border', () => {
@@ -15,5 +15,15 @@ describe('checkboxLookBox', () => {
     const box = checkboxLookBox(look);
 
     expect(box).toBeUndefined();
+  });
+});
+
+describe('CHECKBOX_TEXT_COLUMN', () => {
+  it('with an auto basis, sizes the label column from its text so it is not clipped', () => {
+    const column = CHECKBOX_TEXT_COLUMN;
+
+    const basis = column.flexBasis;
+
+    expect({ basis, grow: column.flexGrow, flex: column.flex }).toEqual({ basis: undefined, grow: 1, flex: undefined });
   });
 });
