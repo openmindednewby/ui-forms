@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     // The whole row is the Pressable, so the row IS the hit box: on RN-web `hitSlop` is inert and a
     // one-line label measured 36px tall (SHOWCASE-1). The 20px visual box keeps its size inside.
     minHeight: MIN_TOUCH_TARGET_PX,
+    maxWidth: '100%',
   },
   /** With no hint the row is a single line, so centre it vertically inside the floor. */
   centered: {

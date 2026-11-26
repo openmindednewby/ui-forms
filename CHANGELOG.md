@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.67.0
+
+- `FormCheckbox`: the label column may shrink to 0 and wraps an unbroken label, so "Unlimited" is never clipped at a card edge (MODC-1 S11-D, TEXT-FIT-1).
+- `ChipSelector` `selectedFill="ink"`: a selected chip fills with the theme strong ink (dark fill, check mark, readable ink); other values unchanged (MODC-1 NV-D). Pair with `size="tap"`.
+
 ## 1.53.0
 
 - `ChipSelector` `outlineTone="surface"`: an unselected outline chip sits on the theme `surface` fill with strong ink (was the page `background` fill with muted ink), so it reads on a white card (MODC-1 D-MC-749 F1). `default` and `strong` unchanged.

@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 
 import { ChipSelector } from './ChipSelector';
+import { resolveSelectedFill } from './utils/chipLook';
 
 const OPTIONS = [
   { value: 'a', label: 'Alpha' },
@@ -59,5 +60,24 @@ describe('ChipSelector selectedFill', () => {
     const checks = screen.queryAllByTestId(/-check$/);
 
     expect(checks).toHaveLength(2);
+  });
+});
+
+describe('ChipSelector selectedFill ink', () => {
+  it('with selectedFill "ink", fills the selected chip with the theme strong ink, not the literal word', () => {
+    render(<ChipSelector options={OPTIONS} selectedFill="ink" size="tap" value="a" onChange={noop} />);
+
+    const chip = screen.getByTestId('chip-selector-chip-a');
+
+    expect(chip.innerHTML).not.toContain('background-color: ink');
+    expect(screen.queryByTestId('chip-selector-chip-a-check')).not.toBeNull();
+  });
+});
+
+describe('resolveSelectedFill', () => {
+  it('with "ink", returns the strong ink; with a colour, returns it unchanged', () => {
+    const results = [resolveSelectedFill('ink', 'rgb(9, 9, 9)'), resolveSelectedFill(FILL, 'rgb(9, 9, 9)'), resolveSelectedFill(undefined, 'rgb(9, 9, 9)')];
+
+    expect(results).toEqual(['rgb(9, 9, 9)', FILL, undefined]);
   });
 });

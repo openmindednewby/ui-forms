@@ -5,8 +5,8 @@ import type { ViewStyle } from 'react-native';
 /** Checkbox look: `default` = 20 px box; `compact` = 16 px box for dense desktop tables and forms. The row keeps its 44 px hit box. */
 export type CheckboxLook = 'default' | 'compact';
 
-/** The label column grows from its text width, so a checkbox in a wrapping row never clips its label (TEXT-FIT-1). */
-export const CHECKBOX_TEXT_COLUMN: ViewStyle = { flexGrow: 1, flexShrink: 1 };
+/** The label column grows from its text width and may shrink to 0, wrapping an unbroken label (inherited `overflowWrap`) instead of clipping it at the card edge (TEXT-FIT-1). */
+export const CHECKBOX_TEXT_COLUMN: ViewStyle = { flexGrow: 1, flexShrink: 1, minWidth: 0, overflowWrap: 'anywhere' } as unknown as ViewStyle;
 
 const COMPACT_BOX: ViewStyle = { width: 16, height: 16, borderRadius: 4, borderWidth: 1.5 };
 
