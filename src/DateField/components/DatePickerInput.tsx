@@ -2,11 +2,8 @@ import React, { useCallback, useRef, useState, type CSSProperties, type Keyboard
 
 import { StyleSheet, View } from 'react-native';
 
-import { IconButton } from '@dloizides/ui-buttons';
-
+import { CalendarButton } from './CalendarButton';
 import { buildNativeInputStyle } from './WebDateInput';
-import { Glyph } from '../../DatePicker/components/Glyph';
-import { GlyphName } from '../../DatePicker/components/GlyphName';
 import { PickerSurface } from '../../DatePicker/components/PickerSurface';
 import { lookInputBox, useSelectLookMetrics } from '../../SelectControl/selectLook';
 import { SingleCalendar } from '../../DatePicker/components/SingleCalendar';
@@ -37,7 +34,7 @@ export interface FocusHandlers {
 
 export const SINGLE_PICKER_WIDTH = 340;
 export const ICON_ROOM = 48;
-export const ICON_SLOT: CSSProperties = { position: 'absolute', right: 2, top: 0, bottom: 0, display: 'flex', alignItems: 'center' };
+export const ICON_SLOT: CSSProperties = { position: 'absolute', right: 2, top: 0, bottom: 0, display: 'flex', alignItems: 'stretch' };
 export const anchorStyles = StyleSheet.create({ wrap: { position: 'relative', width: '100%' } });
 
 /** A typeable date with a calendar button; the calendar opens as a sheet on a phone and a dropdown on desktop. */
@@ -52,7 +49,8 @@ export function DatePickerInput({ fieldProps, context, onTypedError }: DatePicke
   const typed = useTypedDate({ value, onChange, bounds, format: displayFormatter(display), onError: onTypedError, editOnType: true });
   const edit = typedEditBind(typed);
   const { style, focusBind, hoverBind } = useThemedInput({ hasError: context.hasError, editable: !disabled });
-  const look = lookInputBox(useSelectLookMetrics());
+  const metrics = useSelectLookMetrics();
+  const look = lookInputBox(metrics);
   const focus = focusBind as unknown as FocusHandlers;
   const webA11y = webFieldA11y({ describedById: context.describedById, hasError: context.hasError, required });
 
@@ -105,7 +103,7 @@ export function DatePickerInput({ fieldProps, context, onTypedError }: DatePicke
         onPaste={edit.onPaste}
       />
       <div style={ICON_SLOT}>
-        <IconButton accessibilityHint={labels.openCalendarHint} accessibilityLabel={labels.openCalendar} appearance="ghost" disabled={disabled} renderIcon={(color) => <Glyph color={color} name={GlyphName.Calendar} />} testID={`${testID}-calendar`} onPress={() => setOpen((current) => !current)} />
+        <CalendarButton boxHeight={metrics?.height} disabled={disabled} hint={labels.openCalendarHint} label={labels.openCalendar} testID={`${testID}-calendar`} onPress={() => setOpen((current) => !current)} />
       </div>
       {open ? (
         <PickerSurface anchorRef={anchorRef} label={labels.dialog} minWidth={SINGLE_PICKER_WIDTH} phone={phone} testID={`${testID}-picker`} onDismiss={close}>
