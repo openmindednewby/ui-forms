@@ -4,6 +4,8 @@ import { StyleSheet, Switch, View } from 'react-native';
 
 import { MIN_TOUCH_TARGET_PX } from '@dloizides/a11y';
 
+import { useSwitchFocusRing } from './useSwitchFocusRing';
+
 const BOX_SLOT_PAD_H = 10;
 
 const styles = StyleSheet.create({
@@ -42,8 +44,16 @@ export const SwitchSlot = ({
   accessibilityHint,
   activeTrackColor,
   inBox = false,
-}: SwitchSlotProps): React.ReactElement => (
-  <View pointerEvents="none" style={inBox ? styles.box : styles.row} testID={`${testID}-hitbox`}>
+}: SwitchSlotProps): React.ReactElement => {
+  const ring = useSwitchFocusRing();
+  return (
+  <View
+    pointerEvents="none"
+    style={[inBox ? styles.box : styles.row, ring.ringStyle]}
+    testID={`${testID}-hitbox`}
+    onBlur={ring.onBlur}
+    onFocus={ring.onFocus}
+  >
     <Switch
       accessibilityHint={accessibilityHint ?? label}
       accessibilityLabel={label}
@@ -55,4 +65,5 @@ export const SwitchSlot = ({
       onValueChange={onValueChange}
     />
   </View>
-);
+  );
+};
