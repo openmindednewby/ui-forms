@@ -27,3 +27,17 @@ describe('CHECKBOX_TEXT_COLUMN', () => {
     expect({ basis, grow: column.flexGrow, flex: column.flex }).toEqual({ basis: undefined, grow: 1, flex: undefined });
   });
 });
+
+describe('CHECKBOX_TEXT_COLUMN width', () => {
+  it('with a zero min width, lets the column shrink below its text so the row stays inside its card', () => {
+    const column = CHECKBOX_TEXT_COLUMN;
+
+    expect(column.minWidth).toBe(0);
+  });
+
+  it('wraps an unbroken label anywhere rather than clipping it', () => {
+    const column = CHECKBOX_TEXT_COLUMN as Record<string, unknown>;
+
+    expect(column.overflowWrap).toBe('anywhere');
+  });
+});

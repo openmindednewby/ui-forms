@@ -82,7 +82,7 @@ export interface ChipSelectorProps<T> {
   singleSelectRole?: ChipSingleSelectRole;
   /** `compact` = a 28 px pill (padding 4/10, label 12/600) in a 44 px hit box; `dense` = `compact` with no row gap; defaults to `default`. */
   size?: ChipSize;
-  /** Background of a selected chip, from the app's tokens; when set, a selected chip also shows a leading check. */
+  /** Background of a selected chip, from the app tokens, or "ink" for the theme strong ink (dark fill); when set, a selected chip also shows a leading check. */
   selectedFill?: string;
   /** `strong` = unselected chips get the darker theme `textSecondary` outline; defaults to `default`. */
   outlineTone?: ChipOutlineTone;

@@ -6,7 +6,7 @@ import { CHIP_HIT_SLOP, TRANSPARENT_COLOR } from '../constants';
 import type { ChipProps } from '../types';
 
 import { chipLabelLayout } from '../utils/chipLabelLayout';
-import { chipBoxFill, chipFill, chipSizeLook, restBorderColor } from '../utils/chipLook';
+import { chipBoxFill, chipFill, resolveSelectedFill, chipSizeLook, restBorderColor } from '../utils/chipLook';
 
 import { ChipContent } from './ChipContent';
 import { chipStyles } from './chipStyles';
@@ -16,7 +16,7 @@ export function SolidChip<T extends string | number>(props: ChipProps<T>): React
   const { option, selected, disabled, colors, testID, accessibilityHint, onPress } = props;
   const fill = chipFill({
     selected,
-    selectedFill: props.selectedFill,
+    selectedFill: resolveSelectedFill(props.selectedFill, colors.textStrong),
     ink: colors.textStrong,
     onDarkInk: colors.onPrimary,
     lightInk: colors.surface,

@@ -6,7 +6,7 @@ import { CHIP_HIT_SLOP } from '../constants';
 import type { ChipProps } from '../types';
 
 import { chipLabelLayout } from '../utils/chipLabelLayout';
-import { chipBoxFill, chipFill, chipSizeLook, outlineRest, restBorderColor } from '../utils/chipLook';
+import { chipBoxFill, chipFill, resolveSelectedFill, chipSizeLook, outlineRest, restBorderColor } from '../utils/chipLook';
 
 import { ChipContent } from './ChipContent';
 import { chipStyles } from './chipStyles';
@@ -20,7 +20,7 @@ export function OutlineChip<T extends string | number>(props: ChipProps<T>): Rea
   const borderColor = active ? colors.primary : restBorderColor(colors, props.outlineTone);
   const fill = chipFill({
     selected,
-    selectedFill: props.selectedFill,
+    selectedFill: resolveSelectedFill(props.selectedFill, colors.textStrong),
     ink: colors.textStrong,
     onDarkInk: colors.onPrimary,
     lightInk: colors.surface,

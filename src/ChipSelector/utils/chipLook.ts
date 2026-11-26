@@ -26,6 +26,13 @@ interface FillInput {
   rest: { backgroundColor: string; textColor: string };
 }
 
+export const STRONG_SELECTED_FILL = 'ink';
+
+/** `selectedFill="ink"` resolves to the theme's strong ink, giving a dark selected chip with no colour literal; any other value passes through. */
+export function resolveSelectedFill(selectedFill: string | undefined, strongInk: string): string | undefined {
+  return selectedFill === STRONG_SELECTED_FILL ? strongInk : selectedFill;
+}
+
 /** The chip's fill: the variant's own colours, or `selectedFill` plus a check mark when selected. */
 export function chipFill({ selected, selectedFill, ink, onDarkInk, lightInk, rest }: FillInput): ChipFill {
   if (!selected || selectedFill === undefined)
