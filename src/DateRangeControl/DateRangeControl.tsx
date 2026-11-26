@@ -25,6 +25,8 @@ export interface DateRangeControlProps {
   fromPlaceholder?: string;
   /** @deprecated Ignored: a date input shows no typed format hint (DATE-INPUT-1). */
   toPlaceholder?: string;
+  /** Draw the web `<from> – <to>` label; false when the caller already labels the field (default true). */
+  showLabel?: boolean;
   /** PRE-LOCALIZED hint applied to BOTH inputs; defaults to `<fromLabel> – <toLabel>`. */
   accessibilityHint?: string;
   /** Merged LAST onto the row wrapper. */
@@ -41,6 +43,7 @@ export function DateRangeControl({
   fromLabel,
   toLabel,
   accessibilityHint,
+  showLabel = true,
   style,
   testID,
 }: DateRangeControlProps): React.ReactElement {
@@ -58,7 +61,7 @@ export function DateRangeControl({
   return (
     <GapOwnedProvider value>
       <View style={style} testID={`${testID}-range`}>
-        <Field error={typedError} label={`${fromLabel}${labels.rangeSeparator}${toLabel}`}>
+        <Field error={typedError} label={showLabel ? `${fromLabel}${labels.rangeSeparator}${toLabel}` : undefined}>
           {(context) => (
             <WebDateRange context={context} fromLabel={fromLabel} hint={hint} testID={testID} toLabel={toLabel} value={value} onChange={onChange} onSubmit={onSubmit} onTypedError={setTypedError} />
           )}

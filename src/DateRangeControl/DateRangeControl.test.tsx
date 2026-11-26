@@ -135,3 +135,21 @@ describe('DateRangeControl editing a whole selection', () => {
     expect([input.value, onChange.mock.calls.at(-1)?.[0]]).toEqual(['', { from: '', to: '' }]);
   });
 });
+
+describe('DateRangeControl label', () => {
+  it('by default, draws its own from-to label', () => {
+    renderRange({ from: '', to: '' });
+
+    const label = screen.queryByText(/^From.+To$/);
+
+    expect(label).not.toBeNull();
+  });
+
+  it('with showLabel false, draws no label of its own so a caller label is the only one', () => {
+    renderRange({ from: '', to: '' }, { showLabel: false });
+
+    const label = screen.queryByText(/^From.+To$/);
+
+    expect(label).toBeNull();
+  });
+});
