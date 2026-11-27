@@ -2,13 +2,10 @@ import React, { useCallback, useEffect, useRef, useState, type CSSProperties, ty
 
 import { View } from 'react-native';
 
-import { IconButton } from '@dloizides/ui-buttons';
-
 import { RangeSide } from './RangeSide';
+import { CalendarButton } from '../../DateField/components/CalendarButton';
 import { anchorStyles, ICON_ROOM, ICON_SLOT, type FocusHandlers } from '../../DateField/components/DatePickerInput';
 import { buildNativeInputStyle } from '../../DateField/components/WebDateInput';
-import { Glyph } from '../../DatePicker/components/Glyph';
-import { GlyphName } from '../../DatePicker/components/GlyphName';
 import { PickerSurface } from '../../DatePicker/components/PickerSurface';
 import { RangeCalendar } from '../../DatePicker/components/RangeCalendar';
 import { useDatePickerConfig } from '../../DatePicker/hooks/useDatePickerConfig';
@@ -18,6 +15,7 @@ import { useTypedDate, type TypedDate } from '../../DatePicker/hooks/useTypedDat
 import { datePattern } from '../../DatePicker/utils/datePattern';
 import { typedEditBind } from '../../DatePicker/utils/typedEdit';
 import { formatShort } from '../../DatePicker/utils/formatDate';
+import { lookInputBox, useSelectLookMetrics } from '../../SelectControl/selectLook';
 import { useThemedInput } from '../../useThemedInput/useThemedInput';
 import { webFieldA11y } from '../../webFieldA11y/webFieldA11y';
 
@@ -58,6 +56,7 @@ export function WebDateRange({ value, onChange, onSubmit, fromLabel, toLabel, hi
   const from = useTypedDate({ value: value.from, onChange: (next) => onChange({ from: next, to: value.to }), bounds: { max: orNone(value.to) }, format: formatShort, onError: setFromError, rangeMessage: labels.rangeOrder, editOnType: true });
   const to = useTypedDate({ value: value.to, onChange: (next) => onChange({ from: value.from, to: next }), bounds: { min: orNone(value.from) }, format: formatShort, onError: setToError, rangeMessage: labels.rangeOrder, editOnType: true });
   const { style, focusBind, hoverBind } = useThemedInput({ hasError: context.hasError, editable: true });
+  const metrics = useSelectLookMetrics();
   const focus = focusBind as unknown as FocusHandlers;
   const webA11y = webFieldA11y({ describedById: context.describedById, hasError: context.hasError });
 
@@ -112,13 +111,13 @@ export function WebDateRange({ value, onChange, onSubmit, fromLabel, toLabel, hi
 
   return (
     <View ref={anchorRef} style={anchorStyles.wrap}>
-      <div {...(hoverBind as React.HTMLAttributes<HTMLDivElement>)} style={{ ...buildNativeInputStyle(style), display: 'flex', alignItems: 'center', gap: GAP, paddingInlineEnd: ICON_ROOM }}>
+      <div {...(hoverBind as React.HTMLAttributes<HTMLDivElement>)} style={{ ...buildNativeInputStyle(style, lookInputBox(metrics)), display: 'flex', alignItems: 'center', gap: GAP, paddingInlineEnd: ICON_ROOM }}>
         {segment(RangeSide.From, from)}
         <span aria-hidden="true">→</span>
         {segment(RangeSide.To, to)}
       </div>
       <div style={ICON_SLOT}>
-        <IconButton accessibilityHint={labels.openCalendarHint} accessibilityLabel={labels.openCalendar} appearance="ghost" renderIcon={(color) => <Glyph color={color} name={GlyphName.Calendar} />} testID={`${testID}-calendar`} onPress={() => setOpen((current) => !current)} />
+        <CalendarButton boxHeight={metrics?.height} disabled={false} hint={labels.openCalendarHint} label={labels.openCalendar} testID={`${testID}-calendar`} onPress={() => setOpen((current) => !current)} />
       </div>
       {open ? (
         <PickerSurface anchorRef={anchorRef} label={labels.rangeDialog} minWidth={RANGE_PICKER_WIDTH} phone={phone} testID={`${testID}-picker`} onDismiss={close}>
