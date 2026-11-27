@@ -16,11 +16,9 @@ const enlargeInput = (input: HTMLInputElement): void => {
   input.style.transform = 'translate(-50%, -50%)';
 };
 
-/** Grows the RN-web Switch's native input to a centred 44x44 box; the 40x20 drawn switch keeps its size. */
+/** Grows the RN-web Switch's native input (its ref target) to a centred 44x44 box; the 40x20 drawn switch keeps its size. */
 export const useSwitchInputTarget = (): React.RefCallback<Switch> =>
   React.useCallback((node: Switch | null): void => {
-    const root: unknown = node;
-    if (Platform.OS !== 'web' || !(root instanceof HTMLElement)) return;
-    const input = root.querySelector('input');
-    if (input !== null) enlargeInput(input);
+    const input: unknown = node;
+    if (Platform.OS === 'web' && input instanceof HTMLInputElement) enlargeInput(input);
   }, []);
