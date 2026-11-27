@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.68.1
+
+- `FormSwitch`: on web the native switch input (the `role="switch"` element) is a 44x44 box centred on the switch, so a target-size audit no longer reads 40x20. The drawn switch keeps its 40x20 size; presses still toggle once through the row (FORMSWITCH-HIT-1).
+
 ## 1.68.0
 
 - `FieldLookProvider` (opt-in): `size="compact"` draws single-line text inputs in the 38 px `field` select-look box (44 px on a phone or a touch screen, so the tap height never drops under 44); `labelVariant` sets the default label voice of every `Field` and `AlignToControl` below it, e.g. `caption` (uppercase small label). A prop on the field still wins. Outside a provider nothing changes (MODC-1 r7, FORM-ALIGN-1).
