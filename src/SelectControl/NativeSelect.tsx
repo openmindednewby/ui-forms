@@ -8,7 +8,7 @@ import { controlStyles as s } from '../controls/controlStyles';
 import { controlBorderOf } from './controlBorder';
 
 import type { SelectControlProps } from './SelectControl';
-import { chevronDataUri, useSelectLookMetrics, type SelectLookMetrics } from './selectLook';
+import { chevronDataUri, selectThemeInk, useSelectLookMetrics, type SelectLookMetrics } from './selectLook';
 
 const NATIVE_SELECT_BOX: React.CSSProperties = {
   borderStyle: 'solid',
@@ -100,7 +100,7 @@ export function NativeSelect({
   const metrics = useSelectLookMetrics();
   const selectStyle = metrics === undefined
     ? nativeSelectStyle(fit, controlBorderOf(theme), colors.surfaceElevated, textColor)
-    : lookSelectStyle(fit, metrics, { border: controlBorderOf(theme), background: colors.surfaceElevated, text: textColor, chevron: colors.textSecondary });
+    : lookSelectStyle(fit, metrics, { border: controlBorderOf(theme), text: textColor, ...selectThemeInk(metrics, colors) });
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>): void => onChange(event.target.value);
 

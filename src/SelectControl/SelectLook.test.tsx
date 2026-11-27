@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 
 import { SelectControl } from './SelectControl';
-import { SelectLookProvider, selectLookMetrics } from './selectLook';
+import { SelectLookProvider, selectLookMetrics, selectThemeInk } from './selectLook';
 
 const LONG = 'Comprehensive - all lists, every PEP class, every sanction regime and adverse media source';
 const OPTIONS = [
@@ -100,5 +100,25 @@ describe('NativeSelect under SelectLookProvider', () => {
     const select = screen.getByTestId('preset');
 
     expect(select.style.textOverflow).toBe('');
+  });
+});
+
+describe('selectThemeInk', () => {
+  const colors = { surface: '#ffffff', surfaceElevated: '#f8fafc', text: '#0b1220', textSecondary: '#4a5567' };
+
+  it('with the field look, fills with the card surface and draws the chevron in text ink', () => {
+    const metrics = selectLookMetrics({ look: 'field' }, 1280);
+
+    const ink = selectThemeInk(metrics, colors);
+
+    expect(ink).toEqual({ background: '#ffffff', chevron: '#0b1220' });
+  });
+
+  it('with the default look, keeps the raised fill and the muted chevron', () => {
+    const metrics = selectLookMetrics({ look: 'default' }, 1280);
+
+    const ink = selectThemeInk(metrics, colors);
+
+    expect(ink).toEqual({ background: '#f8fafc', chevron: '#4a5567' });
   });
 });

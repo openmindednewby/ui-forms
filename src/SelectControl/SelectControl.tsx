@@ -29,7 +29,7 @@ import type { ControlOption } from '../controls/controlTypes';
 import { controlBorderOf } from './controlBorder';
 import { NativeSelect } from './NativeSelect';
 import { SelectChevron } from './SelectChevron';
-import { useSelectLookMetrics, type SelectLookMetrics } from './selectLook';
+import { selectThemeInk, useSelectLookMetrics, type SelectLookMetrics, type SelectThemeColors } from './selectLook';
 import { useSelectListbox } from './useSelectListbox';
 
 const IS_WEB = Platform.OS === 'web';
@@ -88,13 +88,14 @@ function lookTriggerBox(m: SelectLookMetrics | undefined): ViewStyle | undefined
 interface TriggerInk { border: string; background: string; text: string; chevron: string }
 
 /** The trigger's colours: a look's configured border, fill and ink win over the theme. */
-function triggerInk(m: SelectLookMetrics | undefined, colors: { controlBorder: string; surfaceElevated: string; text: string; textSecondary: string }, isEmpty: boolean): TriggerInk {
+function triggerInk(m: SelectLookMetrics | undefined, colors: SelectThemeColors & { controlBorder: string }, isEmpty: boolean): TriggerInk {
   const themeText = isEmpty ? colors.textSecondary : colors.text;
+  const themeInk = selectThemeInk(m, colors);
   return {
     border: m?.borderColor ?? colors.controlBorder,
-    background: m?.backgroundColor ?? colors.surfaceElevated,
+    background: m?.backgroundColor ?? themeInk.background,
     text: m?.textColor ?? themeText,
-    chevron: m?.textColor ?? colors.textSecondary,
+    chevron: m?.textColor ?? themeInk.chevron,
   };
 }
 

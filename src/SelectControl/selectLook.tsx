@@ -82,6 +82,25 @@ export function selectLookMetrics({ look, borderColor, backgroundColor, textColo
   };
 }
 
+/** The theme colours a select box picks its fill and chevron from. */
+export interface SelectThemeColors {
+  surface: string;
+  surfaceElevated: string;
+  text: string;
+  textSecondary: string;
+}
+
+/**
+ * The theme fill and chevron ink of a select box: a `field` or `chip` look sits on the card surface with a text-ink
+ * chevron, like the typeahead and date inputs beside it; the `default` look keeps the raised fill and the muted chevron.
+ * @param m the look metrics; `undefined` is the `default` look
+ * @param colors the theme colours
+ */
+export function selectThemeInk(m: SelectLookMetrics | undefined, colors: SelectThemeColors): { background: string; chevron: string } {
+  if (m === undefined) return { background: colors.surfaceElevated, chevron: colors.textSecondary };
+  return { background: colors.surface, chevron: colors.text };
+}
+
 /** The metrics of the nearest provider's look at the current window width; `undefined` for `default`. */
 export function useSelectLookMetrics(): SelectLookMetrics | undefined {
   const config = useContext(SelectLookContext);
