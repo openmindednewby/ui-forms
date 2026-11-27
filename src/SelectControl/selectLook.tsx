@@ -101,6 +101,11 @@ export function selectThemeInk(m: SelectLookMetrics | undefined, colors: SelectT
   return { background: colors.surface, chevron: colors.text };
 }
 
+/** The look of the nearest `SelectLookProvider`; `default` outside one. */
+export function useSelectLook(): SelectLook {
+  return useContext(SelectLookContext).look;
+}
+
 /** The metrics of the nearest provider's look at the current window width; `undefined` for `default`. */
 export function useSelectLookMetrics(): SelectLookMetrics | undefined {
   const config = useContext(SelectLookContext);

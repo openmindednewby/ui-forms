@@ -23,6 +23,7 @@ import { themeFocusRingColor } from '@dloizides/ui-buttons';
 import { useUi } from '@dloizides/ui-feedback';
 
 import { fieldErrorInk } from '../fieldErrorInk/fieldErrorInk';
+import { useSelectLook } from '../SelectControl/selectLook';
 
 /** The exact focus/blur event types of the installed `react-native` `TextInput` (version-safe). */
 type FocusEvent = Parameters<NonNullable<TextInputProps['onFocus']>>[0];
@@ -107,6 +108,7 @@ export function useThemedInput(options: UseThemedInputOptions = {}): ThemedInput
   const { hasError = false, onFocus, onBlur, editable = true } = options;
   const { theme } = useUi();
   const { colors, palette } = theme;
+  const isFieldLook = useSelectLook() === 'field';
 
   const [isFocused, setIsFocused] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -136,7 +138,7 @@ export function useThemedInput(options: UseThemedInputOptions = {}): ThemedInput
     const focusBorder = hasError ? errorColor : primary;
     const editableBorder = isFocused ? focusBorder : isHovered ? withAlpha(colors.text, HOVER_BORDER_ALPHA) : restBorder;
     const borderColor = editable ? editableBorder : restBorder;
-    const editableFill = isFocused ? colors.surface : colors.surfaceElevated;
+    const editableFill = isFocused || isFieldLook ? colors.surface : colors.surfaceElevated;
     const backgroundColor = editable ? editableFill : colors.surface;
     const base: TextStyle = { color: editable ? colors.text : colors.textSecondary, borderColor, backgroundColor };
     if (!IS_WEB) return base;
@@ -164,6 +166,7 @@ export function useThemedInput(options: UseThemedInputOptions = {}): ThemedInput
     colors.surfaceElevated,
     colors.textSecondary,
     editable,
+    isFieldLook,
     primary,
     errorColor,
     theme,
