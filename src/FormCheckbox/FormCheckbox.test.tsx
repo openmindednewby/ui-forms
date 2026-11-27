@@ -1,5 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 
+import { FormCell, FormGrid } from '../FormGrid';
+import { FormStack } from '../FormStack/FormStack';
 import { FormCheckbox } from './FormCheckbox';
 
 const BOX_INNER_PX = 16;
@@ -56,5 +58,53 @@ describe('FormCheckbox labelHidden', () => {
     fireEvent.click(screen.getByTestId('cb-hidden-press'));
 
     expect(onValueChange).toHaveBeenCalledWith(true);
+  });
+});
+
+describe('FormCheckbox spacing', () => {
+  it('standalone, keeps its own 12px bottom margin', () => {
+    render(<FormCheckbox testID="cb-alone" label="Show logo" value={false} />);
+
+    const margin = getComputedStyle(screen.getByTestId('cb-alone')).marginBottom;
+
+    expect(margin).toBe('12px');
+  });
+
+  it('inside a FormStack, drops its own bottom margin so the stack gap owns the rhythm', () => {
+    render(
+      <FormStack>
+        <FormCheckbox testID="cb-stack" label="Show logo" value={false} />
+      </FormStack>,
+    );
+
+    const margin = getComputedStyle(screen.getByTestId('cb-stack')).marginBottom;
+
+    expect(margin).toBe('0px');
+  });
+
+  it('inside a FormGrid cell, drops its own bottom margin so the grid gap owns the rhythm', () => {
+    render(
+      <FormGrid>
+        <FormCell>
+          <FormCheckbox testID="cb-grid" label="Show logo" value={false} />
+        </FormCell>
+      </FormGrid>,
+    );
+
+    const margin = getComputedStyle(screen.getByTestId('cb-grid')).marginBottom;
+
+    expect(margin).toBe('0px');
+  });
+
+  it('inside a FormStack with a caller containerStyle margin, the caller margin still wins', () => {
+    render(
+      <FormStack>
+        <FormCheckbox containerStyle={{ marginBottom: 4 }} testID="cb-override" label="Show logo" value={false} />
+      </FormStack>,
+    );
+
+    const margin = getComputedStyle(screen.getByTestId('cb-override')).marginBottom;
+
+    expect(margin).toBe('4px');
   });
 });

@@ -12,6 +12,7 @@ import { MIN_TOUCH_TARGET_PX } from '@dloizides/a11y';
 import { useUi } from '@dloizides/ui-feedback';
 
 import { useFieldIds } from '../Field/Field';
+import { useIsGapOwned } from '../FormGrid/formGridContext';
 
 import { checkboxBoxColors, checkboxTickColor } from './checkboxColors';
 import { CHECKBOX_TEXT_COLUMN, useCheckboxLookBox } from './checkboxLook';
@@ -55,6 +56,9 @@ const styles = StyleSheet.create({
   /** With no hint the row is a single line, so centre it vertically inside the floor. */
   centered: {
     alignItems: 'center',
+  },
+  gapOwned: {
+    marginBottom: 0,
   },
   boxOnly: {
     minWidth: MIN_TOUCH_TARGET_PX,
@@ -137,6 +141,7 @@ export const FormCheckbox = ({
   const hintText = typeof hint === 'string' && hint !== '' ? hint : description;
   const hasHint = typeof hintText === 'string' && hintText !== '';
   const { hintId } = useFieldIds();
+  const gapOwned = useIsGapOwned();
 
   const [focused, setFocused] = React.useState(false);
 
@@ -183,6 +188,7 @@ export const FormCheckbox = ({
       style={[
         styles.container,
         hasHint ? null : styles.centered,
+        gapOwned ? styles.gapOwned : null,
         labelHidden ? styles.boxOnly : null,
         containerStyle,
         disabled ? { opacity: DISABLED_OPACITY } : null,
