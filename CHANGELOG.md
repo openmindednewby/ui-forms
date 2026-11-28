@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.69.0
+
+- Field and chip select looks fill with the card surface and draw a text-ink chevron; under the field select look an editable input rests on the theme surface, so it matches the selects beside it (MODC-1 D-MC-830 "One dropdown look app-wide, lighter to match the frame").
+- `FormCheckbox` inside `FormGrid` or `FormStack` drops its own 12 px bottom margin so the container gap owns the rhythm; a standalone checkbox keeps 12 px (MODC-1 D-MC-837 "Checkbox takes the form grid gap").
+
 ## 1.68.1
 
 - `FormSwitch`: on web the native switch input (the `role="switch"` element) is a 44x44 box centred on the switch, so a target-size audit no longer reads 40x20. The drawn switch keeps its 40x20 size; presses still toggle once through the row (FORMSWITCH-HIT-1).
